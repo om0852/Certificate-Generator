@@ -1,12 +1,9 @@
-"use client"
-// import "./assets/script"
-// import "./vendor/joystick"
-// import "./customizetemplate/assets"
-import "./customizetemplate/assets/style.css"
-export default function Home() {
+import Navbar from "./component/Navbar";
+
+export default function Page() {
   return (
     <>
-      Welcome
+      <Navbar />
     </>
-  );
+  )
 }
