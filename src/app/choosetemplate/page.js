@@ -5,7 +5,7 @@ export default function Page() {
     return (
         <>
             <SideTemplate />
-
+            <div className="main-container">Preview of certificate</div>
         </>
 
     )

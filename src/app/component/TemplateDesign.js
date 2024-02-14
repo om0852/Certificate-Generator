@@ -1,10 +1,14 @@
+"use client"
 import "./component.css"
-import cert from "../../images/certificate_template1.webp"
+import Image from 'next/image'
+
 export default function TemplateDesign({ templateimg }) {
+    const img = templateimg?.trim()
+
     return (
         <>
             <div className="card">
-                <img src={cert.src} />
+                <img src={(img)} />
             </div>
         </>
     )
