@@ -1,0 +1,26 @@
+.sidebar-template{
+    background-color: red;
+    width: 30%;
+    position: absolute;
+    right: 0;
+    display: grid;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100vh;
+}
+.card{
+    width: 90%;
+    height: 100%;
+    margin: 2vh auto;
+    
+}
+/* sideremplate */
+.create-card{
+    width: 90%;
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2vh auto;
+    background-color: aliceblue;
+}
