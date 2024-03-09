@@ -27,7 +27,7 @@ const Sidebar = ({addFields,handleTextFieldChange,textFields}) => {
 {textFields && textFields.map((data,index)=>{
     return(
         <>
-    <input id={data.id} value={data.text} onChange={(e)=>{handleTextFieldChange(e,index)}} placeholder='enter some text' style={{color:"black",margin:"2vh 0"}}/>
+    <input id={data.id} value={data.text} onChange={(e)=>{handleTextFieldChange(e,index)}} placeholder='enter some text' style={{width:"90%",color:"black",margin:"2vh auto", marginLeft:"1vh"}}/>
         </>
     )
 })}
