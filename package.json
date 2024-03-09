@@ -13,10 +13,7 @@
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-draggable": "^4.4.6"
-    "next": "14.1.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react-draggable": "^4.4.6",
     "svelte-carousel": "^1.0.25"
   },
   "devDependencies": {

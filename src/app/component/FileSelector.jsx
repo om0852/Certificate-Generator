@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 
-const ImageBanner = () => {
+const ImageBanner = ({addFields,textFields,setTextFields}) => {
+    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const [textFields, setTextFields] = useState([
-        { id: 1, x: 300, y: 100, text: 'Text 1' },
-        { id: 2, x: 300, y: 80, text: 'Text 2' },
-        { id: 3, x: 300, y: 60, text: 'Text 3' },
-        { id: 4, x: 300, y: 120, text: 'Text 4' },
-
-    ]);
-
+   
+    // addFields(addTextField);
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
+        
             reader.onload = () => {
                 setSelectedImage(reader.result);
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = () => {
+                    setImageDimensions({ width: img.width, height: img.height });
+                };
             };
             reader.readAsDataURL(file);
         } else {
@@ -61,6 +62,8 @@ const ImageBanner = () => {
                 <div
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
+                        width:600,
+                        height:600,
                         backgroundImage: `url(${selectedImage})`,
                         backgroundSize: 'contain', // or '100%'
                         backgroundPosition: 'center',
