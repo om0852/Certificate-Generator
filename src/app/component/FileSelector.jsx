@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 
 const ImageBanner = () => {
+
     const [selectedImage, setSelectedImage] = useState(null);
     const [textFields, setTextFields] = useState([
         { id: 1, x: 300, y: 100, text: 'Text 1' },
@@ -24,11 +25,21 @@ const ImageBanner = () => {
         }
     };
 
+
+    const stop = (e, data, index) => {
+        const updatedTextFields = [...textFields];
+        const draggable = document.getElementsByClassName("draggable")
+        updatedTextFields[index].x = data.x - draggable.offsetLeft;
+        updatedTextFields[index].y = data.y - draggable.offsetTop;
+        setTextFields(updatedTextFields);
+    }
+
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
         updatedTextFields[index].text = event.target.value;
         setTextFields(updatedTextFields);
     };
+    let offsetLeft, offsetTop
 
     return (
         <div className="flex flex-col items-center relative">
@@ -57,28 +68,34 @@ const ImageBanner = () => {
                     }}
                 >
                     {textFields.map((textField, index) => (
-                        <Draggable
-                            key={textField.id}
-                            defaultPosition={{ x: textField.x, y: textField.y }}
-                            onStop={(e, data) => {
-                                const updatedTextFields = [...textFields];
-                                updatedTextFields[index].x = data.x;
-                                updatedTextFields[index].y = data.y;
-                                setTextFields(updatedTextFields);
-                            }}
-                        >
-                            <input
-                                type="text"
-                                value={textField.text}
-                                onChange={(e) => handleTextFieldChange(e, index)}
-                                className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                style={{ left: textField.x, top: textField.y }}
-                            />
-                        </Draggable>
+                        <div>
+                            <Draggable
+                                className="draggable"
+                                key={textField.id}
+                                defaultPosition={{ x: textField.x, y: textField.y }}
+                                onStop={(e, data) => { stop(e, data, index) }}
+                            // onMouseDown={(e) => {
+                            //     offsetLeft=e.clientX-offsetX
+                            //     offsetTop=e.clientY-offsetY
+                            //     document.addEventListener("mousemove",move)
+                            // }
+                            // }
+
+                            >
+                                <input
+                                    type="text"
+                                    value={textField.text}
+                                    onChange={(e) => handleTextFieldChange(e, index)}
+                                    className="absolute border border-gray-400 bg-transparent text-black p-2"
+                                    style={{ left: textField.x, top: textField.y }}
+                                />
+                            </Draggable>
+                        </div>
                     ))}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
 
