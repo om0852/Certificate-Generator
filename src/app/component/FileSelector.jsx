@@ -1,12 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
-const ImageBanner = ({addFields,textFields,setTextFields}) => {
+const ImageBanner = ({addFields,textFields,setTextFields,certificateRef,selectedTextFieldIndex}) => {
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const certificateRef = useRef(null);
     // addFields(addTextField);
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -26,16 +25,6 @@ const ImageBanner = ({addFields,textFields,setTextFields}) => {
             setSelectedImage(null);
         }
     };
-    const downloadCertificate = () => {
-        html2canvas(certificateRef.current).then(canvas => {
-          const imgData = canvas.toDataURL('image/jpeg');
-          const pdf = new jsPDF("l", "mm", [canvas.width, canvas.height]);
-          const imgWidth = pdf.internal.pageSize.getWidth();
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-          pdf.save("certificate.pdf");
-        })
-      }
     
 
     const stop = (e, data, index) => {
@@ -55,7 +44,7 @@ const ImageBanner = ({addFields,textFields,setTextFields}) => {
 
     return (
         <div className="flex flex-col items-center relative">
-            <button style={{position:"absolute",top:"0"}} onClick={downloadCertificate}>download </button>
+            
             <input
                 type="file"
                 accept="image/*"
@@ -104,7 +93,7 @@ const ImageBanner = ({addFields,textFields,setTextFields}) => {
                                     value={textField.text}
                                     onChange={(e) => handleTextFieldChange(e, index)}
                                     className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                    style={{ left: textField.x, top: textField.y ,border:"none",height:"8%",overflow:"hidden"}}
+                                    style={{ left: textField.x, top: textField.y ,border:"none",height:"8%",overflow:"hidden",fontFamily:textField.fontFamily,fontSize:parseInt(textField.size)}}
                                 ></textarea>
                             </Draggable>
                         </div>
