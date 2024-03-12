@@ -5,7 +5,7 @@ import Sidebar from "../component/Sidebar";
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
 export default function Page() {
-    const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(-1); // State to hold the index of the selected text field
+    const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(0); // State to hold the index of the selected text field
 
     const certificateRef = useRef(null);
 
@@ -29,14 +29,14 @@ export default function Page() {
     }
 
     const [textFields, setTextFields] = useState([
-        { id: 1, x: 300, y: 100, text: 'Text 1', fontFamily: "Times New Roman", size: 10 },
-        { id: 2, x: 300, y: 80, text: 'Text 2', fontFamily: "Times New Roman", size: 10 },
+        { id: 1, x: 300, y: 100, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify" },
+        { id: 2, x: 300, y: 80, text: 'Text 2', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", },
 
 
     ]);
     const addTextField = () => {
         alert("run")
-        const data = { id: (textFields.length + 1), x: 300, y: 150, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10 }
+        const data = { id: (textFields.length + 1), x: 300, y: 150, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "none" }
         setTextFields(prevTextFields => [
             ...prevTextFields,
             data
