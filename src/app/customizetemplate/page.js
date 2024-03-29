@@ -10,7 +10,6 @@ export default function Page() {
     const certificateRef = useRef(null);
 
     const addFields = () => {
-        alert("clicked")
         addTextField();
     }
     const handleRadioChange = (index) => {
@@ -35,7 +34,6 @@ export default function Page() {
 
     ]);
     const addTextField = () => {
-        alert("run")
         const data = { id: (textFields.length + 1), x: 300, y: 150, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "none" }
         setTextFields(prevTextFields => [
             ...prevTextFields,

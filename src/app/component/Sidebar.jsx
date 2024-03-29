@@ -98,8 +98,6 @@ const fontSizes=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
   }
   const onChangeFontFamily = (e) => {
-//     setSelectedFontFamily(e.target.value);
-// setTextFields(...textFields[selectedTextFieldIndex],fontFamily:e.target.value)
     const updatedTextFields = textFields.map((textField, index) => {
         
         if (index === selectedTextFieldIndex && selectedTextFieldIndex!=-1) {
@@ -179,12 +177,23 @@ const fontSizes=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
       <div className='style-option'>
         <div style={{display:"flex" ,alignItems:"center"}}><span style={{background:textFields[selectedTextFieldIndex].bold=="bold"?"grey":"none"}} className='bold'><img width="30" height="30" src="https://img.icons8.com/ios/30/bold.png" alt="bold"/></span>
       <span style={{background:textFields[selectedTextFieldIndex].italic=="italic"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/italic.png" alt="italic"/></span>
-      <span style={{background:textFields[selectedTextFieldIndex].underline=="underline"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline"/></span></div>
+      <span style={{background:textFields[selectedTextFieldIndex].underline=="underline"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline"/></span>
+      </div>
+      
       <div style={{marginTop:"2vh",display:"flex",alignItems:"center"}}>
-      <span style={{background:textFields[selectedTextFieldIndex].alignment=="justify"?"grey":"none"}}>
-      <img  width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify"/></span>
-      <span style={{background:textFields[selectedTextFieldIndex].alignment=="align-center"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center"/></span>
-      <span style={{background:textFields[selectedTextFieldIndex].alignment=="align-left"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left"/></span><span style={{background:textFields[selectedTextFieldIndex].alignment=="align-right"?"grey":"none"}}><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right"/></span>
+      <input onClick={()=>{    const updatedTextFields = [...textFields];
+    updatedTextFields[selectedTextFieldIndex].alignment = "justify";
+    setTextFields(updatedTextFields);}} id='align-justify' type='radio' name="content-align" style={{visibility:"hidden",background:textFields[selectedTextFieldIndex].alignment=="justify"?"grey":"white"}}/>
+      <label style={{background:textFields[selectedTextFieldIndex].alignment=="justify"?"grey":"none"}} htmlFor="align-justify"><img  width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify"/></label>
+      <input  onClick={()=>{const updatedTextFields = [...textFields];
+    updatedTextFields[selectedTextFieldIndex].alignment = "center"; setTextFields(updatedTextFields);}}  type='radio' name='content-align' id='align-center' style={{visibility:"hidden",background:textFields[selectedTextFieldIndex].alignment=="center"?"grey":"none"}}/>
+      <label style={{background:textFields[selectedTextFieldIndex].alignment=="center"?"grey":"none"}}  htmlFor='align-center'><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center"/></label>
+      <input  onClick={()=>{const updatedTextFields = [...textFields];
+    updatedTextFields[selectedTextFieldIndex].alignment = "left"; setTextFields(updatedTextFields);}}  type='radio' name='content-align' id='align-left' style={{visibility:"hidden",background:textFields[selectedTextFieldIndex].alignment=="align-left"?"grey":"none"}}/><label style={{background:textFields[selectedTextFieldIndex].alignment=="left"?"grey":"none"}} htmlFor='align-left'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left"/></label>
+      <input  onClick={()=>{const updatedTextFields = [...textFields];
+    updatedTextFields[selectedTextFieldIndex].alignment = "right"; setTextFields(updatedTextFields);console.log(textFields[selectedTextFieldIndex].alignment)}}  type='radio' name='content-align' id='align-right' style={{visibility:"hidden",background:textFields[selectedTextFieldIndex].alignment=="align-right"?"grey":"none"}}/>
+      <label style={{background:textFields[selectedTextFieldIndex].alignment=="right"?"grey":"none"}} htmlFor='align-right'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right"/>
+      </label>
       </div>
       </div>
     </div>

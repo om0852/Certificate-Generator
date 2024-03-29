@@ -7,6 +7,9 @@ const ImageBanner = ({addFields,textFields,setTextFields,certificateRef,selected
 
     const [selectedImage, setSelectedImage] = useState(null);
     // addFields(addTextField);
+    useEffect(()=>{
+console.log(textFields);
+    },[textFields])
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
@@ -40,6 +43,7 @@ const ImageBanner = ({addFields,textFields,setTextFields,certificateRef,selected
         updatedTextFields[index].text = event.target.value;
         setTextFields(updatedTextFields);
     };
+
     let offsetLeft, offsetTop
 
     return (
@@ -87,13 +91,13 @@ const ImageBanner = ({addFields,textFields,setTextFields,certificateRef,selected
                             // }
 
                             >
+                              
                                 <textarea
                                     type="text"
-                                   
                                     value={textField.text}
                                     onChange={(e) => handleTextFieldChange(e, index)}
                                     className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                    style={{ left: textField.x, top: textField.y ,border:"none",height:"8%",overflow:"hidden",fontFamily:textField.fontFamily,fontSize:parseInt(textField.size)}}
+                                    style={{ left: textField.x, top: textField.y ,border:"none",textAlign:textField.alignment,height:"8%",overflow:"hidden",fontFamily:textField.fontFamily,fontSize:parseInt(textField.size)}}
                                 ></textarea>
                             </Draggable>
                         </div>
