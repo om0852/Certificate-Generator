@@ -28,8 +28,8 @@ export default function Page() {
     }
 
     const [textFields, setTextFields] = useState([
-        { id: 1, x: 300, y: 100, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify" },
-        { id: 2, x: 300, y: 80, text: 'Text 2', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", },
+        { id: 1, x: 300, y: 100, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal" },
+        { id: 2, x: 300, y: 80, text: 'Text 2', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal" },
 
 
     ]);

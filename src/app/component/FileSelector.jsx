@@ -2,19 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
-const ImageBanner = ({addFields,textFields,setTextFields,certificateRef,selectedTextFieldIndex}) => {
+const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex }) => {
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
     const [selectedImage, setSelectedImage] = useState(null);
     // addFields(addTextField);
-    useEffect(()=>{
-console.log(textFields);
-    },[textFields])
+    useEffect(() => {
+        console.log(textFields);
+    }, [textFields])
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-        
+
             reader.onload = () => {
                 setSelectedImage(reader.result);
                 const img = new Image();
@@ -28,7 +28,7 @@ console.log(textFields);
             setSelectedImage(null);
         }
     };
-    
+
 
     const stop = (e, data, index) => {
         const updatedTextFields = [...textFields];
@@ -48,7 +48,7 @@ console.log(textFields);
 
     return (
         <div className="flex flex-col items-center relative">
-            
+
             <input
                 type="file"
                 accept="image/*"
@@ -65,11 +65,11 @@ console.log(textFields);
             {selectedImage && (
 
                 <div
-                ref={certificateRef}
+                    ref={certificateRef}
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
-                        width:600,
-                        height:600,
+                        width: 600,
+                        height: 600,
                         backgroundImage: `url(${selectedImage})`,
                         backgroundSize: 'contain', // or '100%'
                         backgroundPosition: 'center',
@@ -91,13 +91,18 @@ console.log(textFields);
                             // }
 
                             >
-                              
+
                                 <textarea
                                     type="text"
                                     value={textField.text}
                                     onChange={(e) => handleTextFieldChange(e, index)}
                                     className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                    style={{ left: textField.x, top: textField.y ,border:"none",textAlign:textField.alignment,height:"8%",overflow:"hidden",fontFamily:textField.fontFamily,fontSize:parseInt(textField.size)}}
+                                    style={{
+                                        left: textField.x, top: textField.y, border: "none", textAlign: textField.alignment, height: "8%", overflow: "hidden", fontFamily: textField.fontFamily, fontSize: parseInt(textField.size),
+                                        fontWeight: textField.bold,
+                                        textDecoration: textField.underline,
+                                        fontStyle: textField.italic
+                                    }}
                                 ></textarea>
                             </Draggable>
                         </div>
