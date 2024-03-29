@@ -2,32 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
-const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex }) => {
-    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage }) => {
 
-    const [selectedImage, setSelectedImage] = useState(null);
     // addFields(addTextField);
     useEffect(() => {
         console.log(textFields);
     }, [textFields])
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                setSelectedImage(reader.result);
-                const img = new Image();
-                img.src = reader.result;
-                img.onload = () => {
-                    setImageDimensions({ width: img.width, height: img.height });
-                };
-            };
-            reader.readAsDataURL(file);
-        } else {
-            setSelectedImage(null);
-        }
-    };
 
 
     const stop = (e, data, index) => {
@@ -47,31 +27,19 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
     let offsetLeft, offsetTop
 
     return (
-        <div className="flex flex-col items-center relative">
+        <div className="flex flex-col items-center relative" style={{ width: "100%" }}>
 
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                id="imageInput"
-            />
-            <label
-                htmlFor="imageInput"
-                className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-                Select Image
-            </label>
+
             {selectedImage && (
 
                 <div
                     ref={certificateRef}
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
-                        width: 600,
-                        height: 600,
+                        width: 900,
+                        height: "100vh",
                         backgroundImage: `url(${selectedImage})`,
-                        backgroundSize: 'contain', // or '100%'
+                        backgroundSize: 'cover', // or '100%'
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
                     }}
@@ -102,6 +70,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                                         fontWeight: textField.bold,
                                         textDecoration: textField.underline,
                                         fontStyle: textField.italic
+                                        , textTransform: textField.textOrientation
                                     }}
                                 ></textarea>
                             </Draggable>

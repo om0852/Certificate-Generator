@@ -18,7 +18,8 @@ const Sidebar = ({
   downloadCertificate,
   setTextFields,
   handleRadioChange,
-  selectedTextFieldIndex
+  selectedTextFieldIndex,
+  handleImageChange
 
 }) => {
   const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
@@ -81,6 +82,7 @@ const Sidebar = ({
     'Yu Gothic',
     // Add more font families as needed
   ];
+  const textOrientation = ["capitalize", "uppercase", "lowercase", "none"];
   const fontSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   // Function to handle font family change
   const onChangeFontSize = (e) => {
@@ -109,6 +111,16 @@ const Sidebar = ({
     console.log(textFields)
 
   };
+  const onChangeOrientation = (e) => {
+    const updatedTextFields = textFields.map((textField, index) => {
+
+      if (index === selectedTextFieldIndex && selectedTextFieldIndex != -1) {
+        return { ...textField, textOrientation: e.target.value };
+      }
+      return textField;
+    });
+    setTextFields(updatedTextFields);
+  }
   const changeBold = () => {
     const updatedTextFields = [...textFields];
     if (textFields[selectedTextFieldIndex].bold == "bold") {
@@ -149,18 +161,36 @@ const Sidebar = ({
   // Function to handle radio button change
 
   return (
-    <div className="bg-blue-700" style={{ width: '30vh', height: '100vh' }}>
-      <button onClick={() => addFields()}>submit</button>
-      <button
-        style={{ position: 'absolute', top: '0' }}
-        onClick={downloadCertificate}
-      >
-        download{' '}
-      </button>
+    <div className="bg-blue-700" style={{ width: '40vh', height: '100vh', background: "rgb(86 17 151)" }}>
+
+      <div style={{ width: "100%", margin: "1vh 0", display: "grid", placeItems: "center" }}>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+          id="imageInput"
+        />
+        <label
+          htmlFor="imageInput"
+          className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Select Certificate
+        </label>
+
+        <button className='rounded' style={{ margin: "2vh auto", width: "90%", height: "40px", background: "red" }} onClick={() => addFields()}>Add Field</button>
+        <button className='rounded'
+          style={{ width: "90%", height: "40px", background: "green" }}
+          onClick={downloadCertificate}
+        >
+          download{' '}
+        </button>
+      </div>
       {textFields &&
         textFields.map((data, index) => {
           return (
             <div style={{ display: 'flex' }}>
+
               {/* Apply selected font family to the selected text field */}
               <input
                 id={data.id}
@@ -169,74 +199,129 @@ const Sidebar = ({
                 placeholder="enter some text"
                 style={{
                   width: '90%',
+                  height: "30px",
+                  borderRadius: ".3vh",
+                  padding: "2vh",
                   color: 'black',
                   margin: '2vh auto',
                   marginLeft: '1vh',
                   fontFamily: data.fontFamily
-                  , fontSize: data.size,
+                  , fontSize: "15px",
+                  outline: "none"
                 }}
               />
-              <input
+              {selectedTextFieldIndex == index ? <input
+                name="inputfield"
+                checked
+                type="radio"
+                onChange={() => handleRadioChange(index)}
+              /> : <input
                 name="inputfield"
                 type="radio"
                 onChange={() => handleRadioChange(index)}
-              />
+              />}
+
             </div>
           );
         })}
       {/* Dropdown menu to select font family */}
-      <select
-        style={{ color: 'black' }}
-        onChange={onChangeFontFamily}
-        value={selectedFontFamily}
-      >
-        {fontFamilies &&
-          fontFamilies.map((data) => {
-            return (
-              <option value={data} style={{ fontFamily: data, color: 'black' }}>
-                {data}
-              </option>
-            );
-          })}
-      </select>
-      <select
-        onChange={onChangeFontSize}
-        style={{ color: 'black' }}
+      <div style={{ display: "grid", placeItems: "center" }}>
 
-      >
-        {fontSizes && fontSizes.map((data) => {
-          return (
-            <option style={{ color: "black" }} value={data}>{data}</option>
-          )
-        })}
-      </select>
-      <div className='style-option'>
-        <div style={{ display: "flex", alignItems: "center", }}><span onClick={changeBold} style={{ background: textFields[selectedTextFieldIndex].bold == "bold" ? "grey" : "none" }} className='bold'><img width="30" height="30" src="https://img.icons8.com/ios/30/bold.png" alt="bold" /></span>
-          <span onClick={changeItalic} style={{ background: textFields[selectedTextFieldIndex].italic == "italic" ? "grey" : "none" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/italic.png" alt="italic" /></span>
-          <span onClick={changeUnderline} style={{ background: textFields[selectedTextFieldIndex].underline == "underline" ? "grey" : "none" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline" /></span>
+        <select
+          style={{ color: 'black', width: "90%", marginTop: "3vh" }}
+          onChange={onChangeFontFamily}
+        >
+          {fontFamilies &&
+            fontFamilies.map((data) => {
+              if (textFields[selectedTextFieldIndex].fontFamily == data) {
+                return (
+                  <option selected value={data} style={{ fontFamily: data, color: 'black' }}>
+                    {data}
+                  </option>
+                );
+              }
+              else {
+                return (
+                  <option value={data} style={{ fontFamily: data, color: 'black' }}>
+                    {data}
+                  </option>
+                );
+              }
+
+            })}
+        </select>
+        <select
+          onChange={onChangeOrientation}
+
+          style={{ color: 'black', width: "90%", margin: "2vh 0" }}>
+          {textOrientation &&
+            textOrientation.map((data) => {
+              if (textFields[selectedTextFieldIndex].textOrientation == data) {
+                return (
+                  <option selected value={data} style={{ color: 'black', textTransform: data }}>
+                    {data}
+                  </option>
+                );
+              }
+              else {
+                return (
+                  <option value={data} style={{ color: 'black', textTransform: data }}>
+                    {data}
+                  </option>
+                );
+              }
+
+            })}
+        </select>
+        <select
+          onChange={onChangeFontSize}
+          style={{ color: 'black', margin: "1vh 0" }}
+
+        >
+          {fontSizes && fontSizes.map((data) => {
+            if (textFields[selectedTextFieldIndex].size == data) {
+              return (
+                <option selected style={{ color: "black" }} value={data}>{data}</option>
+              )
+            }
+            else {
+              return (
+                <option style={{ color: "black" }} value={data}>{data}</option>
+              )
+            }
+
+          })}
+        </select>
+      </div>
+
+      <div style={{ margin: "3vh auto", padding: "2vh 0", border: "1px solid black", width: "90%" }} className='style-option'>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+          <span onClick={changeBold} style={{ background: textFields[selectedTextFieldIndex].bold == "bold" ? "grey" : "none", border: "1px solid black", border: "1px solid black" }} className='bold'><img width="30" height="30" src="https://img.icons8.com/ios/30/bold.png" alt="bold" /></span>
+          <span onClick={changeItalic} style={{ background: textFields[selectedTextFieldIndex].italic == "italic" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/italic.png" alt="italic" /></span>
+          <span onClick={changeUnderline} style={{ background: textFields[selectedTextFieldIndex].underline == "underline" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline" /></span>
         </div>
 
-        <div style={{ marginTop: "2vh", display: "flex", alignItems: "center" }}>
+        <div style={{ marginTop: "2vh", display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
           <input onClick={() => {
             const updatedTextFields = [...textFields];
             updatedTextFields[selectedTextFieldIndex].alignment = "justify";
             setTextFields(updatedTextFields);
-          }} id='align-justify' type='radio' name="content-align" style={{ visibility: "hidden", background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "white" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "none" }} htmlFor="align-justify"><img width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify" /></label>
+          }} id='align-justify' type='radio' name="content-align" style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "white" }} />
+          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "none", border: "1px solid black" }} htmlFor="align-justify"><img width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify" /></label>
           <input onClick={() => {
             const updatedTextFields = [...textFields];
             updatedTextFields[selectedTextFieldIndex].alignment = "center"; setTextFields(updatedTextFields);
-          }} type='radio' name='content-align' id='align-center' style={{ visibility: "hidden", background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none" }} htmlFor='align-center'><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center" /></label>
+          }} type='radio' name='content-align' id='align-center' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} />
+          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-center'><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center" /></label>
           <input onClick={() => {
             const updatedTextFields = [...textFields];
             updatedTextFields[selectedTextFieldIndex].alignment = "left"; setTextFields(updatedTextFields);
-          }} type='radio' name='content-align' id='align-left' style={{ visibility: "hidden", background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "grey" : "none" }} /><label style={{ background: textFields[selectedTextFieldIndex].alignment == "left" ? "grey" : "none" }} htmlFor='align-left'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left" /></label>
+          }} type='radio' name='content-align' id='align-left' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "grey" : "none", border: "1px solid black" }} /><label style={{ background: textFields[selectedTextFieldIndex].alignment == "left" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-left'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left" /></label>
           <input onClick={() => {
             const updatedTextFields = [...textFields];
             updatedTextFields[selectedTextFieldIndex].alignment = "right"; setTextFields(updatedTextFields); console.log(textFields[selectedTextFieldIndex].alignment)
-          }} type='radio' name='content-align' id='align-right' style={{ visibility: "hidden", background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "grey" : "none" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "right" ? "grey" : "none" }} htmlFor='align-right'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right" />
+          }} type='radio' name='content-align' id='align-right' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "grey" : "none", border: "1px solid black" }} />
+          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "right" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-right'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right" />
           </label>
         </div>
       </div>
