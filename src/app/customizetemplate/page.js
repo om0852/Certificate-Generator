@@ -35,7 +35,7 @@ export default function Page() {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        setSelectedImage(id != selectImage ? id : null)
+        setSelectedImage(id != selectImage ? id : selectImage)
     }, [])
     const addFields = () => {
         addTextField();

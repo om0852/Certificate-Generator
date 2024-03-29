@@ -29,7 +29,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
     return (
         <div className="flex flex-col items-center relative" style={{ width: "100%" }}>
 
-
+            {selectedImage ? "" : <div style={{ width: "100%", height: "100vh", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
                 <div
