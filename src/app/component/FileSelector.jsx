@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
-const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage }) => {
+const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, imageFields, setImageFields }) => {
 
     // addFields(addTextField);
     useEffect(() => {
@@ -17,7 +17,13 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
         updatedTextFields[index].y = data.y - draggable.offsetTop;
         setTextFields(updatedTextFields);
     }
-
+    const stopImage = (e, data, index) => {
+        const updatedTextFields = [...imageFields];
+        const draggable = document.getElementsByClassName("draggableImage")
+        updatedTextFields[index].x = data.x - draggable.offsetLeft;
+        updatedTextFields[index].y = data.y - draggable.offsetTop;
+        setImageFields(updatedTextFields);
+    }
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
         updatedTextFields[index].text = event.target.value;
@@ -76,6 +82,16 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                             </Draggable>
                         </div>
                     ))}
+                    {imageFields && imageFields.map((data, index) => {
+                        return (
+                            <Draggable
+                                defaultPosition={{ x: data.x, y: data.y }}
+                                onStop={(e, data1) => { stopImage(e, data1, index) }}
+                                className="draggableImage">
+                                <img style={{ width: data.width, height: data.height }} src={data.src} />
+                            </Draggable>
+                        )
+                    })}
                 </div>
             )
             }
