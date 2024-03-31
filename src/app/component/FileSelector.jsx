@@ -33,65 +33,75 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
     let offsetLeft, offsetTop
 
     return (
-        <div className="flex flex-col items-center relative" style={{ width: "100%" }}>
+        <div className="flex flex-col items-center relative" style={{ width: "100%" }}
+        >
 
-            {selectedImage ? "" : <div style={{ width: "100%", height: "100vh", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
+            {selectedImage ? "" : <div style={{ width: "693px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
-                <div
-                    ref={certificateRef}
+                <div ref={certificateRef}
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
                         width: 900,
                         height: "100vh",
-                        backgroundImage: `url(${selectedImage})`,
                         backgroundSize: 'cover', // or '100%'
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
+                        position: "relative", width: "1280px", height: "720px"
                     }}
                 >
-                    {textFields.map((textField, index) => (
-                        <div>
-                            <Draggable
-                                className="draggable"
-                                key={textField.id}
-                                defaultPosition={{ x: textField.x, y: textField.y }}
-                                onStop={(e, data) => { stop(e, data, index) }}
-                            // onMouseDown={(e) => {
-                            //     offsetLeft=e.clientX-offsetX
-                            //     offsetTop=e.clientY-offsetY
-                            //     document.addEventListener("mousemove",move)
-                            // }
-                            // }
+                    <div>
 
-                            >
+                        <img src={selectedImage} style={{ width: 1000, height: "620px" }} />
+                        {/* <h2 style={{ color: "red", position: "fixed", top: "28px" }}> omsalunke</h2> */}
+                        {textFields.map((textField, index) => (
+                            <div>
+                                <Draggable
+                                    className="draggable"
+                                    key={textField.id}
+                                    defaultPosition={{ x: textField.x, y: textField.y }}
+                                    onStop={(e, data) => { stop(e, data, index) }}
+                                // onMouseDown={(e) => {
+                                //     offsetLeft=e.clientX-offsetX
+                                //     offsetTop=e.clientY-offsetY
+                                //     document.addEventListener("mousemove",move)
+                                // }
+                                // }
 
-                                <textarea
-                                    type="text"
-                                    value={textField.text}
-                                    onChange={(e) => handleTextFieldChange(e, index)}
-                                    className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                    style={{
-                                        left: textField.x, top: textField.y, border: "none", textAlign: textField.alignment, height: "8%", overflow: "hidden", fontFamily: textField.fontFamily, fontSize: parseInt(textField.size),
-                                        fontWeight: textField.bold,
-                                        textDecoration: textField.underline,
-                                        fontStyle: textField.italic
-                                        , textTransform: textField.textOrientation
-                                    }}
-                                ></textarea>
-                            </Draggable>
-                        </div>
-                    ))}
-                    {imageFields && imageFields.map((data, index) => {
-                        return (
-                            <Draggable
-                                defaultPosition={{ x: data.x, y: data.y }}
-                                onStop={(e, data1) => { stopImage(e, data1, index) }}
-                                className="draggableImage">
-                                <img style={{ width: data.width, height: data.height }} src={data.src} />
-                            </Draggable>
-                        )
-                    })}
+                                >
+
+                                    <textarea
+                                        type="text"
+                                        value={textField.text}
+                                        onChange={(e) => handleTextFieldChange(e, index)}
+                                        className="absolute border border-gray-400 bg-transparent text-black p-2"
+                                        style={{
+                                            left: textField.x, top: textField.y, border: "none", textAlign: textField.alignment, height: "8%", overflow: "hidden", fontFamily: textField.fontFamily, fontSize: parseInt(textField.size),
+                                            fontWeight: textField.bold,
+                                            textDecoration: textField.underline,
+                                            fontStyle: textField.italic
+                                            , textTransform: textField.textOrientation,
+                                            color: "red",
+                                            position: "absolute",
+                                            top: 300,
+                                            left: 100,
+
+                                        }}
+                                    ></textarea>
+                                </Draggable>
+                            </div>
+                        ))}
+                        {imageFields && imageFields.map((data, index) => {
+                            return (
+                                <Draggable
+                                    defaultPosition={{ x: data.x, y: data.y }}
+                                    onStop={(e, data1) => { stopImage(e, data1, index) }}
+                                    className="draggableImage">
+                                    <img style={{ width: data.width, height: data.height }} src={data.src} />
+                                </Draggable>
+                            )
+                        })}
+                    </div>
                 </div>
             )
             }
