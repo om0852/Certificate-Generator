@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import addImageIcon from "../../images/addimage.png"
+import ReactToPrint from 'react-to-print';
+
 const Input = ({ placeholder, name, type, handleChange, value, setTextFields }) => (
   <input
     placeholder={placeholder}
@@ -21,7 +23,8 @@ const Sidebar = ({
   selectedTextFieldIndex,
   handleImageChange,
   imageFields,
-  setImageFields
+  setImageFields,
+  certificateRef
 
 }) => {
   const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
@@ -224,13 +227,12 @@ const Sidebar = ({
           <label htmlFor="addImage" style={{ backgroundColor: "red", display: "flex", alignItems: "center", margin: "0vh 2vh", marginTop: "2vh", width: "95%", height: "40px", }}><img style={{ margin: "0 2vh" }} src={addImageIcon.src} width={30} height={30} />Add Image</label>
         </div>
         <button className='rounded' style={{ margin: "1vh auto", width: "90%", height: "40px", background: "red" }} onClick={() => addFields()}>Add Field</button>
-        <button className='rounded'
-          style={{ width: "90%", height: "40px", background: "green" }}
-          onClick={downloadCertificate}
-        >
-          download{' '}
-        </button>
 
+        <ReactToPrint
+          trigger={() => <button className='rounded'
+            style={{ width: "90%", height: "40px", background: "green" }}  >Download</button>}
+          content={() => certificateRef.current}
+        />
 
       </div>
       {textFields &&

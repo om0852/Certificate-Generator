@@ -33,7 +33,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
     let offsetLeft, offsetTop
 
     return (
-        <div className="flex flex-col items-center relative" style={{ width: "100%" }}
+        <div className="flex flex-col items-center relative" style={{ width: "85%" }}
         >
 
             {selectedImage ? "" : <div style={{ width: "693px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
@@ -47,6 +47,8 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                         backgroundSize: 'cover', // or '100%'
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
+                        display: "grid"
+                        , placeItems: "center",
                         position: "relative", width: "1280px", height: "720px"
                     }}
                 >

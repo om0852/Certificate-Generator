@@ -52,28 +52,28 @@ export default function Page() {
     };
 
     const downloadCertificate = async () => {
-        html2canvas(certificateRef.current).then(canvas => {
-            const imgData = canvas.toDataURL('image/jpeg');
-            const pdf = new jsPDF("l", "mm", [693, 600]);
-            const imgWidth = pdf.internal.pageSize.getWidth();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, 'JPEG', 0, 0, 693, 462);
-            const pdfBlob = pdf.output('blob');
+        // html2canvas(certificateRef.current).then(canvas => {
+        //     const imgData = canvas.toDataURL('image/jpeg');
+        //     const pdf = new jsPDF("l", "mm", [693, 600]);
+        //     const imgWidth = pdf.internal.pageSize.getWidth();
+        //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        //     pdf.addImage(imgData, 'JPEG', 0, 0, 693, 462);
+        //     const pdfBlob = pdf.output('blob');
 
-            // Create Blob URL
-            const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+        //     // Create Blob URL
+        //     const pdfBlobUrl = URL.createObjectURL(pdfBlob);
 
-            // Open the PDF in a new tab
-            window.open(pdfBlobUrl, '_blank');
-            // Create download link
-            // const downloadLink = document.createElement('a');
-            // downloadLink.href = URL.createObjectURL(pdfBlob);
-            // downloadLink.download = 'certificate.pdf';
+        //     // Open the PDF in a new tab
+        //     window.open(pdfBlobUrl, '_blank');
+        //     // Create download link
+        //     // const downloadLink = document.createElement('a');
+        //     // downloadLink.href = URL.createObjectURL(pdfBlob);
+        //     // downloadLink.download = 'certificate.pdf';
 
-            // // Trigger the download
-            // downloadLink.click();
-            // // pdf.save("certificate.pdf");
-        })
+        //     // // Trigger the download
+        //     // downloadLink.click();
+        //     // // pdf.save("certificate.pdf");
+        // })
 
 
         // convertHtmlToImage(certificateRef.current.innerHTML)
@@ -93,63 +93,14 @@ export default function Page() {
         // });
         // handleGeneratePdf()
     }
-    async function convertHtmlToImage(htmlContent) {
-        try {
-            const response = await fetch('/api/imgCoverter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ htmlContent }),
-            });
-            console.log("done")
-            if (!response.ok) {
-                throw new Error('Conversion failed');
-            }
 
-            const res = await response.json();
-            console.log(res)
-            return res.screenshot; // Return the base64 encoded image data
-        } catch (error) {
-            console.error('Conversion failed:', error);
-            // Handle the error
-        }
-    }
-    // Your frontend code (e.g., in a React component)
-    // async function convertHtmlToImage(htmlContent) {
-    //     const response = await fetch('/api/imgCoverter', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ htmlContent }),
-    //     });
-    //     // const req = response.json()
-    //     console.log(response)
-    //     // if (!response.ok) {
-    //     //     throw new Error('Conversion failed');
-    //     // }
 
-    //     // Assuming the response is an image, you can display it using <img> tag
-    //     const blob = await response.blob();
-    //     const imageUrl = URL.createObjectURL(blob);
-    //     // Use `imageUrl` to display the converted image
-    // }
-
-    const handleGeneratePdf = async () => {
-        const doc = new jsPDF({
-            format: 'a4',
-            unit: 'px',
-        });
-
-        // Adding the fonts.
-
-        doc.html(certificateRef.current, {
-            async callback(doc) {
-                await doc.save('document');
-            },
-        });
-    };
+    // doc.html(certificateRef.current, {
+    //     async callback(doc) {
+    //         await doc.save('document');
+    //     },
+    // });
+    // };
     const addTextField = () => {
         const data = { id: (textFields.length + 1), x: 300, y: 150, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none" }
         setTextFields(prevTextFields => [
@@ -165,13 +116,13 @@ export default function Page() {
     return (
         <>
 
-            <div className="flex" style={{ width: "100%", height: "100vh", alignItems: "center" }}>
+            <div className="flex" style={{
+                width: "100%", height: "100vh", alignItems: "center", overflow: "hidden", scrollbarWidth: "none",
+                scrollBehavior: "smooth"
+            }}>
                 {/* <!-- Sidebar (Optional) --> */}
-                <ReactToPrint
-                    trigger={() => <button className="generate" >Print this out!</button>}
-                    content={() => certificateRef.current}
-                />
-                <Sidebar setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} />
+
+                <Sidebar certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} />
 
                 <FileSelector setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} />
             </div>
