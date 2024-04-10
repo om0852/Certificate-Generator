@@ -13,6 +13,7 @@ const Input = ({ placeholder, name, type, handleChange, value, setTextFields }) 
   />
 );
 
+
 const Sidebar = ({
   addFields,
   handleTextFieldChange,
@@ -28,6 +29,18 @@ const Sidebar = ({
 
 }) => {
   const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
+  const [styleDropdown, setStyleDropdown] = useState(false)
+  const [addedComponent, setAddedComponent] = useState(false)
+  const [addedImageComponent, setAddedImageComponent] = useState(false)
+  const handleStyleDropdown = () => {
+    setStyleDropdown(!styleDropdown);
+  }
+  const handleAddedComponent = () => {
+    setAddedComponent(!addedComponent);
+  }
+  const handleImageAddedComponent = () => {
+    setAddedImageComponent(!addedImageComponent);
+  }
 
   const fontFamilies = [
     'Arial',
@@ -235,176 +248,191 @@ const Sidebar = ({
         />
 
       </div>
-      {textFields &&
-        textFields.map((data, index) => {
+      <div onClick={handleAddedComponent} style={{ color: "black", width: "90%", margin: "1vh auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: addedComponent ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>TextFields</div>
+      </div>
+      <div style={{ display: addedComponent ? "none" : "block" }}>
+        {textFields &&
+          textFields.map((data, index) => {
+            return (
+              <div style={{ display: 'flex', alignItems: "center" }}>
+                <svg onClick={() => {
+                  const updatedImageField = [...textFields];
+                  if (updatedImageField.length > 1) {
+                    updatedImageField.splice(index, 1)
+                    setTextFields(updatedImageField)
+                  }
+                  else {
+                    alert("1 field mantatory")
+                  }
+
+                }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
+                  <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
+                </svg>
+                {/* Apply selected font family to the selected text field */}
+                <input
+                  id={data.id}
+                  value={data.text}
+                  onChange={(e) => handleTextFieldChange(e, index)}
+                  placeholder="enter some text"
+                  style={{
+                    width: '90%',
+                    height: "30px",
+                    borderRadius: ".3vh",
+                    padding: "2vh",
+                    color: 'black',
+                    margin: '2vh auto',
+                    marginLeft: '1vh',
+                    fontFamily: data.fontFamily
+                    , fontSize: "15px",
+                    outline: "none"
+                  }}
+                />
+                {selectedTextFieldIndex == index ? <input
+                  name="inputfield"
+                  checked
+                  type="radio"
+                  onChange={() => handleRadioChange(index)}
+                /> : <input
+                  name="inputfield"
+                  type="radio"
+                  onChange={() => handleRadioChange(index)}
+                />}
+
+              </div>
+            );
+          })}
+      </div>
+      {imageFields && <div onClick={handleImageAddedComponent} style={{ color: "black", width: "90%", margin: "1vh auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: addedImageComponent ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>Images</div>
+      </div>}
+      <div style={{ display: addedImageComponent ? "none" : "block" }}>
+
+        {imageFields && imageFields.map((data, index) => {
           return (
-            <div style={{ display: 'flex', alignItems: "center" }}>
-              <svg onClick={() => {
-                const updatedImageField = [...textFields];
-                if (updatedImageField.length > 1) {
+            <>
+              <div style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
+
+                <label style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
+                <svg onClick={() => {
+                  const updatedImageField = [...imageFields];
                   updatedImageField.splice(index, 1)
-                  setTextFields(updatedImageField)
+                  setImageFields(updatedImageField)
+
+                }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
+                  <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
+                </svg>
+              </div>
+
+            </>
+          )
+        })}
+      </div>
+      {/* Dropdown menu to select font family */}
+      <div onClick={handleStyleDropdown} style={{ color: "black", width: "90%", margin: "0 auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: styleDropdown ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>style</div>
+      </div>
+      <div style={{ display: styleDropdown ? "none" : "block" }}>
+
+        <div style={{ display: "grid", placeItems: "center" }}>
+
+          <select
+            style={{ color: 'black', width: "90%", marginTop: "3vh" }}
+            onChange={onChangeFontFamily}
+          >
+            {fontFamilies &&
+              fontFamilies.map((data) => {
+                if (textFields[selectedTextFieldIndex].fontFamily == data) {
+                  return (
+                    <option selected value={data} style={{ fontFamily: data, color: 'black' }}>
+                      {data}
+                    </option>
+                  );
                 }
                 else {
-                  alert("1 field mantatory")
+                  return (
+                    <option value={data} style={{ fontFamily: data, color: 'black' }}>
+                      {data}
+                    </option>
+                  );
                 }
 
-              }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-                <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
-              </svg>
-              {/* Apply selected font family to the selected text field */}
-              <input
-                id={data.id}
-                value={data.text}
-                onChange={(e) => handleTextFieldChange(e, index)}
-                placeholder="enter some text"
-                style={{
-                  width: '90%',
-                  height: "30px",
-                  borderRadius: ".3vh",
-                  padding: "2vh",
-                  color: 'black',
-                  margin: '2vh auto',
-                  marginLeft: '1vh',
-                  fontFamily: data.fontFamily
-                  , fontSize: "15px",
-                  outline: "none"
-                }}
-              />
-              {selectedTextFieldIndex == index ? <input
-                name="inputfield"
-                checked
-                type="radio"
-                onChange={() => handleRadioChange(index)}
-              /> : <input
-                name="inputfield"
-                type="radio"
-                onChange={() => handleRadioChange(index)}
-              />}
+              })}
+          </select>
+          <select
+            onChange={onChangeOrientation}
 
-            </div>
-          );
-        })}
-      {imageFields && imageFields.map((data, index) => {
-        return (
-          <>
-            <div style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
+            style={{ color: 'black', width: "90%", margin: "2vh 0" }}>
+            {textOrientation &&
+              textOrientation.map((data) => {
+                if (textFields[selectedTextFieldIndex].textOrientation == data) {
+                  return (
+                    <option selected value={data} style={{ color: 'black', textTransform: data }}>
+                      {data}
+                    </option>
+                  );
+                }
+                else {
+                  return (
+                    <option value={data} style={{ color: 'black', textTransform: data }}>
+                      {data}
+                    </option>
+                  );
+                }
 
-              <label style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
-              <svg onClick={() => {
-                const updatedImageField = [...imageFields];
-                updatedImageField.splice(index, 1)
-                setImageFields(updatedImageField)
+              })}
+          </select>
+          <select
+            onChange={onChangeFontSize}
+            style={{ color: 'black', margin: "1vh 0" }}
 
-              }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-                <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
-              </svg>
-            </div>
-
-          </>
-        )
-      })}
-      {/* Dropdown menu to select font family */}
-      <div style={{ display: "grid", placeItems: "center" }}>
-
-        <select
-          style={{ color: 'black', width: "90%", marginTop: "3vh" }}
-          onChange={onChangeFontFamily}
-        >
-          {fontFamilies &&
-            fontFamilies.map((data) => {
-              if (textFields[selectedTextFieldIndex].fontFamily == data) {
+          >
+            {fontSizes && fontSizes.map((data) => {
+              if (textFields[selectedTextFieldIndex].size == data) {
                 return (
-                  <option selected value={data} style={{ fontFamily: data, color: 'black' }}>
-                    {data}
-                  </option>
-                );
+                  <option selected style={{ color: "black" }} value={data}>{data}</option>
+                )
               }
               else {
                 return (
-                  <option value={data} style={{ fontFamily: data, color: 'black' }}>
-                    {data}
-                  </option>
-                );
+                  <option style={{ color: "black" }} value={data}>{data}</option>
+                )
               }
 
             })}
-        </select>
-        <select
-          onChange={onChangeOrientation}
-
-          style={{ color: 'black', width: "90%", margin: "2vh 0" }}>
-          {textOrientation &&
-            textOrientation.map((data) => {
-              if (textFields[selectedTextFieldIndex].textOrientation == data) {
-                return (
-                  <option selected value={data} style={{ color: 'black', textTransform: data }}>
-                    {data}
-                  </option>
-                );
-              }
-              else {
-                return (
-                  <option value={data} style={{ color: 'black', textTransform: data }}>
-                    {data}
-                  </option>
-                );
-              }
-
-            })}
-        </select>
-        <select
-          onChange={onChangeFontSize}
-          style={{ color: 'black', margin: "1vh 0" }}
-
-        >
-          {fontSizes && fontSizes.map((data) => {
-            if (textFields[selectedTextFieldIndex].size == data) {
-              return (
-                <option selected style={{ color: "black" }} value={data}>{data}</option>
-              )
-            }
-            else {
-              return (
-                <option style={{ color: "black" }} value={data}>{data}</option>
-              )
-            }
-
-          })}
-        </select>
-      </div>
-
-      <div style={{ margin: "3vh auto", padding: "2vh 0", border: "1px solid black", width: "90%" }} className='style-option'>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-          <span onClick={changeBold} style={{ background: textFields[selectedTextFieldIndex].bold == "bold" ? "grey" : "none", border: "1px solid black", border: "1px solid black" }} className='bold'><img width="30" height="30" src="https://img.icons8.com/ios/30/bold.png" alt="bold" /></span>
-          <span onClick={changeItalic} style={{ background: textFields[selectedTextFieldIndex].italic == "italic" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/italic.png" alt="italic" /></span>
-          <span onClick={changeUnderline} style={{ background: textFields[selectedTextFieldIndex].underline == "underline" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline" /></span>
+          </select>
         </div>
 
-        <div style={{ marginTop: "2vh", display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-          <input onClick={() => {
-            const updatedTextFields = [...textFields];
-            updatedTextFields[selectedTextFieldIndex].alignment = "justify";
-            setTextFields(updatedTextFields);
-          }} id='align-justify' type='radio' name="content-align" style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "white" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "none", border: "1px solid black" }} htmlFor="align-justify"><img width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify" /></label>
-          <input onClick={() => {
-            const updatedTextFields = [...textFields];
-            updatedTextFields[selectedTextFieldIndex].alignment = "center"; setTextFields(updatedTextFields);
-          }} type='radio' name='content-align' id='align-center' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-center'><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center" /></label>
-          <input onClick={() => {
-            const updatedTextFields = [...textFields];
-            updatedTextFields[selectedTextFieldIndex].alignment = "left"; setTextFields(updatedTextFields);
-          }} type='radio' name='content-align' id='align-left' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "grey" : "none", border: "1px solid black" }} /><label style={{ background: textFields[selectedTextFieldIndex].alignment == "left" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-left'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left" /></label>
-          <input onClick={() => {
-            const updatedTextFields = [...textFields];
-            updatedTextFields[selectedTextFieldIndex].alignment = "right"; setTextFields(updatedTextFields); console.log(textFields[selectedTextFieldIndex].alignment)
-          }} type='radio' name='content-align' id='align-right' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "grey" : "none", border: "1px solid black" }} />
-          <label style={{ background: textFields[selectedTextFieldIndex].alignment == "right" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-right'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right" />
-          </label>
+        <div style={{ margin: "3vh auto", padding: "2vh 0", border: "1px solid black", width: "90%" }} className='style-option'>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+            <span onClick={changeBold} style={{ background: textFields[selectedTextFieldIndex].bold == "bold" ? "grey" : "none", border: "1px solid black", border: "1px solid black" }} className='bold'><img width="30" height="30" src="https://img.icons8.com/ios/30/bold.png" alt="bold" /></span>
+            <span onClick={changeItalic} style={{ background: textFields[selectedTextFieldIndex].italic == "italic" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/italic.png" alt="italic" /></span>
+            <span onClick={changeUnderline} style={{ background: textFields[selectedTextFieldIndex].underline == "underline" ? "grey" : "none", border: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/underline.png" alt="underline" /></span>
+          </div>
+
+          <div style={{ marginTop: "2vh", display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+            <input onClick={() => {
+              const updatedTextFields = [...textFields];
+              updatedTextFields[selectedTextFieldIndex].alignment = "justify";
+              setTextFields(updatedTextFields);
+            }} id='align-justify' type='radio' name="content-align" style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "white" }} />
+            <label style={{ background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "none", border: "1px solid black" }} htmlFor="align-justify"><img width="30" height="30" src="https://img.icons8.com/ios/30/align-justify.png" alt="align-justify" /></label>
+            <input onClick={() => {
+              const updatedTextFields = [...textFields];
+              updatedTextFields[selectedTextFieldIndex].alignment = "center"; setTextFields(updatedTextFields);
+            }} type='radio' name='content-align' id='align-center' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} />
+            <label style={{ background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-center'><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-center.png" alt="align-center" /></label>
+            <input onClick={() => {
+              const updatedTextFields = [...textFields];
+              updatedTextFields[selectedTextFieldIndex].alignment = "left"; setTextFields(updatedTextFields);
+            }} type='radio' name='content-align' id='align-left' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "grey" : "none", border: "1px solid black" }} /><label style={{ background: textFields[selectedTextFieldIndex].alignment == "left" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-left'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-left.png" alt="align-left" /></label>
+            <input onClick={() => {
+              const updatedTextFields = [...textFields];
+              updatedTextFields[selectedTextFieldIndex].alignment = "right"; setTextFields(updatedTextFields); console.log(textFields[selectedTextFieldIndex].alignment)
+            }} type='radio' name='content-align' id='align-right' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "grey" : "none", border: "1px solid black" }} />
+            <label style={{ background: textFields[selectedTextFieldIndex].alignment == "right" ? "grey" : "none", border: "1px solid black" }} htmlFor='align-right'><img width="30" height="30" src="https://img.icons8.com/ios/30/align-right.png" alt="align-right" />
+            </label>
+          </div>
         </div>
       </div>
+
     </div>
   );
 };

@@ -96,10 +96,17 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                         {imageFields && imageFields.map((data, index) => {
                             return (
                                 <Draggable
+                                    onResize={() => { alert("welcome") }}
                                     defaultPosition={{ x: data.x, y: data.y }}
                                     onStop={(e, data1) => { stopImage(e, data1, index) }}
                                     className="draggableImage">
-                                    <img style={{ width: data.width, height: data.height }} src={data.src} />
+                                    <div onResize={() => { alert("welcome") }} style={{ width: data.width, height: data.height, overflow: "auto", resize: "both", position: "absolute", top: data.y, left: data.x }}>
+
+                                        <img onResize={() => { alert("welcome") }} style={{
+                                            width: "100%", height: "100%",
+
+                                        }} src={data.src} />
+                                    </div>
                                 </Draggable>
                             )
                         })}

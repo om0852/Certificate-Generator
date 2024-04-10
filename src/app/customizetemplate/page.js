@@ -31,7 +31,7 @@ export default function Page() {
                 const img = new Image();
                 img.src = reader.result;
                 img.onload = () => {
-                    setImageDimensions({ width: img.width, height: img.height });
+                    setImageDimensions({ width: img.width, height: img.height, x: 0, y: 0 });
                 };
             };
             reader.readAsDataURL(file);
