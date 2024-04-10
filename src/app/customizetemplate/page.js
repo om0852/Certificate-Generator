@@ -116,7 +116,7 @@ export default function Page() {
     return (
         <>
 
-            <div className="flex" style={{
+            <div onContextMenu={(e) => { e.preventDefault(); }} className="flex" style={{
                 width: "100%", height: "100vh", alignItems: "center", overflow: "hidden", scrollbarWidth: "none",
                 scrollBehavior: "smooth"
             }}>
@@ -125,7 +125,7 @@ export default function Page() {
                 <Sidebar certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} />
 
                 <FileSelector setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} />
-            </div>
+            </div >
 
         </>
     );

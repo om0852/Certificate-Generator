@@ -199,7 +199,7 @@ const Sidebar = ({
         const imageSrc = reader.result;
 
         // Push new image object to updatedImageField
-        updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100 });
+        updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100 });
 
         // Update state with updatedImageField
         setImageFields(updatedImageField);
