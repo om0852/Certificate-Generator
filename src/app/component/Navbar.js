@@ -2,6 +2,7 @@
 import { useRouter } from "next/router"
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Navbar() {
     function chooseTemplate() {
