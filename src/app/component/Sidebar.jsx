@@ -34,6 +34,7 @@ const Sidebar = ({
   const [addedImageComponent, setAddedImageComponent] = useState(false)
   const [selectedImageData, setSelectedImageData] = useState(null);
   const [tabGroup, setTabGroup] = useState(true)
+  const [tabGroup1, setTabGroup1] = useState(true)
   const handleStyleDropdown = () => {
     setStyleDropdown(!styleDropdown);
   }
@@ -268,18 +269,6 @@ const Sidebar = ({
           <li class={tabGroup ? "tab" : "tab active"} onClick={(e) => setTabGroup(false)}><a href="#login">Images</a></li>
         </ul>
 
-        <div class="tab-content">
-          <div id="signup">
-
-
-          </div>
-
-          <div id="login">
-
-          </div>
-
-        </div>
-
       </div>
       <div style={{ display: tabGroup != true ? "none" : "block" }}>
         {textFields &&
@@ -372,10 +361,14 @@ const Sidebar = ({
           )
         })}
       </div>
-      {/* Dropdown menu to select font family */}
-      <div onClick={handleStyleDropdown} style={{ color: "black", width: "90%", margin: "0 auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: styleDropdown ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>style</div>
+      <div>
+
+        <ul class="tab-group">
+          <li class={tabGroup1 ? "tab active" : "tab"} onClick={(e) => setTabGroup1(true)}><a href="#signup">Styling</a></li>
+          <li class={tabGroup1 ? "tab" : "tab active"} onClick={(e) => setTabGroup1(false)}><a href="#login">Transform</a></li>
+        </ul>
       </div>
-      <div style={{ display: styleDropdown ? "none" : "block" }}>
+      <div style={{ display: tabGroup1 != true ? "none" : "block" }}>
 
         <div style={{ display: "grid", placeItems: "center" }}>
 
