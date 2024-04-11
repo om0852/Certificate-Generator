@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
+
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf";
 import "./component.css"
@@ -229,8 +230,8 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
 
     const stop = (e, data, index) => {
         const updatedTextFields = [...textFields];
-        updatedTextFields[index].x = e.offsetX;
-        updatedTextFields[index].y = e.offsetY;
+        updatedTextFields[index].x = e.clientX;
+        updatedTextFields[index].y = e.clientY;
         setTextFields(updatedTextFields);
     }
     const stopImage = (e, data, index) => {
@@ -238,8 +239,8 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
         // const rect = e.getBoundingClientRect();
 
         console.log(e)
-        updatedTextFields[index].x = e.offsetX;
-        updatedTextFields[index].y = e.offsetY;
+        updatedTextFields[index].x = e.clientX;
+        updatedTextFields[index].y = e.clientY;
         setImageFields(updatedTextFields);
     }
     const handleTextFieldChange = (event, index) => {
@@ -261,7 +262,8 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
                         width: 900,
-                        height: "100vh",
+                        height: "100%",
+                        overflow: "hidden",
                         backgroundSize: 'cover', // or '100%'
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
@@ -313,7 +315,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                                 </Draggable>
                             </div>
                         ))}
-                        {menuPosition && <div style={{ cursor: "pointer", zIndex: 100, border: "1px solid black", width: "25vh", height: "40vh", background: "white", boxShadow: " 4px 6px 22px 0px rgba(0,0,0,0.75)", color: "black", position: "absolute", top: (menuPosition.y + 100), left: (menuPosition.x + 250) }}>
+                        {menuPosition && <div style={{ cursor: "pointer", zIndex: 100, border: "1px solid black", width: "25vh", height: "40vh", background: "white", boxShadow: " 4px 6px 22px 0px rgba(0,0,0,0.75)", color: "black", position: "absolute", top: (menuPosition.y), left: (menuPosition.x - 300) }}>
                             <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", }}><img width="30" height="30" src={bringToForward.src} />Bring Forward</div>
                             <div onClick={handleBringForward} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/bring-forward.png" alt="bring-forward" />Bring To Front</div>
                             <div onClick={handleSendBack} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img width="30" height="30" src={sendBack.src} />sent Backward</div>

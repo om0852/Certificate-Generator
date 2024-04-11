@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.4.2",
     "child_process": "^1.0.2",
     "git": "^0.1.5",
     "html2canvas": "^1.4.1",
