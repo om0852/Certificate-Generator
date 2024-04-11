@@ -24,3 +24,9 @@
     margin: 2vh auto;
     background-color: aliceblue;
 }
+#resize-component:hover{
+resize: both;
+}
+#resize-component{
+    resize: none;
+}
