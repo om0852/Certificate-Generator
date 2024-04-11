@@ -117,7 +117,7 @@ export default function Page() {
         <>
 
             <div onContextMenu={(e) => { e.preventDefault(); }} className="flex" style={{
-                width: "100%", height: "100vh", alignItems: "center", overflow: "hidden", scrollbarWidth: "none",
+                width: "100%", height: "100vh", scrollbarWidth: "none",
                 scrollBehavior: "smooth"
             }}>
                 {/* <!-- Sidebar (Optional) --> */}

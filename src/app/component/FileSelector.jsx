@@ -272,6 +272,8 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                         position: "relative", height: "720px"
                     }}
                 >
+
+
                     <div>
                         <img src={selectedImage} style={{ width: 1000, height: "620px" }} />
 

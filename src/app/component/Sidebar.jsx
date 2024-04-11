@@ -33,6 +33,7 @@ const Sidebar = ({
   const [addedComponent, setAddedComponent] = useState(false)
   const [addedImageComponent, setAddedImageComponent] = useState(false)
   const [selectedImageData, setSelectedImageData] = useState(null);
+  const [tabGroup, setTabGroup] = useState(true)
   const handleStyleDropdown = () => {
     setStyleDropdown(!styleDropdown);
   }
@@ -224,7 +225,10 @@ const Sidebar = ({
   // Function to handle radio button change
 
   return (
-    <div className="bg-blue-700" style={{ width: '40vh', height: '100vh', background: "rgb(86 17 151)" }}>
+    <div className="bg-blue-700" style={{
+      overflowY: "scroll", scrollbarWidth: "none",
+      scrollBehavior: "smooth", width: '40vh', height: '100vh', background: "rgb(86 17 151)"
+    }}>
 
       <div style={{ width: "100%", margin: "1vh 0", display: "grid", placeItems: "center" }}>
         <input
@@ -257,9 +261,27 @@ const Sidebar = ({
         />
 
       </div>
-      <div onClick={handleAddedComponent} style={{ color: "black", width: "90%", margin: "1vh auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: addedComponent ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>TextFields</div>
+      <div>
+
+        <ul class="tab-group">
+          <li class={tabGroup ? "tab active" : "tab"} onClick={(e) => setTabGroup(true)}><a href="#signup">TextFields</a></li>
+          <li class={tabGroup ? "tab" : "tab active"} onClick={(e) => setTabGroup(false)}><a href="#login">Images</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="signup">
+
+
+          </div>
+
+          <div id="login">
+
+          </div>
+
+        </div>
+
       </div>
-      <div style={{ display: addedComponent ? "none" : "block" }}>
+      <div style={{ display: tabGroup != true ? "none" : "block" }}>
         {textFields &&
           textFields.map((data, index) => {
             return (
@@ -311,9 +333,7 @@ const Sidebar = ({
             );
           })}
       </div>
-      {imageFields && <div onClick={handleImageAddedComponent} style={{ color: "black", width: "90%", margin: "1vh auto", background: "white", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img style={{ rotate: addedImageComponent ? "270deg" : "0deg" }} width="20" height="20" src="https://img.icons8.com/ios/50/expand-arrow--v1.png" alt="expand-arrow--v1" /><div>Images</div>
-      </div>}
-      <div style={{ display: addedImageComponent ? "none" : "block" }}>
+      <div style={{ display: tabGroup == true ? "none" : "block" }}>
         {selectedImageData && <div style={{ zIndex: 1000, display: "block", width: "20vh", height: "20vh", background: "white", position: "absolute", top: selectedImageData.y, left: selectedImageData.x }}> <span onClick={() => {
           const updatedImageField = [...imageFields];
           updatedImageField.splice(selectedImageData.index, 1)
