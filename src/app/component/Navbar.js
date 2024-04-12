@@ -2,6 +2,7 @@
 import { useRouter } from "next/router"
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 import { useState, useEffect } from 'react';
+import Image from 'next/image'
 import Link from 'next/link';
 
 export default function Navbar() {
@@ -77,64 +78,65 @@ export default function Navbar() {
                             <li>
                                 <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                             </li>
+
+                            <li>
+
+                                <div className='sm:flex hidden'>
+                                    {session?.user ? (<div className='flex gap-3 md:gap-5'>
+
+                                        <button type="button" onclick={signOut} className='outline_btn'>
+                                            Sign Out
+                                        </button>
+                                        <Link href="/profile">
+                                            <Image src={session?.user.image} alt="Profile" width={36} height={36} className='rounded-full' />
+                                        </Link>
+                                    </div>) : (
+                                        <>
+                                            {providers && Object.values(providers).map((provider) => (
+                                                <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
+                                                    Sign in
+                                                </button>
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+                                <div className='sm:hidden flex relative'>
+                                    {session?.user ? (
+                                        <div className='flex'>
+                                            <Image src={session?.user.image} alt="Profile" width={36} height={36} className='rounded-full' onClick={() => settoggleDropdown((prev) => !prev)} />
+                                            {toggleDropdown && (<div className='dropdown'>
+                                                <Link href="/profile" className='dropdown_link' onClick={() => {
+                                                    settoggleDropdown(false)
+                                                }}>
+                                                    My Profile
+                                                </Link>
+
+                                                <button
+                                                    type='button'
+                                                    onClick={() => {
+                                                        settoggleDropdown(false);
+                                                        signOut();
+                                                    }}
+                                                    className='mt-5 w-full black_btn'
+                                                >
+                                                    Sign Out
+                                                </button>
+                                            </div>)}
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {providers && Object.values(providers).map((provider) => (
+                                                <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
+                                                    Sign in
+                                                </button>
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+
+                            </li>
                         </ul>
                     </div>
-                </div>
-                <div className='sm:flex hidden'>
-                    {session?.user ? (<div className='flex gap-3 md:gap-5'>
-
-                        <button type="button" onclick={signOut} className='outline_btn'>
-                            Sign Out
-                        </button>
-                        <Link href="/profile">
-                            <Image src={session?.user.image} alt="Profile" width={36} height={36} className='rounded-full' />
-                        </Link>
-                    </div>) : (
-                        <>
-                            {providers && Object.values(providers).map((provider) => (
-                                <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
-                                    Sign in
-                                </button>
-                            ))}
-                        </>
-                    )}
-                </div>
-                <div className='sm:hidden flex relative'>
-                    {session?.user ? (
-                        <div className='flex'>
-                            <Image src={session?.user.image} alt="Profile" width={36} height={36} className='rounded-full' onClick={() => settoggleDropdown((prev) => !prev)} />
-                            {toggleDropdown && (<div className='dropdown'>
-                                <Link href="/profile" className='dropdown_link' onClick={() => {
-                                    settoggleDropdown(false)
-                                }}>
-                                    My Profile
-                                </Link>
-                                <Link href="/create-prompt" className='dropdown_link' onClick={() => {
-                                    settoggleDropdown(false)
-                                }}>
-                                    Create Prompt
-                                </Link>
-                                <button
-                                    type='button'
-                                    onClick={() => {
-                                        settoggleDropdown(false);
-                                        signOut();
-                                    }}
-                                    className='mt-5 w-full black_btn'
-                                >
-                                    Sign Out
-                                </button>
-                            </div>)}
-                        </div>
-                    ) : (
-                        <>
-                            {providers && Object.values(providers).map((provider) => (
-                                <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
-                                    Sign in
-                                </button>
-                            ))}
-                        </>
-                    )}
                 </div>
 
 
