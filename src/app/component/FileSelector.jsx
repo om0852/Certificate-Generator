@@ -7,7 +7,7 @@ import "./component.css"
 import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
-const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, imageFields, setImageFields, handleRadioChange }) => {
+const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, imageFields, setImageFields, handleRadioChange, imageBorder, setImageBorder }) => {
     const [menuPosition, setMenuPosition] = useState(null)
     const [selectImageLayer, setSelectImageLayer] = useState(null)
     // addFields(addTextField);
@@ -272,8 +272,6 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                         position: "relative", height: "720px"
                     }}
                 >
-
-
                     <div>
                         <img src={selectedImage} style={{ width: 1000, height: "620px" }} />
 
@@ -329,7 +327,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                                     defaultPosition={{ x: 100, y: 100 }}
                                     onStop={(e, data1) => { stopImage(e, data1, index) }}
                                     className="draggableImage">
-                                    <div id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width, height: data.height, overflow: "auto", position: "absolute", top: 100, left: 100 }}>
+                                    <div onClick={(e) => { if (imageBorder == null) { setImageBorder(index) } else { setImageBorder(null) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width, height: data.height, overflow: "auto", position: "absolute", top: 100, left: 100, border: imageBorder != null ? "1px solid blue" : "none" }}>
 
                                         <img onClick={(e) => { setSelectImageLayer(index); setMenuPosition(null); }} style={{
                                             width: "100%", height: "100%",

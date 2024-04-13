@@ -1,77 +1,32 @@
-
-body{
-height: 100vh;
-overflow: hidden;
-
-}
 .sidebar-template{
-    background-color: red;
-    width: 30%;
-    position: absolute;
-    right: 0;
-    display: grid;
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 100vh;
+  background-color: red;
+  width: 30%;
+  position: absolute;
+  right: 0;
+  display: grid;
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 100vh;
 }
 .card{
-    width: 90%;
-    height: 100%;
-    margin: 2vh auto;
-    
+  width: 90%;
+  height: 100%;
+  margin: 2vh auto;
+  
 }
 /* sideremplate */
 .create-card{
-    width: 90%;
-    height: 25vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 2vh auto;
-    background-color: aliceblue;
+  width: 90%;
+  height: 25vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2vh auto;
+  background-color: aliceblue;
 }
 #resize-component:hover{
 resize: both;
 }
 #resize-component{
-    resize: none;
+  resize: none;
 }
-
-
-
-
-.tab-group {
-  list-style: none;
-  padding: 0;
-  display:flex;
-  align-items: center;
-  margin: 0 0 40px 0;
-}
-.tab-group:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.tab-group li{
-    height: 4vh;
-    width: 50%;
-}
-.tab-group li a {
-    width: 100%;
-  display: block;
-  text-decoration: none;
-  padding: 15px;
-  background: rgba(160, 179, 176, 0.25);
-  color: #a0b3b0;
-  float: left;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.5s ease;
-}
-
-.tab-group .active a {
-  background: #1ab188;
-  color: #ffffff;
-}
-
-
