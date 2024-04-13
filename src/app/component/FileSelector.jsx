@@ -7,7 +7,7 @@ import "./component.css"
 import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
-const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, imageFields, setImageFields, handleRadioChange, imageBorder, setImageBorder }) => {
+const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
     const [menuPosition, setMenuPosition] = useState(null)
     const [selectImageLayer, setSelectImageLayer] = useState(null)
     // addFields(addTextField);
@@ -15,7 +15,7 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
         console.log(textFields);
     }, [textFields])
     const handleBringToForward = () => {
-        const updatedImages = [...imageFields];
+        const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
         let values1 = [0];
         let values2 = [0];
@@ -63,16 +63,16 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
             if (maxValue < 1) {
 
                 updatedImages[selectImageLayer].z_index = 1;
-                setImageFields(updatedImages)
+                setTextFields(updatedImages)
             }
             updatedImages[selectImageLayer].z_index = maxValue + 1;
-            setImageFields(updatedImages)
+            setTextFields(updatedImages)
 
         }
 
     }
     const handleSendToBack = () => {
-        const updatedImages = [...imageFields];
+        const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
         let values1 = [0];
         let values2 = [0];
@@ -119,12 +119,12 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
 
 
             updatedImages[selectImageLayer].z_index = maxValue - 1;
-            setImageFields(updatedImages)
+            setTextFields(updatedImages)
         }
 
     }
     const handleSendBack = () => {
-        const updatedImages = [...imageFields];
+        const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
         console.log(textFields)
         let values1 = [0];
@@ -171,12 +171,12 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
         else {
             if (maxValue < (updatedImages[selectImageLayer].z_index + 1)) {
                 updatedImages[selectImageLayer].z_index--;
-                setImageFields(updatedImages)
+                setTextFields(updatedImages)
             }
         }
     }
     const handleBringForward = () => {
-        const updatedImages = [...imageFields];
+        const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
         let values1 = [0];
         let values2 = [0];
@@ -223,25 +223,25 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
             // Use Math.max() to get the maximum value
             if (maxValue > (updatedImages[selectImageLayer].z_index - 1)) {
                 updatedImages[selectImageLayer].z_index++;
-                setImageFields(updatedImages)
+                setTextFields(updatedImages)
             }
         }
     }
 
     const stop = (e, data, index) => {
         const updatedTextFields = [...textFields];
-        updatedTextFields[index].x = e.clientX;
-        updatedTextFields[index].y = e.clientY;
+        updatedTextFields[index].x = data.lastX;
+        updatedTextFields[index].y = data.lastY;
         setTextFields(updatedTextFields);
     }
-    const stopImage = (e, data, index) => {
-        const updatedTextFields = [...imageFields];
+    const stopImage = (e, ui, index) => {
+        const updatedTextFields = [...textFields];
         // const rect = e.getBoundingClientRect();
 
         console.log(e)
-        updatedTextFields[index].x = e.clientX;
-        updatedTextFields[index].y = e.clientY;
-        setImageFields(updatedTextFields);
+        updatedTextFields[index].x = ui.lastX;
+        updatedTextFields[index].y = ui.lastY;
+        setTextFields(updatedTextFields);
     }
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
@@ -275,68 +275,70 @@ const ImageBanner = ({ addFields, textFields, setTextFields, certificateRef, sel
                     <div>
                         <img src={selectedImage} style={{ width: 1000, height: "620px" }} />
 
-                        {textFields.map((textField, index) => (
-                            <div
-                            >
-                                <Draggable
-                                    className="draggable"
-                                    key={textField.id}
-                                    defaultPosition={{ x: textField.x, y: textField.y }}
-                                    onStop={(e, data) => { stop(e, data, index) }}
-                                // onMouseDown={(e) => {
-                                //     offsetLeft=e.clientX-offsetX
-                                //     offsetTop=e.clientY-offsetY
-                                //     document.addEventListener("mousemove",move)
-                                // }
-                                // }
+                        {textFields.map((data, index) => {
+                            {
+                                if (data.type == "textfield") {
+                                    return (
+                                        <div
+                                        >
+                                            <Draggable
+                                                className="draggable"
+                                                key={data.id}
+                                                defaultPosition={{ x: data.x, y: data.y }}
+                                                onDrag={(e, ui) => { stop(e, ui, index) }}
+                                            >
 
-                                >
+                                                <textarea
+                                                    onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} onContextMenu={(e) => { setSelectImageLayer(-(index + 1)); setMenuPosition(data); }}
+                                                    id='resize-component'
+                                                    type="text"
+                                                    value={data.text}
+                                                    onChange={(e) => handleTextFieldChange(e, index)}
+                                                    className="absolute border border-gray-400 bg-transparent text-black p-2"
+                                                    style={{
+                                                        width: data.width + "px",
+                                                        height: data.height + "px",
+                                                        left: data.x + "px", top: data.y + "px", border: "none", textAlign: data.alignment, overflow: "hidden", fontFamily: data.fontFamily, fontSize: parseInt(data.size),
+                                                        fontWeight: data.bold,
+                                                        textDecoration: data.underline,
+                                                        fontStyle: data.italic
+                                                        , textTransform: data.textOrientation,
+                                                        color: "red",
+                                                        position: "absolute",
+                                                        zIndex: data.z_index,
+                                                        outline: "none",
+                                                        opacity: data.transparency / 100,
+                                                        border: imageBorder == index ? "1px solid blue" : "none"
+                                                    }}
+                                                ></textarea>
+                                            </Draggable>
+                                        </div>
+                                    )
+                                } else {
+                                    return (
+                                        <Draggable
+                                            defaultPosition={{ x: 100, y: 100 }}
+                                            onDrag={(e, ui) => { stopImage(e, ui, index) }}
+                                            className="draggableImage">
+                                            <div onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none" }}>
 
-                                    <textarea
-                                        onContextMenu={(e) => { setSelectImageLayer(-(index + 1)); setMenuPosition(textField); }}
-                                        id='resize-component'
-                                        type="text"
-                                        value={textField.text}
-                                        onChange={(e) => handleTextFieldChange(e, index)}
-                                        className="absolute border border-gray-400 bg-transparent text-black p-2"
-                                        style={{
-                                            left: textField.x, top: textField.y, border: "none", textAlign: textField.alignment, height: "8%", overflow: "hidden", fontFamily: textField.fontFamily, fontSize: parseInt(textField.size),
-                                            fontWeight: textField.bold,
-                                            textDecoration: textField.underline,
-                                            fontStyle: textField.italic
-                                            , textTransform: textField.textOrientation,
-                                            color: "red",
-                                            position: "absolute",
-                                            top: 300,
-                                            left: 100,
-                                            zIndex: textField.z_index
-                                        }}
-                                    ></textarea>
-                                </Draggable>
-                            </div>
-                        ))}
+                                                <img onClick={(e) => { setSelectImageLayer(index); setMenuPosition(null); }} style={{
+                                                    width: "100%", height: "100%",
+
+                                                }} src={data.src} />
+                                            </div>
+                                        </Draggable>
+                                    )
+                                }
+                            }
+                        })
+                        }
                         {menuPosition && <div style={{ cursor: "pointer", zIndex: 100, border: "1px solid black", width: "25vh", height: "40vh", background: "white", boxShadow: " 4px 6px 22px 0px rgba(0,0,0,0.75)", color: "black", position: "absolute", top: (menuPosition.y), left: (menuPosition.x - 300) }}>
                             <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", }}><img width="30" height="30" src={bringToForward.src} />Bring Forward</div>
                             <div onClick={handleBringForward} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/bring-forward.png" alt="bring-forward" />Bring To Front</div>
                             <div onClick={handleSendBack} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img width="30" height="30" src={sendBack.src} />sent Backward</div>
                             <div onClick={handleSendToBack} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}><img width="30" height="30" src={sendToBack.src} />send to back</div>
                         </div>}
-                        {imageFields && imageFields.map((data, index) => {
-                            return (
-                                <Draggable
-                                    defaultPosition={{ x: 100, y: 100 }}
-                                    onStop={(e, data1) => { stopImage(e, data1, index) }}
-                                    className="draggableImage">
-                                    <div onClick={(e) => { if (imageBorder == null) { setImageBorder(index) } else { setImageBorder(null) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width, height: data.height, overflow: "auto", position: "absolute", top: 100, left: 100, border: imageBorder != null ? "1px solid blue" : "none" }}>
-
-                                        <img onClick={(e) => { setSelectImageLayer(index); setMenuPosition(null); }} style={{
-                                            width: "100%", height: "100%",
-
-                                        }} src={data.src} />
-                                    </div>
-                                </Draggable>
-                            )
-                        })}
                     </div>
                 </div>
             )

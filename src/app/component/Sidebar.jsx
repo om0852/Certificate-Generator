@@ -23,10 +23,9 @@ const Sidebar = ({
   handleRadioChange,
   selectedTextFieldIndex,
   handleImageChange,
-  imageFields,
-  setImageFields,
   certificateRef,
-  imageBorder
+  imageBorder,
+  setImageBorder
 
 }) => {
   const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
@@ -49,6 +48,7 @@ const Sidebar = ({
     setSelectedImageData({ x: e.clientX, y: e.clientY, index: i })
 
   }
+
   const fontFamilies = [
     'Arial',
     'Arial Black',
@@ -196,12 +196,12 @@ const Sidebar = ({
     }
   }
   const handleTransparency = (e) => {
-    const updatedImageFields = [...imageFields];
+    const updatedImageFields = [...textFields];
     updatedImageFields[imageBorder].transparency = e.target.value
-    setImageFields(updatedImageFields)
+    setTextFields(updatedImageFields)
   }
   const handleAddImage = (event, i) => {
-    const updatedImageField = [...imageFields];
+    const updatedImageField = [...textFields];
     const file = event.target.files[0];
 
     if (file && file.type.startsWith('image/')) {
@@ -211,14 +211,14 @@ const Sidebar = ({
         const imageSrc = reader.result;
         if (i == -1) {
           // Push new image object to updatedImageField
-          updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 1 });
+          updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image" });
         }
         else {
           updatedImageField[i].src = imageSrc;
         }
 
         // Update state with updatedImageField
-        setImageFields(updatedImageField);
+        setTextFields(updatedImageField);
       };
 
       // Start reading the file as a data URL
@@ -272,62 +272,64 @@ const Sidebar = ({
       <div style={{ display: tabGroup1 != true ? "none" : "block" }}>
         {textFields &&
           textFields.map((data, index) => {
-            return (
-              <div style={{ display: 'flex', alignItems: "center" }}>
-                <svg onClick={() => {
-                  const updatedImageField = [...textFields];
-                  if (updatedImageField.length > 1) {
-                    updatedImageField.splice(index, 1)
-                    setTextFields(updatedImageField)
-                  }
-                  else {
-                    alert("1 field mantatory")
-                  }
+            if (data.type == "textfield") {
+              return (
+                <div style={{ display: 'flex', alignItems: "center" }}>
+                  <svg onClick={() => {
+                    const updatedImageField = [...textFields];
+                    if (updatedImageField.length > 1) {
+                      updatedImageField.splice(index, 1)
+                      setTextFields(updatedImageField)
+                    }
+                    else {
+                      alert("1 field mantatory")
+                    }
 
-                }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-                  <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
-                </svg>
-                {/* Apply selected font family to the selected text field */}
-                <input
-                  id={data.id}
-                  value={data.text}
-                  onChange={(e) => handleTextFieldChange(e, index)}
-                  placeholder="enter some text"
-                  style={{
-                    width: '90%',
-                    height: "30px",
-                    borderRadius: ".3vh",
-                    padding: "2vh",
-                    color: 'black',
-                    margin: '2vh auto',
-                    marginLeft: '1vh',
-                    fontFamily: data.fontFamily
-                    , fontSize: "15px",
-                    outline: "none"
-                  }}
-                />
-                {selectedTextFieldIndex == index ? <input
-                  name="inputfield"
-                  checked
-                  type="radio"
-                  onChange={() => handleRadioChange(index)}
-                /> : <input
-                  name="inputfield"
-                  type="radio"
-                  onChange={() => handleRadioChange(index)}
-                />}
+                  }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
+                    <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
+                  </svg>
+                  {/* Apply selected font family to the selected text field */}
+                  <input
+                    id={data.id}
+                    value={data.text}
+                    onChange={(e) => handleTextFieldChange(e, index)}
+                    placeholder="enter some text"
+                    style={{
+                      width: '90%',
+                      height: "30px",
+                      borderRadius: ".3vh",
+                      padding: "2vh",
+                      color: 'black',
+                      margin: '2vh auto',
+                      marginLeft: '1vh',
+                      fontFamily: data.fontFamily
+                      , fontSize: "15px",
+                      outline: "none"
+                    }}
+                  />
+                  {selectedTextFieldIndex == index ? <input
+                    name="inputfield"
+                    checked
+                    type="radio"
+                    onChange={() => handleRadioChange(index)}
+                  /> : <input
+                    name="inputfield"
+                    type="radio"
+                    onChange={() => handleRadioChange(index)}
+                  />}
 
-              </div>
-            );
+                </div>)
+            }
+
           })}
       </div>
       <div style={{ display: tabGroup1 != false ? "none" : "block" }}>
 
         <div >
           {selectedImageData && <div style={{ zIndex: 1000, display: "block", width: "20vh", height: "20vh", background: "white", position: "absolute", top: selectedImageData.y, left: selectedImageData.x }}> <span onClick={() => {
-            const updatedImageField = [...imageFields];
+            const updatedImageField = [...textFields];
             updatedImageField.splice(selectedImageData.index, 1)
-            setImageFields(updatedImageField)
+            setTextFields(updatedImageField)
             setSelectedImageData(null)
 
 
@@ -342,24 +344,18 @@ const Sidebar = ({
             <label htmlFor='addImage1'
               style={{ height: "5vh", borderBottom: "1px solid black", display: "flex", alignItems: "center", justifyContent: "space-around", color: "black" }}><img width="20" height="20" src="https://img.icons8.com/ios-filled/50/replace.png" alt="replace" />
               Replace</label></div>}
-          {imageFields && imageFields.map((data, index) => {
-            return (
-              <>
-                <div onClick={(e) => setSelectedImageData(null)} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
+          {textFields && textFields.map((data, index) => {
+            if (data.type == "image") {
+              return (
+                <>
+                  <div onClick={(e) => setSelectedImageData(null)} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
 
-                  <label onContextMenu={(e) => { handleImageData(e, index) }} style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
-                  {/* <svg onClick={() => {
-                  const updatedImageField = [...imageFields];
-                  updatedImageField.splice(index, 1)
-                  setImageFields(updatedImageField)
+                    <label onContextMenu={(e) => { handleImageData(e, index) }} style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
+                  </div>
 
-                }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-                  <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
-                </svg> */}
-                </div>
-
-              </>
-            )
+                </>
+              )
+            }
           })}
         </div>
       </div>
@@ -472,19 +468,50 @@ const Sidebar = ({
           </div>
         </div>
       </div>
-      <div style={{ display: tabGroup2 == true ? "none" : "block" }} >
+      <div style={{ display: tabGroup2 == false ? imageBorder == null ? "none" : "block" : "none" }} >
         {/* transparency function */}
         <div style={{ display: imageBorder == null ? "none" : "block", color: "white", borderBottom: "1px solid white", padding: "1vh 0" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", margin: "1vh auto" }} >Transparency    <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 101) { const updatedImageField = [...imageFields]; updatedImageField[imageBorder].transparency = e.target.value; setImageFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "5vh", outline: "none", color: "black" }}
-            value={imageBorder == null ? 0 : parseFloat(imageFields[imageBorder].transparency) * 1} />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", margin: "1vh auto" }} >Transparency    <input type='number'
+            onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 101) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].transparency = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+            value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].transparency) * 1} />
           </div>
-          <div style={{ width: "100%", display: "grid", placeItems: "center" }}><input type="range" style={{ width: "80%", margin: "1vh 0", height: ".6vh" }} value={imageBorder == null ? 0 : parseFloat(imageFields[imageBorder].transparency)}
-            onChange={(e) => handleTransparency(e)}
-          /></div>
-        </div>
+          <div style={{ width: "100%", display: "grid", placeItems: "center" }}>
+            <input type="range" style={{ width: "80%", margin: "1vh 0", height: ".6vh" }} value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].transparency)}
+              onChange={(e) => handleTransparency(e)}
 
+            /></div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh", borderBottom: "1px solid white", padding: "1vh 0" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Width:
+            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].width = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+              type='number'
+
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].width) * 1} />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>height:
+            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].height = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+              type='number'
+
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].height) * 1} />
+          </div>
+        </div>
+        {/* positioing  */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh", borderBottom: "1px solid white", padding: "1vh 0" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Left:
+            <input
+              onChange={(e) => { if (e.target.value != "" && e.target.value >= -900 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].x = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+              type='number'
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].x) * 1} />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Top:
+            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= -900 && e.target.value < 1001) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].y = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+              type='number'
+
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].y) * 1} />
+          </div>
+        </div>
       </div>
-    </div>
+    </div >
   );
 }
 
