@@ -1,8 +1,20 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { signOut } from 'next-auth/react';
+
 
 import User from '@/app/models/users';
 import { connectToDB } from '@/app/utils/database';
+
+const handleSignOut = async (req, res) => {
+  try {
+    await signOut({ redirect: { destination: '/logout', permanent: false }, req });
+    res.status(302).end();
+  } catch (error) {
+    console.error('Error signing out:', error);
+    res.status(500).json({ error: 'An error occurred while signing out' });
+  }
+};
 
 const handler = NextAuth({
   providers: [
@@ -40,6 +52,9 @@ const handler = NextAuth({
         console.log("Error checking if user exists: ", error.message);
         return false
       }
+    },
+    async signOut({ redirect }) {
+      return signOut({ redirect });
     },
   }
 })
