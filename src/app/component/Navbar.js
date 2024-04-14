@@ -84,7 +84,7 @@ export default function Navbar() {
                                 <div className='sm:flex hidden'>
                                     {session?.user ? (<div className='flex gap-3 md:gap-5'>
 
-                                        <button type="button" onclick={signOut} className='outline_btn'>
+                                        <button type="button" onClick={() => signOut()} className='outline_btn'>
                                             Sign Out
                                         </button>
                                         <Link href="/profile">
@@ -113,10 +113,7 @@ export default function Navbar() {
 
                                                 <button
                                                     type='button'
-                                                    onClick={() => {
-                                                        settoggleDropdown(false);
-                                                        signOut();
-                                                    }}
+                                                    onClick={() => { signOut(); settoggleDropdown(false) }}
                                                     className='mt-5 w-full black_btn'
                                                 >
                                                     Sign Out
