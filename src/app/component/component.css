@@ -35,3 +35,9 @@ resize: both;
 #resize-component{
   resize: none;
 }
+.layer-subclass {
+  display: none; 
+}
+.layer-class:hover + .layer-subclass {
+  display: block;
+}
