@@ -233,21 +233,21 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     const rangeBorderChecker = (index) => {
         const updatedTextFields = [...textFields];
         console.log(dragIndicator)
-        console.log("width", parseInt(updatedTextFields[index].x), + parseInt(updatedTextFields[index].width / 2))
+        console.log("width", parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2))
         console.log("height", parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2))
-        if (parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2) == 225 || parseInt(updatedTextFields[index].x) == 225) {
+        if (parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2) > 215 && parseInt(updatedTextFields[index].x) < 330) {
             dragIndicator.left = true
             setDragIndicator(dragIndicator)
         }
-        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) == 155 || parseInt(updatedTextFields[index].y) == 155) {
+        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) > 145 && parseInt(updatedTextFields[index].y) < 215) {
             dragIndicator.top = true
             setDragIndicator(dragIndicator)
         }
-        if (parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2) < 225 || parseInt(updatedTextFields[index].x) > 225) {
+        if (parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2) < 215 || parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 2) > 330) {
             dragIndicator.left = false
             setDragIndicator(dragIndicator)
         }
-        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) < 155 || parseInt(updatedTextFields[index].y) > 155) {
+        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) < 145 || parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) > 215) {
             dragIndicator.top = false
             setDragIndicator(dragIndicator)
         }
@@ -310,6 +310,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 position={{ x: data.x, y: data.y }}
                                                 defaultPosition={{ x: data.x, y: data.y }}
                                                 onDrag={(e, ui) => { stop(e, ui, index) }}
+                                                onStop={(e) => setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })}
+
                                             >
 
                                                 <textarea
