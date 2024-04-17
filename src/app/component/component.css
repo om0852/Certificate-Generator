@@ -30,7 +30,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: aliceblue;
 }
 #resize-component:hover{
-resize: both;
+/* resize: both; */
 }
 #resize-component{
   resize: none;
@@ -40,4 +40,41 @@ resize: both;
 }
 .layer-class:hover + .layer-subclass {
   display: block;
+}
+
+.resizer {
+  position: absolute;
+  background: black;
+}
+
+.resizer-r {
+  cursor: col-resize;
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 1px;
+}
+
+.resizer-t {
+  cursor: row-resize;
+  height: 1px;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+.resizer-b {
+  cursor: row-resize;
+  height: 1px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.resizer-l {
+  cursor: col-resize;
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 1px;
 }
