@@ -17,8 +17,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     const refBottom = useRef([]);
     useEffect(() => {
         // if (imageBorder != null) {
-        console.log(ref.current)
-        console.log(refLeft.current[0])
+        // console.log(ref.current)
+        // console.log(refLeft.current[0])
         let resizerRight;
         let resizerTop;
         let resizerBottom;
@@ -42,6 +42,11 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                 const onMouseMoveRightResize = (event) => {
                     const dx = event.clientX - x;
                     x = event.clientX;
+                    const updateTextfield = [...textFields];
+                    updateTextfield[index].width = divRef.offsetWidth;
+                    updateTextfield[index].height = divRef.offsetHeight;
+                    setTextFields(updateTextfield);
+                    rangeBorderChecker(index)
                     width = width + dx;
                     resizeableEle.style.width = `${width}px`;
                 };
@@ -63,6 +68,12 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                     const dy = event.clientY - y;
                     height = height - dy;
                     y = event.clientY;
+                    const updateTextfield = [...textFields];
+                    updateTextfield[index].width = divRef.offsetWidth;
+                    updateTextfield[index].height = divRef.offsetHeight;
+                    setTextFields(updateTextfield);
+                    rangeBorderChecker(index)
+
                     resizeableEle.style.height = `${height}px`;
                 };
 
@@ -84,6 +95,12 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                     const dy = event.clientY - y;
                     height = height + dy;
                     y = event.clientY;
+                    const updateTextfield = [...textFields];
+                    updateTextfield[index].width = divRef.offsetWidth;
+                    updateTextfield[index].height = divRef.offsetHeight;
+                    setTextFields(updateTextfield);
+                    rangeBorderChecker(index)
+
                     resizeableEle.style.height = `${height}px`;
                 };
 
@@ -94,8 +111,12 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                 const onMouseDownBottomResize = (event) => {
                     y = event.clientY;
                     const styles = window.getComputedStyle(resizeableEle);
-                    // resizeableEle.style.top = styles.top;
-                    // resizeableEle.style.bottom = null;
+                    const updateTextfield = [...textFields];
+                    updateTextfield[index].width = divRef.offsetWidth;
+                    updateTextfield[index].height = divRef.offsetHeight;
+                    setTextFields(updateTextfield);
+                    rangeBorderChecker(index)
+
                     document.addEventListener("mousemove", onMouseMoveBottomResize);
                     document.addEventListener("mouseup", onMouseUpBottomResize);
                 };
@@ -114,8 +135,16 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
 
                 const onMouseDownLeftResize = (event) => {
                     x = event.clientX;
+                    console.log(x)
+
                     // resizeableEle.style.right = styles.right;
                     // resizeableEle.style.left = null;
+                    const updateTextfield = [...textFields];
+                    updateTextfield[index].width = divRef.offsetWidth;
+                    updateTextfield[index].height = divRef.offsetHeight;
+                    setTextFields(updateTextfield);
+                    rangeBorderChecker(index)
+
                     document.addEventListener("mousemove", onMouseMoveLeftResize);
                     document.addEventListener("mouseup", onMouseUpLeftResize);
                 };
@@ -134,7 +163,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                 resizerLeft = refLeft.current[index];
                 if (!resizerLeft) return; // Check if resizeableEle is valid
                 resizerLeft.addEventListener("mousedown", onMouseDownLeftResize);
-
                 return () => {
                     resizerRight.removeEventListener("mousedown", onMouseDownRightResize);
                     resizerTop.removeEventListener("mousedown", onMouseDownTopResize);
@@ -151,37 +179,10 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     const [layerVisible, setLayerVisible] = useState("none");
     const [dragIndicator, setDragIndicator] = useState({ left: false, right: false, center: false, top: false, bottom: false })
     // addFields(addTextField);
-    useEffect(() => {
-        setTextFields(textFields)
-    }, [])
-
     // useEffect(() => {
-    //     const resizeObserver = new ResizeObserver(entries => {
-    //         entries.forEach((entry, index) => {
-    //             console.log(index)
-    //             const { width, height } = entry.contentRect;
-    //             const updateTextfield = [...textFields];
-    //             updateTextfield[index].width = width
-    //             updateTextfield[index].height = height
+    //     setTextFields(textFields)
+    // }, [])
 
-    //             // setTextFields(updateTextfield)
-    //         });
-    //     }, []);
-
-    //     componentRef.current.forEach(divRef => {
-    //         if (divRef) {
-    //             resizeObserver.observe(divRef);
-    //         }
-    //     });
-
-    //     return () => {
-    //         componentRef.current.forEach(divRef => {
-    //             if (divRef) {
-    //                 resizeObserver.unobserve(divRef);
-    //             }
-    //         });
-    //     };
-    // }, [textFields.length]);
     const handleBringToForward = () => {
         const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
@@ -412,7 +413,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             dragIndicator.left = false
             setDragIndicator(dragIndicator)
         }
-        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) < 145 || parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) > 215) {
+        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) < 145 || parseInt(updatedTextFields[index].y) > 160) {
             dragIndicator.top = false
             setDragIndicator(dragIndicator)
         }
@@ -465,7 +466,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                         {textFields.map((data, index) => {
                             {
                                 if (data.type == "textfield") {
-                                    console.log(data.x, data.y)
+                                    // console.log(data.x, data.y)
                                     return (
                                         <Draggable
                                             className="draggable"
@@ -499,7 +500,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                     height: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                 <textarea
-                                                    onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }}
                                                     onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
                                                     id='resize-component'
                                                     type="text"
