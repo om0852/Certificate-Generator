@@ -9,7 +9,7 @@ import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
 const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
-    const componentRef = useRef([])
+    const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const ref = useRef([]);
     const refLeft = useRef([]);
     const refTop = useRef([]);
@@ -405,7 +405,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             dragIndicator.left = true
             setDragIndicator(dragIndicator)
         }
-        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) > 145 && parseInt(updatedTextFields[index].y) < 215) {
+        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 2) > 145 && parseInt(updatedTextFields[index].y) < 160) {
             dragIndicator.top = true
             setDragIndicator(dragIndicator)
         }
@@ -417,7 +417,33 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             dragIndicator.top = false
             setDragIndicator(dragIndicator)
         }
+        // console.log(parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 4))
+        if (parseInt(updatedTextFields[index].x) + parseInt(updatedTextFields[index].width / 4) == 225) {
+            const updateborder = [...showInsideBorder];
+            updateborder[0].left = true;
+            setShowInsideBorder(updateborder);
+
+        }
+        else {
+
+            const updateborder = [...showInsideBorder];
+            updateborder[0].left = false;
+            setShowInsideBorder(updateborder);
+        }
+        if (parseInt(updatedTextFields[index].y) + parseInt(updatedTextFields[index].height / 4) == 155) {
+
+            const updateborder = [...showInsideBorder];
+            updateborder[0].right = true;
+            setShowInsideBorder(updateborder);
+        }
+        else {
+
+            const updateborder = [...showInsideBorder];
+            updateborder[0].right = false;
+            setShowInsideBorder(updateborder);
+        }
     }
+    useEffect(() => { console.log(textFields) }, imageBorder)
     const stop = (e, data, index) => {
         const updatedTextFields = [...textFields];
         updatedTextFields[index].x = data.lastX;
@@ -427,7 +453,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     }
     const stopImage = (e, ui, index) => {
         const updatedTextFields = [...textFields];
-        // const rect = e.getBoundingClientRect();
 
         console.log(e)
         updatedTextFields[index].x = ui.lastX;
@@ -446,7 +471,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
         <div className="flex flex-col items-center relative" style={{ width: "85%" }} onClick={(e) => { setMenuPosition(null); }}
         >
 
-            {selectedImage ? "" : <div style={{ width: "693px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
+            {selectedImage ? "" : <div style={{ width: "691.5px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
                 <div ref={certificateRef}
@@ -473,7 +498,15 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                             key={data.id}
 
                                             onDrag={(e, ui) => { stop(e, ui, index) }}
-                                            onStop={(e, ui) => { stop(e, ui, index); setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false }) }}
+                                            onStop={(e, ui) => {
+                                                const updatedata = [...showInsideBorder];
+                                                updatedata.left = false;
+                                                updatedata.right = false;
+
+                                                setShowInsideBorder(showInsideBorder);
+                                                //  stop(e, ui, index); 
+                                                setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
+                                            }}
                                         >
                                             <div
                                                 ref={el => (ref.current[index] = el)}
@@ -488,17 +521,19 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 }}
                                             >
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
-                                                    width: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-l"></div>
                                                 <div ref={el => (refTop.current[index] = el)} style={{
-                                                    height: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-t"></div>
                                                 <div style={{
-                                                    width: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
                                                 <div style={{
-                                                    height: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
+                                                <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute" }}></div>
+                                                <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute" }}></div>
                                                 <textarea
                                                     onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
                                                     id='resize-component'
@@ -543,16 +578,16 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 ref={el => (ref.current[index] = el)}
                                                 onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none" }}>
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
-                                                    width: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-l"></div>
                                                 <div ref={el => (refTop.current[index] = el)} style={{
-                                                    height: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-t"></div>
                                                 <div style={{
-                                                    width: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
                                                 <div style={{
-                                                    height: imageBorder == index ? "3px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
 
                                                 <img
