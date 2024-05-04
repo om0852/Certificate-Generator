@@ -6,8 +6,10 @@ export default function ContextMenu({
     handleSendBack,
     handleBringForward,
     sendToBack,
-    layerVisible,
     menuPosition,
+    selectImageLayer,
+    textFields,
+    setTextFields,
     sendBack,
     handleBringToForward,
     bringToForward,
@@ -50,7 +52,7 @@ export default function ContextMenu({
                     onMouseLeave={(e) => handleHoverState("none", "alignTo")} onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-top.png" alt="align-top" />Align To Page
                     <div onMouseEnter={(e) => handleHoverState("block", "alignTo")} onMouseLeave={(e) => handleHoverState("none", "alignTo")} style={{ display: hoverStateTracker[0].alignTo == "block" ? "block" : "none", position: "absolute", top: "1vh", left: "10vh", background: "white", width: "25vh", border: "1px solid black" }}>
                         <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 0; setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Left</div>
-                        <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 205; setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Center</div>
+                        <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 175; setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Center</div>
                         <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 450 - (updateTextfield[selectImageLayer].width / 2); setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Right</div>
                         <div style={{ width: "100%", height: ".5vh", borderBottom: "1px solid black" }}></div>
                         <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Top</div>

@@ -500,13 +500,13 @@ const Sidebar = ({
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh", borderBottom: "1px solid white", padding: "1vh 0" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Width:
-            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].width = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].width = parseInt(e.target.value); setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
               type='number'
 
               value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].width) * 1} />
           </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>height:
-            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].height = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= 0 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].height = parseInt(e.target.value); setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
               type='number'
 
               value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].height) * 1} />
@@ -516,15 +516,15 @@ const Sidebar = ({
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh", borderBottom: "1px solid white", padding: "1vh 0" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Left:
             <input
-              onChange={(e) => { if (e.target.value != "" && e.target.value >= -900 && e.target.value < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].x = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+              onChange={(e) => { if (imageBorder !== null && e.target.value != "" && parseInt(e.target.value) >= -900 && parseInt(e.target.value) < 1000) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].x = parseInt(e.target.value); setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
               type='number'
-              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].x) * 1} />
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].x)} />
           </div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "7vh" }}>Top:
-            <input onChange={(e) => { if (e.target.value != "" && e.target.value >= -900 && e.target.value < 1001) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].y = e.target.value; setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
+            <input onChange={(e) => { if (imageBorder !== null && e.target.value != "" && parseInt(e.target.value) >= -900 && parseInt(e.target.value) < 1001) { const updatedImageField = [...textFields]; updatedImageField[imageBorder].y = parseInt(e.target.value); setTextFields(updatedImageField) } }} style={{ border: "1px solid white", padding: "auto", width: "7vh", outline: "none", color: "black" }}
               type='number'
 
-              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].y) * 1} />
+              value={imageBorder == null ? 0 : parseFloat(textFields[imageBorder].y)} />
           </div>
         </div>
       </div>

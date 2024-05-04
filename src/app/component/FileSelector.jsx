@@ -444,7 +444,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             setShowInsideBorder(updateborder);
         }
     }
-    useEffect(() => { console.log(textFields) }, imageBorder)
     const stop = (e, data, index) => {
         const updatedTextFields = [...textFields];
         updatedTextFields[index].x = data.lastX;
@@ -498,9 +497,11 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                         <Draggable
                                             className="draggable"
                                             key={data.id}
-
+                                            position={{ x: data.x, y: data.y }}
+                                            onStart={(e, ui) => { console.log(ui); stop(e, ui, index) }}
                                             onDrag={(e, ui) => { stop(e, ui, index) }}
                                             onStop={(e, ui) => {
+                                                stop(e, ui, index)
                                                 const updatedata = [...showInsideBorder];
                                                 updatedata.left = false;
                                                 updatedata.right = false;
@@ -517,8 +518,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 style={{
                                                     width: data.width + "px",
                                                     height: data.height + "px",
-                                                    left: data.x + "px",
-                                                    top: data.y + "px", textAlign: data.alignment, position: "absolute",
+                                                    left: data.x,
+                                                    top: data.y, textAlign: data.alignment, position: "absolute",
                                                     border: "none",
                                                     zIndex: imageBorder == index ? 1005 : 1000
                                                 }}
@@ -554,8 +555,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                         fontStyle: data.italic
                                                         , textTransform: data.textOrientation,
                                                         color: "red",
+
                                                         // border: imageBorder == index ? "1px solid blue" : "none",
-                                                        position: "absolute",
                                                         zIndex: data.z_index,
                                                         boxSizing: "content-box",
                                                         padding: "0",
@@ -575,6 +576,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                     return (
                                         <Draggable
                                             defaultPosition={{ x: 100, y: 100 }}
+                                            position={{ x: data.x, y: data.y }}
+
                                             onDrag={(e, ui) => {
                                                 stopImage(e, ui, index);
                                             }}
@@ -633,6 +636,9 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             handleBringToForward={handleBringToForward}
                             bringToForward={bringToForward}
                             handleSendToBack={handleSendToBack}
+                            textFields={textFields}
+                            selectImageLayer={selectImageLayer}
+                            setTextFields={setTextFields}
                         />}
                     </div>
                 </div>

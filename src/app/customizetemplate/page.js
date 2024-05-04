@@ -12,7 +12,7 @@ import { toPng } from 'html-to-image';
 export default function Page() {
     const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(0); // State to hold the index of the selected text field
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
-    const [imageBorder, setImageBorder] = useState(null)
+    const [imageBorder, setImageBorder] = useState(0)
 
     const [textFields, setTextFields] = useState([
         { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true },
