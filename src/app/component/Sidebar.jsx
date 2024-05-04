@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import addImageIcon from "../../images/addimage.png"
 import ReactToPrint from 'react-to-print';
-
-const Input = ({ placeholder, name, type, handleChange, value, setTextFields }) => (
-  <input
-    placeholder={placeholder}
-    type={type}
-    step="0.0001 "
-    value={value}
-    onChange={(e) => handleChange(name, e)}
-    className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-  />
-);
+import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import domToPdf from "./DomToPdf";
 
 
 const Sidebar = ({
@@ -195,6 +187,18 @@ const Sidebar = ({
       alert("1 field is mandatory")
     }
   }
+
+  const handleConvertToPdf = async () => {
+    const element = certificateRef.current;
+
+    var options = {
+      filename: 'test.pdf',
+    };
+    domToPdf(element, options, function (pdf) {
+      console.log('done');
+    }, 900, 400);
+  };
+
   const handleTransparency = (e) => {
     const updatedImageFields = [...textFields];
     updatedImageFields[imageBorder].transparency = e.target.value
@@ -248,21 +252,26 @@ const Sidebar = ({
         >
           Select Certificate
         </label>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "100%" }}>
-          <input type="file"
-            accept="image/*"
-            onChange={(e) => handleAddImage(e, -1)}
-            className="hidden"
-            id="addImage" />
-          <label htmlFor="addImage" style={{ backgroundColor: "red", display: "flex", alignItems: "center", margin: "0vh 2vh", marginTop: "2vh", width: "95%", height: "40px", }}><img style={{ margin: "0 2vh" }} src={addImageIcon.src} width={30} height={30} />Add Image</label>
-        </div>
-        <button className='rounded' style={{ margin: "1vh auto", width: "90%", height: "40px", background: "red" }} onClick={() => addFields()}>Add Field</button>
+        <button
+          className='rounded'
+          style={{ width: "90%", height: "40px", background: "green", margin: "2vh 0" }}
+          onClick={handleConvertToPdf}
+        >
+          Download
+        </button>
+        <button
+          className='rounded'
+          style={{ width: "90%", height: "40px", background: "green", margin: "2vh 0" }}
+          onClick={downloadCertificate}
+        >
+          Download
+        </button>
 
-        <ReactToPrint
+        {/* <ReactToPrint
           trigger={() => <button className='rounded'
             style={{ width: "90%", height: "40px", background: "green" }}  >Download</button>}
           content={() => certificateRef.current}
-        />
+        /> */}
 
       </div>
       <div style={{ marginBottom: "1vh", cursor: "pointer", border: "1px solid white", width: "100%", height: "6vh", display: "flex", alignItems: "center", justifyContent: "space-around" }}>
@@ -270,6 +279,8 @@ const Sidebar = ({
         <div style={{ display: "grid", placeItems: "center", width: "50%", height: "100%", background: tabGroup1 == false ? "green" : "none" }} onClick={(e) => setTabGroup1(false)}>Images</div>
       </div>
       <div style={{ display: tabGroup1 != true ? "none" : "block" }}>
+        <button className='rounded' style={{ margin: "1vh auto", position: "relative", left: "5%", width: "90%", height: "40px", background: "red" }} onClick={() => addFields()}>Add Field</button>
+
         {textFields &&
           textFields.map((data, index) => {
             if (data.type == "textfield") {
@@ -292,6 +303,8 @@ const Sidebar = ({
                   <input
                     id={data.id}
                     value={data.text}
+                    onClick={(e) => handleRadioChange(index)}
+
                     onChange={(e) => handleTextFieldChange(e, index)}
                     placeholder="enter some text"
                     style={{
@@ -307,25 +320,29 @@ const Sidebar = ({
                       outline: "none"
                     }}
                   />
-                  {selectedTextFieldIndex == index ? <input
+                  <input
                     name="inputfield"
-                    checked
+                    checked={data.isSelected}
                     type="radio"
-                    onChange={() => handleRadioChange(index)}
-                  /> : <input
-                    name="inputfield"
-                    type="radio"
-                    onChange={() => handleRadioChange(index)}
-                  />}
+                    onClick={(e) => handleRadioChange(index)}
+                  />
 
                 </div>)
             }
 
           })}
       </div>
-      <div style={{ display: tabGroup1 != false ? "none" : "block" }}>
+      <div style={{ display: tabGroup1 != false ? "none" : "block", margin: "1vh 0" }}>
 
-        <div >
+        <div style={{ display: "grid", alignItems: "center" }} >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "100%" }}>
+            <input type="file"
+              accept="image/*"
+              onChange={(e) => handleAddImage(e, -1)}
+              className="hidden"
+              id="addImage" />
+            <label htmlFor="addImage" style={{ backgroundColor: "red", display: "flex", alignItems: "center", margin: "1vh 2vh", width: "95%", height: "40px", }}><img style={{ margin: "0 2vh" }} src={addImageIcon.src} width={30} height={30} />Add Image</label>
+          </div>
           {selectedImageData && <div style={{ zIndex: 1000, display: "block", width: "20vh", height: "20vh", background: "white", position: "absolute", top: selectedImageData.y, left: selectedImageData.x }}> <span onClick={() => {
             const updatedImageField = [...textFields];
             updatedImageField.splice(selectedImageData.index, 1)

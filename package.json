@@ -11,8 +11,12 @@
   "dependencies": {
     "@react-pdf/renderer": "^3.4.2",
     "child_process": "^1.0.2",
+    "dom-to-pdf": "^0.3.2",
+    "dom-to-pdf-converter": "^0.3.2",
     "git": "^0.1.5",
+    "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.1",
     "install": "^0.13.0",
     "jspdf": "^2.5.1",
     "mongodb": "^6.5.0",

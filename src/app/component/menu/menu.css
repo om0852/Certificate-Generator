@@ -1,0 +1,4 @@
+.layer-classname-container:hover .layer-subclass{
+background-color: red;
+display: block;
+}

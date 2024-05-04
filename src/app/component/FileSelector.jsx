@@ -8,6 +8,7 @@ import "./component.css"
 import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
+import ContextMenu from './menu/ContextMenu';
 const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const ref = useRef([]);
@@ -454,10 +455,11 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     const stopImage = (e, ui, index) => {
         const updatedTextFields = [...textFields];
 
-        console.log(e)
         updatedTextFields[index].x = ui.lastX;
         updatedTextFields[index].y = ui.lastY;
         setTextFields(updatedTextFields);
+        rangeBorderChecker(index)
+
     }
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
@@ -474,7 +476,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             {selectedImage ? "" : <div style={{ width: "691.5px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
-                <div ref={certificateRef}
+                <div
                     className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
                         width: "900px",
@@ -483,7 +485,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                         position: "relative", height: "620px"
                     }}
                 >
-                    <div>
+                    <div ref={certificateRef}>
                         <div style={{ display: dragIndicator.left == true ? "block" : "none", position: "absolute", left: "450px", top: "0px", width: ".1vh", height: "100%", background: "purple" }}></div>
                         <div style={{ display: dragIndicator.top == true ? "block" : "none", position: "absolute", left: "0px", top: "310px", width: "900px", height: ".1vh", background: "purple" }}></div>
                         <img src={selectedImage} style={{ width: "900px", height: "620px" }} />
@@ -518,6 +520,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                     left: data.x + "px",
                                                     top: data.y + "px", textAlign: data.alignment, position: "absolute",
                                                     border: "none",
+                                                    zIndex: imageBorder == index ? 1005 : 1000
                                                 }}
                                             >
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
@@ -532,13 +535,14 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 <div style={{
                                                     height: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
-                                                <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute" }}></div>
-                                                <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute" }}></div>
+                                                <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
+                                                <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
                                                 <textarea
                                                     onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
                                                     id='resize-component'
                                                     type="text"
                                                     value={data.text}
+                                                    onClick={(e) => handleRadioChange(index)}
                                                     onChange={(e) => handleTextFieldChange(e, index)}
                                                     className="absolute border border-gray-400 bg-transparent text-black "
                                                     style={{
@@ -571,12 +575,26 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                     return (
                                         <Draggable
                                             defaultPosition={{ x: 100, y: 100 }}
-                                            onDrag={(e, ui) => { stopImage(e, ui, index) }}
-                                            className="draggableImage">
+                                            onDrag={(e, ui) => {
+                                                stopImage(e, ui, index);
+                                            }}
+                                            onStop={(e, ui) => {
+                                                const updatedata = [...showInsideBorder];
+                                                updatedata.left = false;
+                                                updatedata.right = false;
+
+                                                setShowInsideBorder(showInsideBorder);
+                                                //  stop(e, ui, index); 
+                                                setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
+
+                                            }}
+
+
+                                            className="draggableImage" >
 
                                             <div
                                                 ref={el => (ref.current[index] = el)}
-                                                onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none" }}>
+                                                onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none", zIndex: imageBorder == index ? 1005 : 1000 }}>
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
                                                     width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-l"></div>
@@ -589,6 +607,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 <div style={{
                                                     height: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
+                                                <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
+                                                <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", zIndex: 1000 }}></div>
 
                                                 <img
                                                     onClick={(e) => { setSelectImageLayer(index); setMenuPosition(null); }} style={{
@@ -602,33 +622,18 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             }
                         })
                         }
-                        {menuPosition && <div style={{ cursor: "pointer", zIndex: 300, border: "1px solid black", width: "25vh", height: "40vh", background: "white", boxShadow: " 4px 6px 22px 0px rgba(0,0,0,0.75)", color: "black", position: "absolute", top: (menuPosition.y + 50) + "px", left: (menuPosition.x + 100) + "px" }}>
-                            {/* layer content */}
-                            <div onMouseEnter={(e) => setLayerVisible("block")}
-                                onMouseLeave={(e) => setLayerVisible("none")}
-
-                                className='layer-class' onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Layer
-                                <div onMouseEnter={(e) => setLayerVisible("block")} onMouseLeave={(e) => setLayerVisible("none")} className='layer-subclass' style={{ display: layerVisible, position: "absolute", top: "1vh", left: "10vh", background: "white", width: "25vh", border: "1px solid black" }}>
-                                    <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Bring Forward</div>
-                                    <div onClick={handleBringForward} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/bring-forward.png" alt="bring-forward" />Bring To Front</div>
-                                    <div onClick={handleSendBack} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={sendBack.src} />sent Backward</div>
-                                    <div onClick={handleSendToBack} style={{ height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={sendToBack.src} />send to back</div>
-                                </div>
-                            </div>
-                            {/* align content */}
-                            <div onMouseEnter={(e) => setLayerVisible("block")}
-                                onMouseLeave={(e) => setLayerVisible("none")} className='layer-class' onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/align-top.png" alt="align-top" />Align To Page
-                                <div onMouseEnter={(e) => setLayerVisible("block")} onMouseLeave={(e) => setLayerVisible("none")} className='layer-subclass' style={{ display: layerVisible, position: "absolute", top: "1vh", left: "10vh", background: "white", width: "25vh", border: "1px solid black" }}>
-                                    <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 0; setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Left</div>
-                                    <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 205; setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Center</div>
-                                    <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].x = 450 - (updateTextfield[selectImageLayer].width / 2); setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Right</div>
-                                    <div style={{ width: "100%", height: ".5vh", borderBottom: "1px solid black" }}></div>
-                                    <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Top</div>
-                                    <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Middle</div>
-                                    <div onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Bottom</div>
-                                </div>
-                            </div>
-                        </div>}
+                        {menuPosition && <ContextMenu
+                            menuPosition={menuPosition}
+                            sendBack={sendBack}
+                            sendToBack={sendToBack}
+                            setLayerVisible={setLayerVisible}
+                            handleSendBack={handleSendBack}
+                            handleBringForward={handleBringForward}
+                            layerVisible={layerVisible}
+                            handleBringToForward={handleBringToForward}
+                            bringToForward={bringToForward}
+                            handleSendToBack={handleSendToBack}
+                        />}
                     </div>
                 </div>
             )
