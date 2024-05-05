@@ -19,7 +19,8 @@ export default function ContextMenu({
     setCopyStyle,
     copyText,
     setCopyText,
-    handleCopyText
+    handleCopyText,
+    handleLockComponent
 
 }) {
 
@@ -131,7 +132,11 @@ export default function ContextMenu({
                         <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].y = 105 + (updateTextfield[selectImageLayer].height / 4); setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Middle</div>
                         <div onClick={(e) => { const updateTextfield = [...textFields]; updateTextfield[selectImageLayer].y = 310 - (updateTextfield[selectImageLayer].height / 2); setTextFields(updateTextfield) }} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Bottom</div>
                     </div>
+
                 </div>
+                <div onClick={(e) => {
+                    handleLockComponent()
+                }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="48" height="48" src="https://img.icons8.com/fluency-systems-regular/48/copy--v1.png" alt="copy--v1" />{textFields[selectImageLayer].isLocked ? "Unlock" : "Lock"} </div>
 
             </div >
         </>

@@ -15,7 +15,7 @@ export default function Page() {
     const [imageBorder, setImageBorder] = useState(0)
 
     const [textFields, setTextFields] = useState([
-        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true },
+        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
     ]);
     const [imageFields, setImageFields] = useState([])
     const certificateRef = useRef(null);
@@ -126,7 +126,7 @@ export default function Page() {
     // });
     // };
     const addTextField = () => {
-        const data = { id: (textFields.length + 1), x: 0, y: 0, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false }
+        const data = { id: (textFields.length + 1), x: 0, y: 0, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
         setTextFields(prevTextFields => [
             ...prevTextFields,
             data

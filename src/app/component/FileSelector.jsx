@@ -12,7 +12,7 @@ import ContextMenu from './menu/ContextMenu';
 const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const [copyStyle, setCopyStyle] = useState(null);
-
+    const [showBorder, setShowBorder] = useState(null)
     const ref = useRef([]);
     const refLeft = useRef([]);
     const refTop = useRef([]);
@@ -45,7 +45,15 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
         copyToClipboard();
     };
 
-
+    const handleLockComponent = () => {
+        const updatedata = [...textFields];
+        if (updatedata[selectImageLayer].isLocked == true) {
+            updatedata[selectImageLayer].isLocked = false;
+        } else {
+            updatedata[selectImageLayer].isLocked = true
+        }
+        setTextFields(updatedata);
+    }
     useEffect(() => {
         // if (imageBorder != null) {
         // console.log(ref.current)
@@ -479,20 +487,25 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
         }
     }
     const stop = (e, data, index) => {
-        const updatedTextFields = [...textFields];
-        updatedTextFields[index].x = data.lastX;
-        updatedTextFields[index].y = data.lastY;
-        setTextFields(updatedTextFields);
-        rangeBorderChecker(index)
+        if (textFields[index].isLocked == false) {
+            const updatedTextFields = [...textFields];
+            updatedTextFields[index].x = data.lastX;
+            updatedTextFields[index].y = data.lastY;
+            setTextFields(updatedTextFields);
+            rangeBorderChecker(index)
+        }
     }
     const stopImage = (e, ui, index) => {
-        const updatedTextFields = [...textFields];
+        if (textFields[index].isLocked == false) {
 
-        updatedTextFields[index].x = ui.lastX;
-        updatedTextFields[index].y = ui.lastY;
-        setTextFields(updatedTextFields);
-        rangeBorderChecker(index)
+            const updatedTextFields = [...textFields];
 
+            updatedTextFields[index].x = ui.lastX;
+            updatedTextFields[index].y = ui.lastY;
+            setTextFields(updatedTextFields);
+            rangeBorderChecker(index)
+
+        }
     }
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
@@ -528,58 +541,108 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                 if (data.type == "textfield") {
                                     // console.log(data.x, data.y)
                                     return (
-                                        <Draggable
-                                            className="draggable"
-                                            key={data.id}
-                                            position={{ x: data.x, y: data.y }}
-                                            onStart={(e, ui) => { console.log(ui); stop(e, ui, index) }}
-                                            onDrag={(e, ui) => { stop(e, ui, index) }}
-                                            onStop={(e, ui) => {
-                                                stop(e, ui, index)
-                                                const updatedata = [...showInsideBorder];
-                                                updatedata.left = false;
-                                                updatedata.right = false;
+                                        <>
+                                            {data.isLocked == false ? <Draggable
+                                                key={data.id}
+                                                position={{ x: data.x, y: data.y }}
+                                                onStart={(e, ui) => { console.log(ui); stop(e, ui, index) }}
+                                                onDrag={(e, ui) => { stop(e, ui, index) }}
+                                                onStop={(e, ui) => {
+                                                    stop(e, ui, index)
+                                                    const updatedata = [...showInsideBorder];
+                                                    updatedata.left = false;
+                                                    updatedata.right = false;
 
-                                                setShowInsideBorder(showInsideBorder);
-                                                //  stop(e, ui, index); 
-                                                setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
-                                            }}
-                                        >
-                                            <div
+                                                    setShowInsideBorder(showInsideBorder);
+                                                    //  stop(e, ui, index); 
+                                                    setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
+                                                }}
+                                            >
+                                                <div
+                                                    key={index}
+                                                    ref={el => (ref.current[index] = el)}
+                                                    onClick={(e) => { if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }}
+                                                    onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
+                                                    style={{
+                                                        width: data.width + "px",
+                                                        height: data.height + "px",
+                                                        left: data.x,
+                                                        top: data.y, textAlign: data.alignment, position: "absolute",
+                                                        border: "none",
+                                                        zIndex: imageBorder == index && data.isLocked == false ? 1005 : 1000
+                                                    }}
+                                                >
+                                                    <div ref={el => (refLeft.current[index] = el)} style={{
+                                                        width: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                    }} className="resizer resizer-l"></div>
+                                                    <div ref={el => (refTop.current[index] = el)} style={{
+                                                        height: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                    }} className="resizer resizer-t"></div>
+                                                    <div style={{
+                                                        width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
+                                                    <div style={{
+                                                        height: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                    }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
+                                                    <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
+                                                    <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
+                                                    <textarea
+                                                        onContextMenu={(e) => { if (data.isLocked == false) { setSelectImageLayer((index)); setMenuPosition(data); } }}
+                                                        id='resize-component'
+                                                        type="text"
+                                                        value={data.text}
+                                                        onClick={(e) => handleRadioChange(index)}
+                                                        onChange={(e) => handleTextFieldChange(e, index)}
+                                                        className="absolute border border-gray-400 bg-transparent text-black "
+                                                        style={{
+                                                            width: data.width + "px",
+                                                            height: data.height + "px",
+                                                            textAlign: data.alignment, overflow: "hidden", fontFamily: data.fontFamily, fontSize: parseInt(data.size),
+                                                            fontWeight: data.bold,
+                                                            textDecoration: data.underline,
+                                                            fontStyle: data.italic
+                                                            , textTransform: data.textOrientation,
+                                                            color: "red",
+
+                                                            // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
+                                                            zIndex: data.z_index,
+                                                            boxSizing: "content-box",
+                                                            padding: "0",
+                                                            border: "none",
+                                                            outline: "none",
+                                                            opacity: data.transparency / 100,
+
+                                                        }}
+                                                    >
+
+                                                    </textarea>
+                                                </div>
+
+                                            </Draggable> : <div
                                                 key={index}
                                                 ref={el => (ref.current[index] = el)}
-                                                onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }}
-                                                onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
+                                                onClick={(e) => {
+                                                    if (showBorder == null && showBorder != index) {
+                                                        setShowBorder(index)
+                                                    } else { setShowBorder(null) }
+                                                }}
                                                 style={{
                                                     width: data.width + "px",
                                                     height: data.height + "px",
                                                     left: data.x,
                                                     top: data.y, textAlign: data.alignment, position: "absolute",
-                                                    border: "none",
-                                                    zIndex: imageBorder == index ? 1005 : 1000
+                                                    border: showBorder == index ? "3px solid black" : "none",
+                                                    boxSizing: "content-box",
+                                                    zIndex: imageBorder == index && data.isLocked == false ? 1005 : 1000
                                                 }}
                                             >
-                                                <div ref={el => (refLeft.current[index] = el)} style={{
-                                                    width: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
-                                                }} className="resizer resizer-l"></div>
-                                                <div ref={el => (refTop.current[index] = el)} style={{
-                                                    height: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
-                                                }} className="resizer resizer-t"></div>
-                                                <div style={{
-                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
-                                                }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
-                                                <div style={{
-                                                    height: imageBorder == index ? "0.5px" : "0px", zIndex: data.z_index + 1
-                                                }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
-                                                <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
-                                                <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
+                                                {showBorder == index ? <img onClick={(e) => { const updatedata = [...textFields]; updatedata[showBorder].isLocked = false; setTextFields(updatedata); }} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 1200, cursor: "pointer" }} width="48" height="48" src="https://img.icons8.com/color/48/lock--v1.png" alt="lock--v1" /> : ""}
+
                                                 <textarea
-                                                    onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
+                                                    onContextMenu={(e) => { if (data.isLocked == false) { setSelectImageLayer((index)); setMenuPosition(data); } }}
                                                     id='resize-component'
                                                     type="text"
                                                     value={data.text}
-                                                    onClick={(e) => handleRadioChange(index)}
-                                                    onChange={(e) => handleTextFieldChange(e, index)}
                                                     className="absolute border border-gray-400 bg-transparent text-black "
                                                     style={{
                                                         width: data.width + "px",
@@ -591,7 +654,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                         , textTransform: data.textOrientation,
                                                         color: "red",
 
-                                                        // border: imageBorder == index ? "1px solid blue" : "none",
+                                                        // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
                                                         zIndex: data.z_index,
                                                         boxSizing: "content-box",
                                                         padding: "0",
@@ -604,8 +667,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
 
                                                 </textarea>
                                             </div>
-
-                                        </Draggable>
+                                            }
+                                        </>
                                     )
                                 } else {
                                     return (
@@ -634,18 +697,18 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 key={index}
 
                                                 ref={el => (ref.current[index] = el)}
-                                                onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none", zIndex: imageBorder == index ? 1005 : 1000 }}>
+                                                onClick={(e) => { if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index && data.isLocked == false ? "1px solid blue" : "none", zIndex: imageBorder == index && data.isLocked == false ? 1005 : 1000 }}>
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
-                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-l"></div>
                                                 <div ref={el => (refTop.current[index] = el)} style={{
-                                                    height: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-t"></div>
                                                 <div style={{
-                                                    width: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
                                                 <div style={{
-                                                    height: imageBorder == index ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                 <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
                                                 <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", zIndex: 1000 }}></div>
@@ -673,6 +736,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             handleBringToForward={handleBringToForward}
                             bringToForward={bringToForward}
                             handleSendToBack={handleSendToBack}
+                            handleLockComponent={handleLockComponent}
                             textFields={textFields}
                             selectImageLayer={selectImageLayer}
                             setTextFields={setTextFields}
