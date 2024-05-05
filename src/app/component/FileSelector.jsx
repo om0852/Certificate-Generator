@@ -11,11 +11,41 @@ import bringToForward from "../../images/bring to forward.png"
 import ContextMenu from './menu/ContextMenu';
 const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
+    const [copyStyle, setCopyStyle] = useState(null);
+
     const ref = useRef([]);
     const refLeft = useRef([]);
     const refTop = useRef([]);
     const refRight = useRef([]);
     const refBottom = useRef([]);
+    const [copyText, setCopyText] = useState(null);
+
+    // Function to copy text to clipboard
+    const copyToClipboard = () => {
+        const selection = window.getSelection();
+        if (selection) {
+            const selectedText = selection.toString();
+            if (selectedText != "") {
+
+                navigator.clipboard.writeText(selectedText)
+                    .then(() => {
+                        setCopyText(selectedText); // Update the copyText state
+                        console.log('Text copied to clipboard:', selectedText, selection);
+                        // You can add any additional actions after successful copy
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text:', err);
+                    });
+            }
+        }
+    };
+
+    // Function to handle copying text
+    const handleCopyText = () => {
+        copyToClipboard();
+    };
+
+
     useEffect(() => {
         // if (imageBorder != null) {
         // console.log(ref.current)
@@ -345,6 +375,10 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             }
         }
     }
+    useEffect(() => {
+        console.log(textFields)
+        console.log(selectImageLayer)
+    }, [textFields])
     const handleBringForward = () => {
         const updatedImages = [...textFields];
         const updatedtextfield = [...textFields];
@@ -512,6 +546,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                             }}
                                         >
                                             <div
+                                                key={index}
                                                 ref={el => (ref.current[index] = el)}
                                                 onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }}
                                                 onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
@@ -596,6 +631,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                             className="draggableImage" >
 
                                             <div
+                                                key={index}
+
                                                 ref={el => (ref.current[index] = el)}
                                                 onClick={(e) => { if (imageBorder != null && imageBorder == index) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index ? "1px solid blue" : "none", zIndex: imageBorder == index ? 1005 : 1000 }}>
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
@@ -639,6 +676,11 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             textFields={textFields}
                             selectImageLayer={selectImageLayer}
                             setTextFields={setTextFields}
+                            copyStyle={copyStyle}
+                            setCopyStyle={setCopyStyle}
+                            handleCopyText={handleCopyText}
+                            copyText={copyText}
+                            setCopyText={setCopyText}
                         />}
                     </div>
                 </div>

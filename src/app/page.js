@@ -6,10 +6,12 @@ export default function Page(
 ) {
   return (
     <>
-    
-      <Navbar />
-      <ChooseTemplate />
-  
+      <div>
+
+        <Navbar />
+        <ChooseTemplate />
+      </div>
+
     </>
   )
 }

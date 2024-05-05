@@ -285,7 +285,8 @@ const Sidebar = ({
           textFields.map((data, index) => {
             if (data.type == "textfield") {
               return (
-                <div style={{ display: 'flex', alignItems: "center" }}>
+                <div key={index}
+                  style={{ display: 'flex', alignItems: "center" }}>
                   <svg onClick={() => {
                     const updatedImageField = [...textFields];
                     if (updatedImageField.length > 1) {
@@ -365,7 +366,8 @@ const Sidebar = ({
             if (data.type == "image") {
               return (
                 <>
-                  <div onClick={(e) => setSelectedImageData(null)} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
+                  <div key={index}
+                    onClick={(e) => setSelectedImageData(null)} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
 
                     <label onContextMenu={(e) => { handleImageData(e, index) }} style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
                   </div>
