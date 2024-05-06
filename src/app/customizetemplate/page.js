@@ -93,6 +93,12 @@ export default function Page() {
             setSelectImageLayer(historyIndex[historyTracker].y);
             setImageBorder(historyIndex[historyTracker].y)
             setHistoryTracker(historyTracker - 1);
+            updatedata.pop();
+            setHistoryComponent(updatedata);
+
+            const updatedata1 = [...historyIndex];
+            updatedata1.pop();
+            setHistoryIndex(updatedata1)
 
         }
     }
