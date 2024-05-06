@@ -98,6 +98,7 @@ const Sidebar = ({
   useEffect(() => {
     if (asyncTracker != 0) {
       handleHistoryComponent();
+      console.log(textFields)
     }
   }, [asyncTracker])
 
@@ -211,7 +212,7 @@ const Sidebar = ({
         const imageSrc = reader.result;
         if (i == -1) {
           // Push new image object to updatedImageField
-          updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image" });
+          updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image", isLocked: false });
         }
         else {
           updatedImageField[i].src = imageSrc;
@@ -219,6 +220,8 @@ const Sidebar = ({
 
         // Update state with updatedImageField
         setTextFields(updatedImageField);
+        handleHistoryComponent(updatedImageField);
+
       };
 
       // Start reading the file as a data URL
@@ -228,7 +231,6 @@ const Sidebar = ({
       // setSelectedImage(null);
     }
     setSelectedImageData(null);
-    setAsyncTracker(prev => prev + 1);
 
   };
   // Function to handle radio button change

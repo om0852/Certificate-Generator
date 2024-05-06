@@ -684,12 +684,12 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                 } else {
                                     return (
                                         <Draggable
+                                            className="draggable"
                                             defaultPosition={{ x: 100, y: 100 }}
                                             position={{ x: data.x, y: data.y }}
                                             key={index}
                                             onDrag={(e, ui) => {
                                                 stopImage(e, ui, index);
-
                                             }}
                                             onStop={(e, ui) => {
                                                 const updatedata = [...showInsideBorder];
@@ -699,7 +699,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 setShowInsideBorder(showInsideBorder);
                                                 //  stop(e, ui, index); 
                                                 setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
-                                                handleHistoryComponent();
+                                                // console.log(historyComponent[historyComponent.length - 1][0][index])
                                                 if (ui.lastX != historyComponent[historyComponent.length - 1][index].x || ui.lastY != historyComponent[historyComponent.length - 1][index].y) {
 
                                                     handleHistoryComponent();
@@ -709,7 +709,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                             }}
 
 
-                                            className="draggableImage" >
+                                        >
 
                                             <div
                                                 key={index}

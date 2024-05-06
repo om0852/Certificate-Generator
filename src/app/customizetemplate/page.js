@@ -11,6 +11,7 @@ import { toPng } from 'html-to-image';
 
 export default function Page() {
     const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(0); // State to hold the index of the selected text field
+    const [historyTracker, setHistoryTracker] = useState(-1)
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageBorder, setImageBorder] = useState(0);
     const [selectImageLayer, setSelectImageLayer] = useState(0);
@@ -26,12 +27,16 @@ export default function Page() {
 
     const [selectedImage, setSelectedImage] = useState(selectImage);
 
-    useEffect(() => { console.log(historyComponent) }
+    useEffect(() => {
+        console.log(historyComponent)
+        console.log("history index", historyIndex)
+        console.log("history index tracker", historyTracker)
+    }
         , [historyComponent])
     //main code
 
 
-    const handleHistoryComponent = () => {
+    const handleHistoryComponent = (data1 = null) => {
         console.log("add call");
         console.log(historyComponent)
 
@@ -49,33 +54,23 @@ export default function Page() {
         setHistoryIndex(prev => [
             ...prev, { x: newX, y: newY }
         ])
-        const data = {
-            id: textFields.length,
-            x: textFields[selectImageLayer].x,
-            y: textFields[selectImageLayer].y,
-            text: textFields[selectImageLayer].text,
-            fontFamily: textFields[selectImageLayer].fontFamily,
-            size: textFields[selectImageLayer].size,
-            bold: textFields[selectImageLayer].bold,
-            italic: textFields[selectImageLayer].italic,
-            alignment: textFields[selectImageLayer].alignment,
-            underline: textFields[selectImageLayer].underline,
-            textOrientation: textFields[selectImageLayer].textOrientation,
-            color: textFields[selectImageLayer].color,
-            z_index: textFields[selectImageLayer].z_index,
-            type: textFields[selectImageLayer].type,
-            transparency: textFields[selectImageLayer].transparency,
-            width: textFields[selectImageLayer].width,
-            height: textFields[selectImageLayer].height,
-            isSelected: textFields[selectImageLayer].isSelected,
-            isLocked: textFields[selectImageLayer].isLocked
-        };
-        const updatedata2 = [...historyComponent];
+        if (data1 == null) {
 
-        updatedata2.push([data]);
-        updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
-        setHistoryComponent(updatedata2);
+            const updatedata2 = [...historyComponent];
 
+            updatedata2.push(textFields);
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            setHistoryComponent(updatedata2);
+        }
+        else {
+            const updatedata2 = [...historyComponent];
+
+            updatedata2.push(data1);
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            setHistoryComponent(updatedata2);
+
+        }
+        setHistoryTracker(prev => prev + 1);
     }
     useEffect(() => {
         document.addEventListener("keyup", handleUndoComponent);
@@ -83,23 +78,22 @@ export default function Page() {
             document.removeEventListener("keyup", handleUndoComponent);
         }
 
-    }, [historyComponent, historyIndex])
+    }, [historyComponent, historyIndex, historyTracker])
 
     const handleUndoComponent = (e) => {
-        if (e.ctrlKey && e.key === 'z' && historyComponent.length > 1) {
+        if (e.ctrlKey && e.key === 'z' && historyTracker >= 0) {
             console.log("remove call")
+            console.log(historyTracker)
+
             const updatedata = [...historyComponent] // Remove last item
             updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
-            let newArray = updatedata[historyComponent.length - 2]
+            let newArray = updatedata[historyTracker]
             setTextFields(newArray);
-            updatedata.pop()
+            setSelectedTextFieldIndex(historyIndex[historyTracker].x);
+            setSelectImageLayer(historyIndex[historyTracker].y);
+            setImageBorder(historyIndex[historyTracker].y)
+            setHistoryTracker(historyTracker - 1);
 
-            setHistoryComponent(updatedata);
-            setSelectedTextFieldIndex(historyIndex[historyIndex.length - 2].x);
-            setSelectImageLayer(historyIndex[historyIndex.length - 2].y);
-            setImageBorder(historyIndex[historyIndex.length - 2].y)
-            const updatedata1 = historyIndex.slice(0, -1); // Remove last item
-            setHistoryIndex(updatedata1);
         }
     }
     const handleImageChange = (event) => {
