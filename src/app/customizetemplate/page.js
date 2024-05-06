@@ -157,6 +157,9 @@ export default function Page() {
             ...prevTextFields,
             data
         ]);
+        const updatedata = [...textFields];
+        updatedata.push(data);
+        handleHistoryComponent(updatedata);
     }
     const handleTextFieldChange = (event, index) => {
         const updatedTextFields = [...textFields];
