@@ -17,29 +17,23 @@ const Sidebar = ({
   handleImageChange,
   certificateRef,
   imageBorder,
-  setImageBorder
+  setImageBorder,
+  handleHistoryComponent
 
 }) => {
   const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
-  const [styleDropdown, setStyleDropdown] = useState(false)
-  const [addedComponent, setAddedComponent] = useState(false)
-  const [addedImageComponent, setAddedImageComponent] = useState(false)
+  //this tracker is used to called  used effect when state of textField change based on some condition
+  const [asyncTracker, setAsyncTracker] = useState(0);
+
   const [selectedImageData, setSelectedImageData] = useState(null);
   const [tabGroup1, setTabGroup1] = useState(true);
   const [tabGroup2, setTabGroup2] = useState(true);
-  const handleStyleDropdown = () => {
-    setStyleDropdown(!styleDropdown);
-  }
-  const handleAddedComponent = () => {
-    setAddedComponent(!addedComponent);
-  }
-  const handleImageAddedComponent = () => {
-    setAddedImageComponent(!addedImageComponent);
-  }
+
   const handleImageData = (e, i) => {
     setSelectedImageData({ x: e.clientX, y: e.clientY, index: i })
 
   }
+
 
   const fontFamilies = [
     'Arial',
@@ -101,6 +95,11 @@ const Sidebar = ({
   ];
   const textOrientation = ["capitalize", "uppercase", "lowercase", "none"];
   let fontSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+  useEffect(() => {
+    if (asyncTracker != 0) {
+      handleHistoryComponent();
+    }
+  }, [asyncTracker])
 
   // Function to handle font family change
   const onChangeFontSize = (e) => {
@@ -114,7 +113,7 @@ const Sidebar = ({
       }
     });
     setTextFields(updatedTextFields);
-    console.log(textFields)
+    setAsyncTracker(prev => prev + 1);
 
   }
   const onChangeFontFamily = (e) => {
@@ -126,8 +125,7 @@ const Sidebar = ({
       return textField;
     });
     setTextFields(updatedTextFields);
-    console.log(textFields)
-
+    setAsyncTracker(prev => prev + 1);
   };
   const onChangeOrientation = (e) => {
     const updatedTextFields = textFields.map((textField, index) => {
@@ -138,6 +136,8 @@ const Sidebar = ({
       return textField;
     });
     setTextFields(updatedTextFields);
+    setAsyncTracker(prev => prev + 1);
+
   }
   const changeBold = () => {
     const updatedTextFields = [...textFields];
@@ -150,6 +150,8 @@ const Sidebar = ({
       updatedTextFields[selectedTextFieldIndex].bold = "bold";
       setTextFields(updatedTextFields);
     }
+    setAsyncTracker(prev => prev + 1);
+
   }
   const changeItalic = () => {
     const updatedTextFields = [...textFields];
@@ -162,7 +164,7 @@ const Sidebar = ({
       updatedTextFields[selectedTextFieldIndex].italic = "italic";
       setTextFields(updatedTextFields);
     }
-    console.log(textFields)
+    setAsyncTracker(prev => prev + 1);
   }
   const changeUnderline = () => {
     const updatedTextFields = [...textFields];
@@ -175,18 +177,10 @@ const Sidebar = ({
       updatedTextFields[selectedTextFieldIndex].underline = "underline";
       setTextFields(updatedTextFields);
     }
+    setAsyncTracker(prev => prev + 1);
+
   }
 
-  const handleDeleteField = () => {
-    const updatedTextFields = [...textFields];
-    if (updatedTextFields.length > 1) {
-      updatedTextFields.splice(selectedTextFieldIndex, 1);
-      setTextFields(updatedTextFields);
-    }
-    else {
-      alert("1 field is mandatory")
-    }
-  }
 
   const handleConvertToPdf = async () => {
     const element = certificateRef.current;
@@ -203,6 +197,8 @@ const Sidebar = ({
     const updatedImageFields = [...textFields];
     updatedImageFields[imageBorder].transparency = e.target.value
     setTextFields(updatedImageFields)
+
+
   }
   const handleAddImage = (event, i) => {
     const updatedImageField = [...textFields];
@@ -231,7 +227,9 @@ const Sidebar = ({
       // Handle invalid file type
       // setSelectedImage(null);
     }
-    setSelectedImageData(null)
+    setSelectedImageData(null);
+    setAsyncTracker(prev => prev + 1);
+
   };
   // Function to handle radio button change
 
@@ -298,7 +296,7 @@ const Sidebar = ({
                     }
 
                   }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-                    <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
+                    <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#32bdef"></stop><stop offset="1" stopColor="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
                   </svg>
                   {/* Apply selected font family to the selected text field */}
                   <input
@@ -325,7 +323,7 @@ const Sidebar = ({
                     name="inputfield"
                     checked={data.isSelected}
                     type="radio"
-                    onClick={(e) => handleRadioChange(index)}
+                    onChange={(e) => handleRadioChange(index)}
                   />
 
                 </div>)
@@ -352,7 +350,7 @@ const Sidebar = ({
 
 
           }} style={{ height: "5vh", borderBottom: "1px solid black", display: "flex", alignItems: "center", justifyContent: "space-around" }}><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-              <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#32bdef"></stop><stop offset="1" stop-color="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
+              <linearGradient id="nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1" x1="18.405" x2="33.814" y1="10.91" y2="43.484" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#32bdef"></stop><stop offset="1" stopColor="#1ea2e4"></stop></linearGradient><path fill="url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)" d="M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826	c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z"></path><path fill="#0176d0" d="M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,0,1h16C32,7.634,32,7,32,7z"></path><path fill="#007ad9" d="M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16.763,7,24,7s13.827,1.293,16.132,1.8	C40.642,8.912,41,9.363,41,9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,7,9.886z"></path>
             </svg><span style={{ color: "black" }}>Delete</span></span>
             <input type="file"
               accept="image/*"
@@ -391,19 +389,20 @@ const Sidebar = ({
           <select
             style={{ color: 'black', width: "90%", marginTop: "3vh" }}
             onChange={onChangeFontFamily}
+            value={textFields[selectedTextFieldIndex].fontFamily}
           >
             {fontFamilies &&
-              fontFamilies.map((data) => {
+              fontFamilies.map((data, index) => {
                 if (textFields[selectedTextFieldIndex].fontFamily == data) {
                   return (
-                    <option selected value={data} style={{ fontFamily: data, color: 'black' }}>
+                    <option key={index} value={data} style={{ fontFamily: data, color: 'black' }}>
                       {data}
                     </option>
                   );
                 }
                 else {
                   return (
-                    <option value={data} style={{ fontFamily: data, color: 'black' }}>
+                    <option key={index} value={data} style={{ fontFamily: data, color: 'black' }}>
                       {data}
                     </option>
                   );
@@ -413,20 +412,20 @@ const Sidebar = ({
           </select>
           <select
             onChange={onChangeOrientation}
-
+            value={textFields[selectedTextFieldIndex].textOrientation}
             style={{ color: 'black', width: "90%", margin: "2vh 0" }}>
             {textOrientation &&
-              textOrientation.map((data) => {
+              textOrientation.map((data, index) => {
                 if (textFields[selectedTextFieldIndex].textOrientation == data) {
                   return (
-                    <option selected value={data} style={{ color: 'black', textTransform: data }}>
+                    <option key={index} value={data} style={{ color: 'black', textTransform: data }}>
                       {data}
                     </option>
                   );
                 }
                 else {
                   return (
-                    <option value={data} style={{ color: 'black', textTransform: data }}>
+                    <option key={index} value={data} style={{ color: 'black', textTransform: data }}>
                       {data}
                     </option>
                   );
@@ -437,17 +436,17 @@ const Sidebar = ({
           <select
             onChange={onChangeFontSize}
             style={{ color: 'black', margin: "1vh 0" }}
-
+            value={textFields[selectedTextFieldIndex].size}
           >
-            {fontSizes && fontSizes.map((data) => {
+            {fontSizes && fontSizes.map((data, index) => {
               if (textFields[selectedTextFieldIndex].size == data) {
                 return (
-                  <option selected style={{ color: "black" }} value={data}>{data}</option>
+                  <option key={index} style={{ color: "black" }} value={data}>{data}</option>
                 )
               }
               else {
                 return (
-                  <option style={{ color: "black" }} value={data}>{data}</option>
+                  <option key={index} style={{ color: "black" }} value={data}>{data}</option>
                 )
               }
 

@@ -9,10 +9,13 @@ import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
 import ContextMenu from './menu/ContextMenu';
-const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, handleRadioChange, imageBorder, setImageBorder }) => {
+const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, selectImageLayer, setSelectImageLayer, handleRadioChange, historyComponent, imageBorder, setImageBorder, handleHistoryComponent }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const [copyStyle, setCopyStyle] = useState(null);
-    const [showBorder, setShowBorder] = useState(null)
+    const [showBorder, setShowBorder] = useState(null);
+    const [menuPosition, setMenuPosition] = useState(null)
+    const [layerVisible, setLayerVisible] = useState("none");
+    const [dragIndicator, setDragIndicator] = useState({ left: false, right: false, center: false, top: false, bottom: false })
     const ref = useRef([]);
     const refLeft = useRef([]);
     const refTop = useRef([]);
@@ -53,6 +56,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             updatedata[selectImageLayer].isLocked = true
         }
         setTextFields(updatedata);
+        handleHistoryComponent();
+
     }
     useEffect(() => {
         // if (imageBorder != null) {
@@ -213,10 +218,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
         }
         // }
     }, [textFields.length]);
-    const [menuPosition, setMenuPosition] = useState(null)
-    const [selectImageLayer, setSelectImageLayer] = useState(null);
-    const [layerVisible, setLayerVisible] = useState("none");
-    const [dragIndicator, setDragIndicator] = useState({ left: false, right: false, center: false, top: false, bottom: false })
     // addFields(addTextField);
     // useEffect(() => {
     //     setTextFields(textFields)
@@ -382,10 +383,11 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                 setTextFields(updatedImages)
             }
         }
+
     }
     useEffect(() => {
-        console.log(textFields)
-        console.log(selectImageLayer)
+        // console.log(textFields)
+        // console.log(selectImageLayer)
     }, [textFields])
     const handleBringForward = () => {
         const updatedImages = [...textFields];
@@ -438,6 +440,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                 setTextFields(updatedImages)
             }
         }
+
     }
     const rangeBorderChecker = (index) => {
         const updatedTextFields = [...textFields];
@@ -493,6 +496,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
             updatedTextFields[index].y = data.lastY;
             setTextFields(updatedTextFields);
             rangeBorderChecker(index)
+
         }
     }
     const stopImage = (e, ui, index) => {
@@ -543,19 +547,26 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                     return (
                                         <>
                                             {data.isLocked == false ? <Draggable
-                                                key={data.id}
+                                                key={index}
+                                                defaultPosition={{ x: 0, y: 0 }}
                                                 position={{ x: data.x, y: data.y }}
                                                 onStart={(e, ui) => { console.log(ui); stop(e, ui, index) }}
                                                 onDrag={(e, ui) => { stop(e, ui, index) }}
                                                 onStop={(e, ui) => {
-                                                    stop(e, ui, index)
+                                                    stop(e, ui, index);
                                                     const updatedata = [...showInsideBorder];
                                                     updatedata.left = false;
                                                     updatedata.right = false;
 
                                                     setShowInsideBorder(showInsideBorder);
-                                                    //  stop(e, ui, index); 
-                                                    setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
+                                                    setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
+                                                    if (ui.lastX != historyComponent[historyComponent.length - 1][index].x || ui.lastY != historyComponent[historyComponent.length - 1][index].y) {
+
+                                                        handleHistoryComponent();
+                                                    }
+
+
+
                                                 }}
                                             >
                                                 <div
@@ -675,9 +686,10 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                         <Draggable
                                             defaultPosition={{ x: 100, y: 100 }}
                                             position={{ x: data.x, y: data.y }}
-
+                                            key={index}
                                             onDrag={(e, ui) => {
                                                 stopImage(e, ui, index);
+
                                             }}
                                             onStop={(e, ui) => {
                                                 const updatedata = [...showInsideBorder];
@@ -686,7 +698,13 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
 
                                                 setShowInsideBorder(showInsideBorder);
                                                 //  stop(e, ui, index); 
-                                                setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false })
+                                                setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
+                                                handleHistoryComponent();
+                                                if (ui.lastX != historyComponent[historyComponent.length - 1][index].x || ui.lastY != historyComponent[historyComponent.length - 1][index].y) {
+
+                                                    handleHistoryComponent();
+                                                }
+
 
                                             }}
 
