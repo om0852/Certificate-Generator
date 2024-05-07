@@ -9,7 +9,7 @@ import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
 import ContextMenu from './menu/ContextMenu';
-const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, selectImageLayer, setSelectImageLayer, handleRadioChange, historyComponent, imageBorder, setImageBorder, handleHistoryComponent }) => {
+const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, selectImageLayer, setSelectImageLayer, handleRadioChange, undoHistoryComponent, imageBorder, setImageBorder, handleHistoryComponent }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const [copyStyle, setCopyStyle] = useState(null);
     const [showBorder, setShowBorder] = useState(null);
@@ -553,17 +553,19 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 onStart={(e, ui) => { console.log(ui); stop(e, ui, index) }}
                                                 onDrag={(e, ui) => { stop(e, ui, index) }}
                                                 onStop={(e, ui) => {
-                                                    stop(e, ui, index);
                                                     const updatedata = [...showInsideBorder];
                                                     updatedata.left = false;
                                                     updatedata.right = false;
 
                                                     setShowInsideBorder(showInsideBorder);
                                                     setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
-                                                    if (ui.lastX != historyComponent[historyComponent.length - 1][index].x || ui.lastY != historyComponent[historyComponent.length - 1][index].y) {
+                                                    console.log(ui.lastX, undoHistoryComponent[undoHistoryComponent.length - 1][index].x)
+                                                    if (ui.lastX != undoHistoryComponent[undoHistoryComponent.length - 1][index].x || ui.lastY != undoHistoryComponent[undoHistoryComponent.length - 1][index].y) {
 
                                                         handleHistoryComponent();
                                                     }
+                                                    stop(e, ui, index);
+
 
 
 
@@ -699,11 +701,12 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 setShowInsideBorder(showInsideBorder);
                                                 //  stop(e, ui, index); 
                                                 setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
-                                                // console.log(historyComponent[historyComponent.length - 1][0][index])
-                                                if (ui.lastX != historyComponent[historyComponent.length - 1][index].x || ui.lastY != historyComponent[historyComponent.length - 1][index].y) {
+                                                // console.log(undoHistoryComponent[undoHistoryComponent.length - 1][0][index])
+                                                if (ui.lastX != undoHistoryComponent[undoHistoryComponent.length - 1][index].x || ui.lastY != undoHistoryComponent[undoHistoryComponent.length - 1][index].y) {
 
                                                     handleHistoryComponent();
                                                 }
+                                                stopImage(e, ui, index);
 
 
                                             }}
