@@ -59,12 +59,18 @@ export default function Page() {
     }
 
     //testing code
+    // useEffect(() => {
+    //     console.log(redoHistoryComponent)
+    //     console.log("history index", redoHistoryIndex)
+    //     console.log("history index tracker", redoHistoryIndexTracker)
+    // }
+    //     , [redoHistoryComponent])
     useEffect(() => {
-        console.log(redoHistoryComponent)
-        console.log("history index", redoHistoryIndex)
-        console.log("history index tracker", redoHistoryIndexTracker)
+        console.log(undoHistoryComponent)
+        console.log("history index", undoHistoryIndex)
+        console.log("history index tracker", undoHistoryTracker)
     }
-        , [redoHistoryComponent])
+        , [undoHistoryComponent, undoHistoryTracker])
     //main code
 
 

@@ -535,7 +535,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                         position: "relative", height: "620px"
                     }}
                 >
-                    <div ref={certificateRef}>
+                    <div ref={certificateRef} style={{ zIndex: -1 }}>
                         <div style={{ display: dragIndicator.left == true ? "block" : "none", position: "absolute", left: "450px", top: "0px", width: ".1vh", height: "100%", background: "purple" }}></div>
                         <div style={{ display: dragIndicator.top == true ? "block" : "none", position: "absolute", left: "0px", top: "310px", width: "900px", height: ".1vh", background: "purple" }}></div>
                         <img src={selectedImage} style={{ width: "900px", height: "620px" }} />
@@ -556,7 +556,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                     const updatedata = [...showInsideBorder];
                                                     updatedata.left = false;
                                                     updatedata.right = false;
-
                                                     setShowInsideBorder(showInsideBorder);
                                                     setDragIndicator({ left: false, right: false, center: false, top: false, bottom: false });
                                                     console.log(ui.lastX, undoHistoryComponent[undoHistoryComponent.length - 1][index].x)
@@ -564,7 +563,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
 
                                                         handleHistoryComponent();
                                                     }
-                                                    stop(e, ui, index);
+                                                    // stop(e, ui, index);
 
 
 
@@ -766,6 +765,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             handleCopyText={handleCopyText}
                             copyText={copyText}
                             setCopyText={setCopyText}
+                            handleHistoryComponent={handleHistoryComponent}
                         />}
                     </div>
                 </div>

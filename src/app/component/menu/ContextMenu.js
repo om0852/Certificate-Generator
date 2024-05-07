@@ -20,8 +20,8 @@ export default function ContextMenu({
     copyText,
     setCopyText,
     handleCopyText,
-    handleLockComponent
-
+    handleLockComponent,
+    handleHistoryComponent
 }) {
 
     const [hoverStateTracker, setHoverStateTracker] = useState([{ layer: "none", alignTo: "none" }])
@@ -44,11 +44,11 @@ export default function ContextMenu({
             <div style={{ cursor: "pointer", zIndex: 1300, border: "1px solid black", width: "25vh", background: "white", boxShadow: " 4px 6px 22px 0px rgba(0,0,0,0.75)", color: "black", position: "absolute", top: (menuPosition.y + 30) + "px", left: (menuPosition.x + 100) + "px" }}>
                 {/* layer content */}
 
-                <div onClick={(e) => {
+                {menuPosition.type != "type" && <div onClick={(e) => {
                     handleCopyText()
-                }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="48" height="48" src="https://img.icons8.com/fluency-systems-regular/48/copy--v1.png" alt="copy--v1" />Copy </div>
+                }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="48" height="48" src="https://img.icons8.com/fluency-systems-regular/48/copy--v1.png" alt="copy--v1" />Copy </div>}
 
-                {copyText != null && <div onClick={(e) => {
+                {copyText != null && menuPosition.type != "type" && <div onClick={(e) => {
                     if (copyText != null) {
                         const updatedata = [...textFields];
                         updatedata[selectImageLayer].text += copyText;
@@ -56,7 +56,7 @@ export default function ContextMenu({
                     }
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-filled/30/paste.png" alt="paste" />Paste</div>}
 
-                <div onClick={(e) => {
+                {menuPosition.type != "type" && <div onClick={(e) => {
                     const data = {
                         fontFamily: textFields[selectImageLayer].fontFamily,
                         size: textFields[selectImageLayer].size,
@@ -68,8 +68,8 @@ export default function ContextMenu({
                         color: textFields[selectImageLayer].color
                     }
                     setCopyStyle(data)
-                }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/copy--v1.png" alt="copy--v1" />Copy Style</div>
-                {copyStyle != null && <div onClick={(e) => {
+                }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios/30/copy--v1.png" alt="copy--v1" />Copy Style</div>}
+                {copyStyle != null && menuPosition.type != "type" && <div onClick={(e) => {
                     if (copyStyle == null) { } else {
                         const updatedata = [...textFields];
                         updatedata[selectImageLayer].fontFamily = copyStyle.fontFamily;
@@ -86,30 +86,60 @@ export default function ContextMenu({
                     }
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={paste_style.src} />Paste Style</div>}
                 <div onClick={(e) => {
-                    const data = {
-                        id: textFields.length + 1,
-                        x: textFields[selectImageLayer].x + 10,
-                        y: textFields[selectImageLayer].y,
-                        text: textFields[selectImageLayer].text,
-                        fontFamily: textFields[selectImageLayer].fontFamily,
-                        size: textFields[selectImageLayer].size,
-                        bold: textFields[selectImageLayer].bold,
-                        italic: textFields[selectImageLayer].italic,
-                        alignment: textFields[selectImageLayer].alignment,
-                        underline: textFields[selectImageLayer].underline,
-                        textOrientation: textFields[selectImageLayer].textOrientation,
-                        color: textFields[selectImageLayer].color,
-                        z_index: textFields[selectImageLayer].z_index + 1,
-                        type: textFields[selectImageLayer].type,
-                        transparency: textFields[selectImageLayer].transparency,
-                        width: textFields[selectImageLayer].width,
-                        height: textFields[selectImageLayer].height,
-                        isSelected: textFields[selectImageLayer].isSelected
-                    };
-                    setTextFields(prevTextFields => [
-                        ...prevTextFields,
-                        data
-                    ]);
+                    if (textFields[selectImageLayer].type == "textfield") {
+
+                        const data = {
+                            id: textFields.length + 1,
+                            x: textFields[selectImageLayer].x + 10,
+                            y: textFields[selectImageLayer].y,
+                            text: textFields[selectImageLayer].text,
+                            fontFamily: textFields[selectImageLayer].fontFamily,
+                            size: textFields[selectImageLayer].size,
+                            bold: textFields[selectImageLayer].bold,
+                            italic: textFields[selectImageLayer].italic,
+                            alignment: textFields[selectImageLayer].alignment,
+                            underline: textFields[selectImageLayer].underline,
+                            textOrientation: textFields[selectImageLayer].textOrientation,
+                            color: textFields[selectImageLayer].color,
+                            z_index: textFields[selectImageLayer].z_index + 1,
+                            type: textFields[selectImageLayer].type,
+                            transparency: textFields[selectImageLayer].transparency,
+                            width: textFields[selectImageLayer].width,
+                            height: textFields[selectImageLayer].height,
+                            isSelected: textFields[selectImageLayer].isSelected,
+                            isLocked: false
+
+                        };
+                        setTextFields(prevTextFields => [
+                            ...prevTextFields,
+                            data
+                        ]);
+                        const updatedata = [...textFields];
+                        updatedata.push(data)
+                        handleHistoryComponent(updatedata);
+                    }
+                    else {
+                        const data = {
+                            id: textFields.length + 1,
+                            x: textFields[selectImageLayer].x + 10,
+                            y: textFields[selectImageLayer].y,
+                            src: textFields[selectImageLayer].src,
+                            z_index: textFields[selectImageLayer].z_index + 1,
+                            type: textFields[selectImageLayer].type,
+                            transparency: textFields[selectImageLayer].transparency,
+                            width: textFields[selectImageLayer].width,
+                            height: textFields[selectImageLayer].height,
+                            isSelected: textFields[selectImageLayer].isSelected,
+                            isLocked: false
+                        };
+                        setTextFields(prevTextFields => [
+                            ...prevTextFields,
+                            data
+                        ]);
+                        const updatedata = [...textFields];
+                        updatedata.push(data)
+                        handleHistoryComponent(updatedata);
+                    }
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-filled/30/duplicate.png" alt="duplicate" />Duplicate</div>
                 <div onMouseEnter={(e) => { handleHoverState("block", "layer"); setLayerVisible("block") }} onMouseLeave={(e) => handleHoverState("none", "layer")}
                     className='layer-classname-container' onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Layer
@@ -136,6 +166,7 @@ export default function ContextMenu({
                 </div>
                 <div onClick={(e) => {
                     handleLockComponent()
+                    handleHistoryComponent();
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="48" height="48" src="https://img.icons8.com/fluency-systems-regular/48/copy--v1.png" alt="copy--v1" />{textFields[selectImageLayer].isLocked ? "Unlock" : "Lock"} </div>
 
             </div >
