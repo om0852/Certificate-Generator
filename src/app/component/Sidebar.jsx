@@ -4,6 +4,7 @@ import ReactToPrint from 'react-to-print';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import domToPdf from "./DomToPdf";
+import { Link } from '@react-pdf/renderer';
 
 
 const Sidebar = ({
@@ -252,13 +253,13 @@ const Sidebar = ({
         >
           Select Certificate
         </label>
-        <button
+        <Link
+        href='/mytemplate'
           className='rounded'
           style={{ width: "90%", height: "40px", background: "green", margin: "2vh 0" }}
-          onClick={handleConvertToPdf}
         >
-          Download
-        </button>
+          Upload Certificate Template
+        </Link>
         <button
           className='rounded'
           style={{ width: "90%", height: "40px", background: "green", margin: "2vh 0" }}
