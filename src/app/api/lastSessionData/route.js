@@ -17,10 +17,10 @@ try{
         
     })
     
-    return NextResponse.json({ status: 300, error: "certificate Uploaded Successfully" });
+    return NextResponse.json({ status: 300, error: "session data updated Successfully" });
 
 }catch(error){
-    console.log("certificateTemplate errror occur");
+    console.log("session data updated errror occur");
     return NextResponse.json({ status: 300, error: "Invalid Attempt" +error.message});
 
 }

@@ -7,6 +7,8 @@ import jsPDF from "jspdf";
 import selectImage from "../../images/selectimage.png"
 import ReactToPrint from 'react-to-print';
 import { toPng } from 'html-to-image';
+import NewSideBar from "../component/NewSideBar";
+import StylingHeader from "../component/StylingHeader";
 
 
 export default function Page() {
@@ -126,7 +128,7 @@ export default function Page() {
             console.log(undoHistoryTracker)
 
             const updatedata = [...undoHistoryComponent] // Remove last item
-            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',textColor:"black",fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             let newArray = updatedata[undoHistoryTracker]
             setTextFields(newArray);
             setSelectedTextFieldIndex(undoHistoryIndex[undoHistoryTracker].x);
@@ -193,7 +195,7 @@ export default function Page() {
             })
     }
     const addTextField = () => {
-        const data = { id: (textFields.length + 1), x: 0, y: 0, text: "Text" + (textFields.length + 1), fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
+        const data = { id: (textFields.length + 1), x: 0, y: 0, text: "Text" + (textFields.length + 1), textColor: "black", fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
         setTextFields(prevTextFields => [
             ...prevTextFields,
             data
@@ -215,9 +217,12 @@ export default function Page() {
                 scrollBehavior: "smooth"
             }}>
                 {/* <!-- Sidebar (Optional) --> */}
-
-                <Sidebar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
-                <FileSelector imageBorder={imageBorder} setImageBorder={setImageBorder} setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} handleRadioChange={handleRadioChange} setSelectImageLayer={setSelectImageLayer} handleHistoryComponent={handleHistoryComponent} selectImageLayer={selectImageLayer} undoHistoryComponent={undoHistoryComponent} />
+                <NewSideBar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
+                {/* <Sidebar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} /> */}
+                <div style={{ width: "100%", overflow: "hidden", height: "100%" }}>
+                    <StylingHeader imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
+                    <FileSelector imageBorder={imageBorder} setImageBorder={setImageBorder} setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} handleRadioChange={handleRadioChange} setSelectImageLayer={setSelectImageLayer} handleHistoryComponent={handleHistoryComponent} selectImageLayer={selectImageLayer} undoHistoryComponent={undoHistoryComponent} />
+                </div>
             </div >
 
         </>

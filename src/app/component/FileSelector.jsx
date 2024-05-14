@@ -520,7 +520,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     let offsetLeft, offsetTop
 
     return (
-        <div className="flex flex-col items-center relative" style={{ width: "85%" }} onClick={(e) => { setMenuPosition(null); }}
+        <div className="flex flex-col items-center relative" style={{ width: "100%" ,display:"grid",placeItems:"center",height:"100%"}} onClick={(e) => { setMenuPosition(null); }}
         >
 
             {selectedImage ? "" : <div style={{ width: "691.5px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
@@ -532,7 +532,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                         width: "900px",
                         height: "100%",
                         overflow: "hidden",
-                        position: "relative", height: "620px"
+                        position: "relative",
                     }}
                 >
                     <div ref={certificateRef} style={{ zIndex: -1 }}>
@@ -614,7 +614,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                             textDecoration: data.underline,
                                                             fontStyle: data.italic
                                                             , textTransform: data.textOrientation,
-                                                            color: "red",
+                                                            color: data.textColor,
 
                                                             // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
                                                             zIndex: data.z_index,
