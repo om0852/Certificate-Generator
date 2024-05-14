@@ -22,7 +22,75 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
     const refRight = useRef([]);
     const refBottom = useRef([]);
     const [copyText, setCopyText] = useState(null);
+    //delete a component 
+    const handleDeleteComponent=(index)=>{
+        const updatedata=[...textFields];
+        updatedata.splice(index,1);
+        setSelectImageLayer(null);
+        setImageBorder(null);
+        setTextFields(updatedata);
+        handleHistoryComponent();
 
+        
+    }
+//Duplicate a component
+
+const handleDuplicateComponent=()=>{
+    if (textFields[selectImageLayer].type == "textfield") {
+
+        const data = {
+            id: textFields.length + 1,
+            x: textFields[selectImageLayer].x + 10,
+            y: textFields[selectImageLayer].y,
+            text: textFields[selectImageLayer].text,
+            fontFamily: textFields[selectImageLayer].fontFamily,
+            size: textFields[selectImageLayer].size,
+            bold: textFields[selectImageLayer].bold,
+            italic: textFields[selectImageLayer].italic,
+            alignment: textFields[selectImageLayer].alignment,
+            underline: textFields[selectImageLayer].underline,
+            textOrientation: textFields[selectImageLayer].textOrientation,
+            color: textFields[selectImageLayer].color,
+            z_index: textFields[selectImageLayer].z_index + 1,
+            type: textFields[selectImageLayer].type,
+            transparency: textFields[selectImageLayer].transparency,
+            width: textFields[selectImageLayer].width,
+            height: textFields[selectImageLayer].height,
+            isSelected: textFields[selectImageLayer].isSelected,
+            isLocked: false
+
+        };
+        setTextFields(prevTextFields => [
+            ...prevTextFields,
+            data
+        ]);
+        const updatedata = [...textFields];
+        updatedata.push(data)
+        handleHistoryComponent(updatedata);
+    }
+    else {
+        const data = {
+            id: textFields.length + 1,
+            x: textFields[selectImageLayer].x + 10,
+            y: textFields[selectImageLayer].y,
+            src: textFields[selectImageLayer].src,
+            z_index: textFields[selectImageLayer].z_index + 1,
+            type: textFields[selectImageLayer].type,
+            transparency: textFields[selectImageLayer].transparency,
+            width: textFields[selectImageLayer].width,
+            height: textFields[selectImageLayer].height,
+            isSelected: textFields[selectImageLayer].isSelected,
+            isLocked: false
+        };
+        setTextFields(prevTextFields => [
+            ...prevTextFields,
+            data
+        ]);
+        const updatedata = [...textFields];
+        updatedata.push(data)
+        handleHistoryComponent(updatedata);
+    }
+}
     // Function to copy text to clipboard
     const copyToClipboard = () => {
         const selection = window.getSelection();
@@ -573,7 +641,6 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                 <div
                                                     key={index}
                                                     ref={el => (ref.current[index] = el)}
-                                                    onClick={(e) => { if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }}
                                                     onContextMenu={(e) => { setSelectImageLayer((index)); setMenuPosition(data); }}
                                                     style={{
                                                         width: data.width + "px",
@@ -598,12 +665,20 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                     }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                     <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
                                                     <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
+
+                                                    {/* //menu component  */}
+                                                 {imageBorder==index&&   <div style={{width:"20vh",height:"8vh",background:"white",position:"absolute",top:"-10vh",left:"5vh",backgroundColor:"white",boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px"}}>
+                                                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-around",height:"100%"}}>
+                                                    <svg onClick={handleDuplicateComponent} style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.7em" height="1.7em"><path fill="none" d="M0 0h256v256H0z"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M168 168h48V40H88v48"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M40 88h128v128H40z"></path><path fill="currentColor" d="M138.14 152.43a4.46 4.46 0 0 1-4.45 4.46h-25.26v25.25a4.46 4.46 0 0 1-8.92 0v-25.25H74.26a4.46 4.46 0 0 1 0-8.92h25.25v-25.26a4.46 4.46 0 0 1 8.92 0V148h25.26a4.46 4.46 0 0 1 4.45 4.43Z"></path></svg
+                                                    ><svg onClick={(e)=>handleDeleteComponent(index)} style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16ZM96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Zm48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Z"></path></svg>
+                                                 <svg style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path></svg>
+                                                 </div></div>}
                                                     <textarea
                                                         onContextMenu={(e) => { if (data.isLocked == false) { setSelectImageLayer((index)); setMenuPosition(data); } }}
                                                         id='resize-component'
                                                         type="text"
-                                                        value={data.text}
-                                                        onClick={(e) => handleRadioChange(index)}
+                                                        value={data.text}     
+                                                        onClick={(e) => { handleRadioChange(index); if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }}
                                                         onChange={(e) => handleTextFieldChange(e, index)}
                                                         className="absolute border border-gray-400 bg-transparent text-black "
                                                         style={{
@@ -623,7 +698,8 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                             border: "none",
                                                             outline: "none",
                                                             opacity: data.transparency / 100,
-
+                                                            lineHeight:data.lineHeight+"px",
+                                                            letterSpacing:data.letterSpacing+"px"
                                                         }}
                                                     >
 
@@ -664,7 +740,9 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                                                         textDecoration: data.underline,
                                                         fontStyle: data.italic
                                                         , textTransform: data.textOrientation,
-                                                        color: "red",
+                                                        color: data.textColor,
+                                                        lineHeight:data.lineHeight+"px",
+                                                        letterSpacing:data.letterSpacing+"px",
 
                                                         // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
                                                         zIndex: data.z_index,
@@ -766,6 +844,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
                             copyText={copyText}
                             setCopyText={setCopyText}
                             handleHistoryComponent={handleHistoryComponent}
+                            handleDuplicateComponent={handleDuplicateComponent}
                         />}
                     </div>
                 </div>

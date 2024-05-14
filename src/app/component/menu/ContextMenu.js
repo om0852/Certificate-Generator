@@ -9,6 +9,7 @@ export default function ContextMenu({
     sendToBack,
     menuPosition,
     selectImageLayer,
+    handleDuplicateComponent,
     textFields,
     setTextFields,
     sendBack,
@@ -85,61 +86,8 @@ export default function ContextMenu({
                         console.log("done")
                     }
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={paste_style.src} />Paste Style</div>}
-                <div onClick={(e) => {
-                    if (textFields[selectImageLayer].type == "textfield") {
-
-                        const data = {
-                            id: textFields.length + 1,
-                            x: textFields[selectImageLayer].x + 10,
-                            y: textFields[selectImageLayer].y,
-                            text: textFields[selectImageLayer].text,
-                            fontFamily: textFields[selectImageLayer].fontFamily,
-                            size: textFields[selectImageLayer].size,
-                            bold: textFields[selectImageLayer].bold,
-                            italic: textFields[selectImageLayer].italic,
-                            alignment: textFields[selectImageLayer].alignment,
-                            underline: textFields[selectImageLayer].underline,
-                            textOrientation: textFields[selectImageLayer].textOrientation,
-                            color: textFields[selectImageLayer].color,
-                            z_index: textFields[selectImageLayer].z_index + 1,
-                            type: textFields[selectImageLayer].type,
-                            transparency: textFields[selectImageLayer].transparency,
-                            width: textFields[selectImageLayer].width,
-                            height: textFields[selectImageLayer].height,
-                            isSelected: textFields[selectImageLayer].isSelected,
-                            isLocked: false
-
-                        };
-                        setTextFields(prevTextFields => [
-                            ...prevTextFields,
-                            data
-                        ]);
-                        const updatedata = [...textFields];
-                        updatedata.push(data)
-                        handleHistoryComponent(updatedata);
-                    }
-                    else {
-                        const data = {
-                            id: textFields.length + 1,
-                            x: textFields[selectImageLayer].x + 10,
-                            y: textFields[selectImageLayer].y,
-                            src: textFields[selectImageLayer].src,
-                            z_index: textFields[selectImageLayer].z_index + 1,
-                            type: textFields[selectImageLayer].type,
-                            transparency: textFields[selectImageLayer].transparency,
-                            width: textFields[selectImageLayer].width,
-                            height: textFields[selectImageLayer].height,
-                            isSelected: textFields[selectImageLayer].isSelected,
-                            isLocked: false
-                        };
-                        setTextFields(prevTextFields => [
-                            ...prevTextFields,
-                            data
-                        ]);
-                        const updatedata = [...textFields];
-                        updatedata.push(data)
-                        handleHistoryComponent(updatedata);
-                    }
+                <div onClick={(e) => {handleDuplicateComponent
+                   
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src="https://img.icons8.com/ios-filled/30/duplicate.png" alt="duplicate" />Duplicate</div>
                 <div onMouseEnter={(e) => { handleHoverState("block", "layer"); setLayerVisible("block") }} onMouseLeave={(e) => handleHoverState("none", "layer")}
                     className='layer-classname-container' onClick={handleBringToForward} style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><img width="30" height="30" src={bringToForward.src} />Layer

@@ -17,11 +17,10 @@ export default function Page() {
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageBorder, setImageBorder] = useState(0);
     const [selectImageLayer, setSelectImageLayer] = useState(0);
-
     const [textFields, setTextFields] = useState([
-        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
+        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman",letterSpacing:0,lineHeight:10, size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
     ]);
-    const [undoHistoryComponent, setUndoHistoryComponent] = useState([[{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }]])
+    const [undoHistoryComponent, setUndoHistoryComponent] = useState([[{ id: 1, x: 0, y: 0, text: 'Text 1',letterSpacing:0,lineHeight:10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }]])
     const [undoHistoryIndex, setUndoHistoryIndex] = useState([{ x: 0, y: 0 }]);
     const [imageFields, setImageFields] = useState([])
     const certificateRef = useRef(null);
@@ -99,14 +98,14 @@ export default function Page() {
             const updatedata2 = [...undoHistoryComponent];
 
             updatedata2.push(textFields);
-            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',letterSpacing:0,lineHeight:10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             setUndoHistoryComponent(updatedata2);
         }
         else {
             const updatedata2 = [...undoHistoryComponent];
 
             updatedata2.push(data1);
-            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, letterSpacing:0,lineHeight:10, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             setUndoHistoryComponent(updatedata2);
 
         }
@@ -128,7 +127,7 @@ export default function Page() {
             console.log(undoHistoryTracker)
 
             const updatedata = [...undoHistoryComponent] // Remove last item
-            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',textColor:"black",fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',textColor:"black", letterSpacing:0,lineHeight:10,fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             let newArray = updatedata[undoHistoryTracker]
             setTextFields(newArray);
             setSelectedTextFieldIndex(undoHistoryIndex[undoHistoryTracker].x);
@@ -195,7 +194,7 @@ export default function Page() {
             })
     }
     const addTextField = () => {
-        const data = { id: (textFields.length + 1), x: 0, y: 0, text: "Text" + (textFields.length + 1), textColor: "black", fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
+        const data = { id: (textFields.length + 1), x: 0, y: 0,letterSpacing:0,lineHeight:10, text: "Text" + (textFields.length + 1), textColor: "black", fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
         setTextFields(prevTextFields => [
             ...prevTextFields,
             data
