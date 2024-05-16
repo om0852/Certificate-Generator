@@ -235,7 +235,7 @@ const handleAddImage = (event, i) => {
 };
     return(
         <>    
-     <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501}}>
+     <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
         <div className="sidebar-icon" onClick={(e)=>{setMenu(true);setMenuData("Template")}}>   
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 16v40H40V56ZM40 112h56v88H40Zm176 88H112v-88h104v88Z"></path></svg>
               Template

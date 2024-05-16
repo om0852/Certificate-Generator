@@ -9,11 +9,13 @@ import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png"
 import bringToForward from "../../images/bring to forward.png"
 import ContextMenu from './menu/ContextMenu';
-const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFieldIndex, selectedImage, textFields, selectImageLayer, setSelectImageLayer, handleRadioChange, undoHistoryComponent, imageBorder, setImageBorder, handleHistoryComponent }) => {
+import { TransformComponent,TransformWrapper } from 'react-zoom-pan-pinch';
+const ImageBanner = ({ addFields, setTextFields,setSelectedTextFieldIndex, zoomValue,certificateRef, selectedTextFieldIndex, selectedImage, textFields, selectImageLayer, setSelectImageLayer, handleRadioChange, undoHistoryComponent, imageBorder, setImageBorder, handleHistoryComponent }) => {
     const [showInsideBorder, setShowInsideBorder] = useState([{ left: false, right: false }]);
     const [copyStyle, setCopyStyle] = useState(null);
     const [showBorder, setShowBorder] = useState(null);
-    const [menuPosition, setMenuPosition] = useState(null)
+    const [menuPosition, setMenuPosition] = useState(null);
+    const [menuStateTracker,setMenuStateTracker]=useState(null)
     const [layerVisible, setLayerVisible] = useState("none");
     const [dragIndicator, setDragIndicator] = useState({ left: false, right: false, center: false, top: false, bottom: false })
     const ref = useRef([]);
@@ -28,6 +30,7 @@ const ImageBanner = ({ addFields, setTextFields, certificateRef, selectedTextFie
         updatedata.splice(index,1);
         setSelectImageLayer(null);
         setImageBorder(null);
+        setSelectedTextFieldIndex(null)
         setTextFields(updatedata);
         handleHistoryComponent();
 
@@ -588,22 +591,24 @@ const handleDuplicateComponent=()=>{
     let offsetLeft, offsetTop
 
     return (
-        <div className="flex flex-col items-center relative" style={{ width: "100%" ,display:"grid",placeItems:"center",height:"100%"}} onClick={(e) => { setMenuPosition(null); }}
+        <div className="flex flex-col items-center relative" style={{ width: "100%" ,display:"grid",placeItems:"center",height:"100%"}}
         >
 
             {selectedImage ? "" : <div style={{ width: "691.5px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
                 <div
-                    className="mt-4 w-full h-40 md:h-48 lg:h-64 bg-cover bg-center"
                     style={{
                         width: "900px",
                         height: "100%",
                         overflow: "hidden",
                         position: "relative",
+                        scale:zoomValue,
+                        marginTop:"-5vh"
                     }}
                 >
-                    <div ref={certificateRef} style={{ zIndex: -1 }}>
+                   
+                        <div ref={certificateRef} style={{ zIndex: -1 }} onClick={(e)=>{if(menuPosition!=null){ setMenuStateTracker(null);setMenuPosition(null)}}}>
                         <div style={{ display: dragIndicator.left == true ? "block" : "none", position: "absolute", left: "450px", top: "0px", width: ".1vh", height: "100%", background: "purple" }}></div>
                         <div style={{ display: dragIndicator.top == true ? "block" : "none", position: "absolute", left: "0px", top: "310px", width: "900px", height: ".1vh", background: "purple" }}></div>
                         <img src={selectedImage} style={{ width: "900px", height: "620px" }} />
@@ -631,13 +636,10 @@ const handleDuplicateComponent=()=>{
 
                                                         handleHistoryComponent();
                                                     }
-                                                    // stop(e, ui, index);
-
-
-
 
                                                 }}
                                             >
+                                                
                                                 <div
                                                     key={index}
                                                     ref={el => (ref.current[index] = el)}
@@ -665,20 +667,73 @@ const handleDuplicateComponent=()=>{
                                                     }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                     <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
                                                     <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
-
+                                                    {menuPosition && menuStateTracker!=true?<ContextMenu
+                            menuPosition={menuPosition}
+                            sendBack={sendBack}
+                            sendToBack={sendToBack}
+                            setLayerVisible={setLayerVisible}
+                            handleSendBack={handleSendBack}
+                            handleBringForward={handleBringForward}
+                            layerVisible={layerVisible}
+                            handleBringToForward={handleBringToForward}
+                            bringToForward={bringToForward}
+                            handleSendToBack={handleSendToBack}
+                            handleLockComponent={handleLockComponent}
+                            textFields={textFields}
+                            selectImageLayer={selectImageLayer}
+                            setTextFields={setTextFields}
+                            copyStyle={copyStyle}
+                            setCopyStyle={setCopyStyle}
+                            handleCopyText={handleCopyText}
+                            copyText={copyText}
+                            setCopyText={setCopyText}
+                            handleHistoryComponent={handleHistoryComponent}
+                            handleDuplicateComponent={handleDuplicateComponent}
+                            top={"10vh"}
+                            left={"10vh"}
+                            handleDeleteComponent={handleDeleteComponent}
+                        />:""}
                                                     {/* //menu component  */}
-                                                 {imageBorder==index&&   <div style={{width:"20vh",height:"8vh",background:"white",position:"absolute",top:"-10vh",left:"5vh",backgroundColor:"white",boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px"}}>
+                                                 {imageBorder==index&&   <div style={{width:"20vh",height:"8vh",background:"white",position:"absolute",top:"-10vh",left:"5vh",backgroundColor:"white",boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px",zIndex:1600}}>
                                                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-around",height:"100%"}}>
                                                     <svg onClick={handleDuplicateComponent} style={{cursor:"pointer"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.7em" height="1.7em"><path fill="none" d="M0 0h256v256H0z"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M168 168h48V40H88v48"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M40 88h128v128H40z"></path><path fill="currentColor" d="M138.14 152.43a4.46 4.46 0 0 1-4.45 4.46h-25.26v25.25a4.46 4.46 0 0 1-8.92 0v-25.25H74.26a4.46 4.46 0 0 1 0-8.92h25.25v-25.26a4.46 4.46 0 0 1 8.92 0V148h25.26a4.46 4.46 0 0 1 4.45 4.43Z"></path></svg
                                                     ><svg onClick={(e)=>handleDeleteComponent(index)} style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16ZM96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Zm48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Z"></path></svg>
-                                                 <svg style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path></svg>
+                                                 <svg onClick={(e)=>{setMenuPosition(data);setMenuStateTracker(true);}} style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path></svg>
+                                                 
+                                                 {menuStateTracker==true && menuPosition!=null? <ContextMenu
+                            menuPosition={menuPosition}
+                            sendBack={sendBack}
+                            sendToBack={sendToBack}
+                            setLayerVisible={setLayerVisible}
+                            handleSendBack={handleSendBack}
+                            handleBringForward={handleBringForward}
+                            layerVisible={layerVisible}
+                            handleBringToForward={handleBringToForward}
+                            bringToForward={bringToForward}
+                            handleSendToBack={handleSendToBack}
+                            handleLockComponent={handleLockComponent}
+                            textFields={textFields}
+                            selectImageLayer={selectImageLayer}
+                            setTextFields={setTextFields}
+                            copyStyle={copyStyle}
+                            setCopyStyle={setCopyStyle}
+                            handleCopyText={handleCopyText}
+                            copyText={copyText}
+                            setCopyText={setCopyText}
+                            handleHistoryComponent={handleHistoryComponent}
+                            handleDuplicateComponent={handleDuplicateComponent}
+                            top={"3vh"}
+                            left={"7vh"}
+                            handleDeleteComponent={handleDeleteComponent}
+
+                        />:""}
                                                  </div></div>}
                                                     <textarea
                                                         onContextMenu={(e) => { if (data.isLocked == false) { setSelectImageLayer((index)); setMenuPosition(data); } }}
                                                         id='resize-component'
                                                         type="text"
                                                         value={data.text}     
-                                                        onClick={(e) => { handleRadioChange(index); if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }}
+                                                        onClick={(e) => { handleRadioChange(index); if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null);setSelectedTextFieldIndex(null); } else { setImageBorder(index);setSelectedTextFieldIndex(index) } }}
                                                         onChange={(e) => handleTextFieldChange(e, index)}
                                                         className="absolute border border-gray-400 bg-transparent text-black "
                                                         style={{
@@ -790,7 +845,33 @@ const handleDuplicateComponent=()=>{
 
 
                                         >
+ {menuPosition && menuStateTracker!=true?<ContextMenu
+                            menuPosition={menuPosition}
+                            sendBack={sendBack}
+                            sendToBack={sendToBack}
+                            setLayerVisible={setLayerVisible}
+                            handleSendBack={handleSendBack}
+                            handleBringForward={handleBringForward}
+                            layerVisible={layerVisible}
+                            handleBringToForward={handleBringToForward}
+                            bringToForward={bringToForward}
+                            handleSendToBack={handleSendToBack}
+                            handleLockComponent={handleLockComponent}
+                            textFields={textFields}
+                            selectImageLayer={selectImageLayer}
+                            setTextFields={setTextFields}
+                            copyStyle={copyStyle}
+                            setCopyStyle={setCopyStyle}
+                            handleCopyText={handleCopyText}
+                            copyText={copyText}
+                            setCopyText={setCopyText}
+                            handleHistoryComponent={handleHistoryComponent}
+                            handleDuplicateComponent={handleDuplicateComponent}
+                            top={"10vh"}
+                            left={"10vh"}
+                            handleDeleteComponent={handleDeleteComponent}
 
+                        />:""}
                                             <div
                                                 key={index}
 
@@ -823,34 +904,15 @@ const handleDuplicateComponent=()=>{
                             }
                         })
                         }
-                        {menuPosition && <ContextMenu
-                            menuPosition={menuPosition}
-                            sendBack={sendBack}
-                            sendToBack={sendToBack}
-                            setLayerVisible={setLayerVisible}
-                            handleSendBack={handleSendBack}
-                            handleBringForward={handleBringForward}
-                            layerVisible={layerVisible}
-                            handleBringToForward={handleBringToForward}
-                            bringToForward={bringToForward}
-                            handleSendToBack={handleSendToBack}
-                            handleLockComponent={handleLockComponent}
-                            textFields={textFields}
-                            selectImageLayer={selectImageLayer}
-                            setTextFields={setTextFields}
-                            copyStyle={copyStyle}
-                            setCopyStyle={setCopyStyle}
-                            handleCopyText={handleCopyText}
-                            copyText={copyText}
-                            setCopyText={setCopyText}
-                            handleHistoryComponent={handleHistoryComponent}
-                            handleDuplicateComponent={handleDuplicateComponent}
-                        />}
+                       
                     </div>
-                </div>
-            )
-            }
-        </div >
+                     
+                     </div>
+                    )
+                }
+                </div >
+      
+                    
     );
 };
 

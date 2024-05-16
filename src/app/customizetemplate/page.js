@@ -9,6 +9,7 @@ import ReactToPrint from 'react-to-print';
 import { toPng } from 'html-to-image';
 import NewSideBar from "../component/NewSideBar";
 import StylingHeader from "../component/StylingHeader";
+import ZoomControlBar from "../component/menu/ZoomControlBar";
 
 
 export default function Page() {
@@ -17,6 +18,7 @@ export default function Page() {
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageBorder, setImageBorder] = useState(0);
     const [selectImageLayer, setSelectImageLayer] = useState(0);
+    const [zoomValue,setZoomValue]=useState(0.7);
     const [textFields, setTextFields] = useState([
         { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman",letterSpacing:0,lineHeight:10, size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
     ]);
@@ -31,6 +33,13 @@ export default function Page() {
     const [redoHistoryComponent, setRedoHistoryComponent] = useState([]);
     const [redoHistoryIndex, setRedoHistoryIndex] = useState([]);
     const [redoHistoryIndexTracker, setRedoHistoryIndexTracker] = useState(-1);
+
+
+//zoom logic
+const handleZoomControl=(value)=>{
+    setZoomValue(value);
+}
+
     //redo feature login
     const handleRedoHistoryComponent = (e) => {
 
@@ -173,9 +182,11 @@ export default function Page() {
     const handleRadioChange = (index) => {
         const updatedTextFields = [...textFields];
         if (updatedTextFields[index].isSelected == false) {
-            updatedTextFields[selectedTextFieldIndex].isSelected = false;
+            updatedTextFields[index].isSelected = false;
             updatedTextFields[index].isSelected = true; setTextFields(updatedTextFields)
             setSelectedTextFieldIndex(index);
+            setImageBorder(index);
+            setSelectImageLayer(index)
         }
     };
 
@@ -216,11 +227,13 @@ export default function Page() {
                 scrollBehavior: "smooth"
             }}>
                 {/* <!-- Sidebar (Optional) --> */}
+
                 <NewSideBar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
                 {/* <Sidebar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} /> */}
                 <div style={{ width: "100%", overflow: "hidden", height: "100%" }}>
                     <StylingHeader imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
-                    <FileSelector imageBorder={imageBorder} setImageBorder={setImageBorder} setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} handleRadioChange={handleRadioChange} setSelectImageLayer={setSelectImageLayer} handleHistoryComponent={handleHistoryComponent} selectImageLayer={selectImageLayer} undoHistoryComponent={undoHistoryComponent} />
+                    <FileSelector imageBorder={imageBorder} zoomValue={zoomValue} setSelectedTextFieldIndex={setSelectedTextFieldIndex} setImageBorder={setImageBorder} setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} handleRadioChange={handleRadioChange} setSelectImageLayer={setSelectImageLayer} handleHistoryComponent={handleHistoryComponent} selectImageLayer={selectImageLayer} undoHistoryComponent={undoHistoryComponent} />
+                    <ZoomControlBar handleZoomControl={handleZoomControl} zoomValue={zoomValue}/>
                 </div>
             </div >
 
