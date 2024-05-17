@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from "next/router"
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
+import AuthComponent from "./AuthComponent";
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import Link from 'next/link';
@@ -13,6 +14,9 @@ export default function Navbar() {
     const { data: session } = useSession()
     const [providers, setProviders] = useState(null);
     const [toggleDropdown, settoggleDropdown] = useState(false);
+    const handleRedirectToAuth = () => {
+        router.push('/auth'); // Redirect to the AuthComponent
+    };
     useEffect(() => {
         const setUpProviders = async () => {
             const response = await getProviders();
@@ -92,11 +96,14 @@ export default function Navbar() {
                                         </Link>
                                     </div>) : (
                                         <>
-                                            {providers && Object.values(providers).map((provider) => (
+                                            {/* {providers && Object.values(providers).map((provider) => (
                                                 <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
                                                     Sign in
                                                 </button>
-                                            ))}
+                                            ))} */}
+                                            <Link href="/authentication">
+                                                Sign in
+                                            </Link>
                                         </>
                                     )}
                                 </div>
@@ -122,12 +129,16 @@ export default function Navbar() {
                                         </div>
                                     ) : (
                                         <>
-                                            {providers && Object.values(providers).map((provider) => (
+                                            {/* {providers && Object.values(providers).map((provider) => (
                                                 <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className='black_btn'>
                                                     Sign in
                                                 </button>
-                                            ))}
+                                            ))} */}
+                                            <Link href="/authentication">
+                                                Sign in
+                                            </Link>
                                         </>
+
                                     )}
                                 </div>
 

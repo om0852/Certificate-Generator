@@ -31,28 +31,69 @@ const handler = NextAuth({
 
       return session;
     },
-    async signIn({ account, profile, user, credentials }) {
+    async signIn({ account, profile, email, credentials }) {
       try {
         await connectToDB();
 
-        // check if user already exists
-        const userExists = await User.findOne({ email: profile.email });
+        // Check if the user is signing in with Google
+        if (account.provider === 'google') {
+          // Check if the user already exists
+          const existingUser = await User.findOne({ email: email });
+          if (existingUser) {
+            // User exists, proceed with sign-in
+            return true;
+          } else {
+            // User doesn't exist, create a new user document
+            await User.create({
+              email: email,
+              // For Google sign-in, use the email as username
+              username: email,
+              // You may also save other profile information if needed
+              // image: profile.picture,
+            });
+            return true;
+          }
+        } else {
+          // Signing in with username and password
+          // Here you can add your own logic to validate credentials
+          // For simplicity, let's assume username and password are valid
+          const { username, password } = credentials;
 
-        // if not, create a new document and save user in MongoDB
-        if (!userExists) {
-          await User.create({
-            email: profile.email,
-            username: profile.name.replace(" ", "").toLowerCase(),
-            image: profile.picture,
-          })
+          // Basic validation for username and password
+          if (!username || !password) {
+            // Username or password is missing
+            return false;
+          }
+
+          // Check if the user exists with the provided username
+          const existingUser = await User.findOne({ username: username });
+          if (!existingUser) {
+            // User doesn't exist, create a new user document
+            await User.create({
+              username: username,
+              password: password, // Remember to hash the password in production
+              // You may also save other profile information if needed
+            });
+            return true;
+          }
+
+          // Check if the provided password matches the stored password
+          // You may use a library like bcrypt for secure password hashing and comparison
+          // For simplicity, we're comparing plaintext passwords
+          if (existingUser.password !== password) {
+            // Incorrect password
+            return false;
+          }
+
+          // Username and password are valid, proceed with sign-in
+          return true;
         }
-
-        return true
       } catch (error) {
-        console.log("Error checking if user exists: ", error.message);
-        return false
+        console.error("Error while signing in:", error);
+        return false;
       }
-    },
+    }
+    ,
     async signOut({ redirect }) {
       return signOut({ redirect });
     },
