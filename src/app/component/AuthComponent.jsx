@@ -1,11 +1,12 @@
-'use client'
+'use client';
+
 import { useState } from 'react';
-import { connectToDB } from '../utils/database';
 import { signIn } from 'next-auth/react';
 
 export default function AuthComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -17,9 +18,6 @@ export default function AuthComponent() {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
-
-        // Connect to the database
-        await connectToDB();
 
         // Check if email and password are provided
         if (!email || !password) {
@@ -36,6 +34,12 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                setError(errorData.message);
+                return;
+            }
 
             const data = await response.json();
 
@@ -68,6 +72,7 @@ export default function AuthComponent() {
                     <label htmlFor="password" className="block text-gray-700">Password:</label>
                     <input type="password" id="password" value={password} onChange={handlePasswordChange} required className="w-full px-3 py-2 mt-1 text-gray-700 border rounded-md focus:outline-none focus:ring focus:ring-blue-400" />
                 </div>
+                {error && <p className="text-red-500">{error}</p>}
                 <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign In</button>
             </form>
             <button onClick={() => signIn('google')} className="mt-4 w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Sign In with Google</button>
