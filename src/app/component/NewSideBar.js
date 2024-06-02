@@ -266,12 +266,13 @@ const handleAddImage = (event, i) => {
         Upload
         </div>
      </div>
-     <div className="sidebar-menu" style={{left:showMenu==true?"15vh":"-30vh"}}>
+     <div className="sidebar-menu" style={{left:showMenu==true?"14vh":"-30vh",top:"54px"}}>
 <div style={{width:"100%",height:"5vh",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"1vh 2vh"}}>{menuData}<img style={{cursor:"pointer"}} onClick={(e)=>{setMenu(false);setMenuData("")}} width="30" height="30" src="https://img.icons8.com/material-outlined/24/multiply--v1.png" alt="multiply--v1"/></div>
-<div style={{width:"100%",height:"100%",marginTop:"2vh"}}>
+<div style={{width:"100%",height:"100%",marginTop:"2vh",}}>
 {menuData=="Text" ?
 <>
 <button className='rounded' style={{ margin: "1vh auto", position: "relative", left: "5%", width: "90%", height: "40px", background: "khaki" }} onClick={() => addFields()}>Add Field</button>
+<div style={{width:"100%",height:"100%",overflowY:"scroll",scrollbarWidth:"none"}}>
 
 {textFields &&
           textFields.map((data, index) => {
@@ -326,8 +327,12 @@ const handleAddImage = (event, i) => {
             }
 
           })}
+          </div>
+
 </>
+
 :""}
+
 {menuData=="Image"?<>
 <div style={{ display: "grid", alignItems: "center" }} >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "100%" }}>
@@ -338,7 +343,7 @@ const handleAddImage = (event, i) => {
               id="addImage" />
             <label htmlFor="addImage" style={{ backgroundColor: "khaki", display: "flex", alignItems: "center", margin: "1vh 2vh", width: "95%", height: "40px", }}><img style={{ margin: "0 2vh" }} src={addImageIcon.src} width={30} height={30} />Add Image</label>
           </div>
-          {selectedImageData && <div style={{ zIndex: 1000, display: "block", width: "20vh", height: "20vh", background: "white", position: "absolute", top: selectedImageData.y, left: selectedImageData.x }}> <span onClick={() => {
+          {selectedImageData && <div style={{ zIndex: 1000, display: "block", width: "20vh", height: "20vh", background: "white", position: "absolute", top: selectedImageData.y-100, left: selectedImageData.x }}> <span onClick={() => {
             const updatedImageField = [...textFields];
             updatedImageField.splice(selectedImageData.index, 1)
             setTextFields(updatedImageField)
@@ -354,22 +359,30 @@ const handleAddImage = (event, i) => {
               className="hidden"
               id="addImage1" />
             <label htmlFor='addImage1'
-              style={{ height: "5vh", borderBottom: "1px solid black", display: "flex", alignItems: "center", justifyContent: "space-around", color: "black" }}><img width="20" height="20" src="https://img.icons8.com/ios-filled/50/replace.png" alt="replace" />
+              style={{ height: "5vh", borderBottom: "1px solid black", display: "flex", alignItems: "center", justifyContent: "space-around", color: "black" ,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px"}}><img width="20" height="20" src="https://img.icons8.com/ios-filled/50/replace.png" alt="replace" />
               Replace</label></div>}
+              <div style={
+                {
+                  width:"100%",
+                  height:"70vh",
+                  overflowY:"scroll"
+                }
+              }>
           {textFields && textFields.map((data, index) => {
             if (data.type == "image") {
               return (
                 <>
                   <div key={index}
-                    onClick={(e) => setSelectedImageData(null)} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
+                    onClick={(e) =>{setImageBorder(index); setSelectedImageData(null)}} style={{ width: "100%", margin: "2vh 0", display: "flex", alignItems: "center", justifyContent: "" }}>
 
-                    <label onContextMenu={(e) => { handleImageData(e, index) }} style={{ width: "fit-content", margin: "0 2vh" }} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 }} /></label>
+                    <label onContextMenu={(e) => { handleImageData(e, index) }} style={{ width: "fit-content", margin: "0 2vh" ,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px"}} htmlFor={index}><img src={data.src} style={{ width: 50, height: 50 ,border:imageBorder==index?"2px solid black":"none"}} /></label>
                   </div>
 
                 </>
               )
             }
           })}
+          </div>
         </div>
 </>:""}
 

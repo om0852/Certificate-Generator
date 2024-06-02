@@ -44,7 +44,7 @@ export default function ContextMenu({
     }
     return (
         <>
-            <div style={{ cursor: "pointer", zIndex: 1300, width: "25vh", background: "white", color: "black", position: "absolute", top: top,left:left,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
+            <div style={{ cursor: "pointer", zIndex: 1300, width: "25vh", background: "white", color: "black", position: "absolute", top: top-(menuPosition.y*1.4),left:30+"vh",boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
                 {/* layer content */}
 
                 {menuPosition.type != "type" && <div onClick={(e) => {
@@ -85,7 +85,6 @@ export default function ContextMenu({
                         updatedata[selectImageLayer].color = copyStyle.color;
                         setTextFields(updatedata);
                         setCopyStyle(null)
-                        console.log("done")
                     }
                 }} className='layer-classname-container' style={{ fontSize: 15, height: "10vh", display: "flex", alignItems: "center", justifyContent: "space-around", borderBottom: "1px solid black" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 3.5H5a.5.5 0 0 0-.5.5v1.5A.5.5 0 0 0 5 6h11a.5.5 0 0 0 .5-.5V4a.5.5 0 0 0-.5-.5ZM5 2a2 2 0 0 0-2 2v1.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-.25h.5a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-.75.75h-5.75a2.25 2.25 0 0 0-2.25 2.25v1.563A2 2 0 0 0 9 15v5a2 2 0 0 0 2 2h.5a2 2 0 0 0 2-2v-5a2 2 0 0 0-1.5-1.937V11.5a.75.75 0 0 1 .75-.75h5.75a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25h-.515A2 2 0 0 0 16 2H5Zm7 13a.5.5 0 0 0-.5-.5H11a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h.5a.5.5 0 0 0 .5-.5v-5Z" fill="currentColor"></path><path fill="currentColor" d="M4 3h13v4H4z"></path></svg>Paste Style</div>}
                 <div onClick={(e) => {handleDuplicateComponent()

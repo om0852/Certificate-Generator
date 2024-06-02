@@ -288,7 +288,7 @@ const handleDuplicateComponent=()=>{
             });
         }
         // }
-    }, [textFields.length]);
+    }, [textFields]);
     // addFields(addTextField);
     // useEffect(() => {
     //     setTextFields(textFields)
@@ -594,7 +594,7 @@ const handleDuplicateComponent=()=>{
         <div className="flex flex-col items-center relative" style={{ width: "100%" ,display:"grid",placeItems:"center",height:"100%"}}
         >
 
-            {selectedImage ? "" : <div style={{ width: "691.5px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
+            {selectedImage ? "" : <div style={{ width: "692px", height: "462px", display: "grid", placeItems: "center", fontSize: 25 }}>Select Certificate Template</div>}
             {selectedImage && (
 
                 <div
@@ -620,6 +620,9 @@ const handleDuplicateComponent=()=>{
                                     return (
                                         <>
                                             {data.isLocked == false ? <Draggable
+                                                                                        className="draggable"
+
+
                                                 key={index}
                                                 defaultPosition={{ x: 0, y: 0 }}
                                                 position={{ x: data.x, y: data.y }}
@@ -654,20 +657,20 @@ const handleDuplicateComponent=()=>{
                                                     }}
                                                 >
                                                     <div ref={el => (refLeft.current[index] = el)} style={{
-                                                        width: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                        width: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                     }} className="resizer resizer-l"></div>
                                                     <div ref={el => (refTop.current[index] = el)} style={{
-                                                        height: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                        height: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                     }} className="resizer resizer-t"></div>
                                                     <div style={{
-                                                        width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                        width: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                     }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
                                                     <div style={{
-                                                        height: imageBorder == index && data.isLocked == false ? "0.5px" : "0px", zIndex: data.z_index + 1
+                                                        height: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                     }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                     <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
                                                     <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", }}></div>
-                                                    {menuPosition && menuStateTracker!=true?<ContextMenu
+                                                    {menuPosition && menuStateTracker!=true && menuPosition.id==data.id?<ContextMenu
                             menuPosition={menuPosition}
                             sendBack={sendBack}
                             sendToBack={sendToBack}
@@ -689,8 +692,8 @@ const handleDuplicateComponent=()=>{
                             setCopyText={setCopyText}
                             handleHistoryComponent={handleHistoryComponent}
                             handleDuplicateComponent={handleDuplicateComponent}
-                            top={"10vh"}
-                            left={"10vh"}
+                            top={10}
+                            left={10}
                             handleDeleteComponent={handleDeleteComponent}
                         />:""}
                                                     {/* //menu component  */}
@@ -700,7 +703,7 @@ const handleDuplicateComponent=()=>{
                                                     ><svg onClick={(e)=>handleDeleteComponent(index)} style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16ZM96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Zm48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Z"></path></svg>
                                                  <svg onClick={(e)=>{setMenuPosition(data);setMenuStateTracker(true);}} style={{cursor:"pointer"}}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1.7em" height="1.7em"><path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path></svg>
                                                  
-                                                 {menuStateTracker==true && menuPosition!=null? <ContextMenu
+                                                 {menuStateTracker==true && menuPosition!=null && menuPosition.id==data.id? <ContextMenu
                             menuPosition={menuPosition}
                             sendBack={sendBack}
                             sendToBack={sendToBack}
@@ -722,8 +725,8 @@ const handleDuplicateComponent=()=>{
                             setCopyText={setCopyText}
                             handleHistoryComponent={handleHistoryComponent}
                             handleDuplicateComponent={handleDuplicateComponent}
-                            top={"3vh"}
-                            left={"7vh"}
+                            top={3}
+                            left={7}
                             handleDeleteComponent={handleDeleteComponent}
 
                         />:""}
@@ -749,7 +752,7 @@ const handleDuplicateComponent=()=>{
                                                             // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
                                                             zIndex: data.z_index,
                                                             boxSizing: "content-box",
-                                                            padding: "0",
+                                                            padding: "3px",
                                                             border: "none",
                                                             outline: "none",
                                                             opacity: data.transparency / 100,
@@ -802,7 +805,7 @@ const handleDuplicateComponent=()=>{
                                                         // border: imageBorder == index && data.isLocked==false ? "1px solid blue" : "none",
                                                         zIndex: data.z_index,
                                                         boxSizing: "content-box",
-                                                        padding: "0",
+                                                        padding: "3px",
                                                         border: "none",
                                                         outline: "none",
                                                         opacity: data.transparency / 100,
@@ -817,6 +820,7 @@ const handleDuplicateComponent=()=>{
                                     )
                                 } else {
                                     return (
+                                    <>
                                         <Draggable
                                             className="draggable"
                                             defaultPosition={{ x: 100, y: 100 }}
@@ -845,7 +849,12 @@ const handleDuplicateComponent=()=>{
 
 
                                         >
- {menuPosition && menuStateTracker!=true?<ContextMenu
+                                            <div
+                                                key={index}
+
+                                                ref={el => (ref.current[index] = el)}
+                                                onClick={(e) => { if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "visible", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index && data.isLocked == false ? "1px solid blue" : "none", zIndex: imageBorder == index && data.isLocked == false ? 1005 : 1000 }}>
+                                                    {menuPosition && menuStateTracker!=true && menuPosition.id==data.id?<ContextMenu
                             menuPosition={menuPosition}
                             sendBack={sendBack}
                             sendToBack={sendToBack}
@@ -867,27 +876,23 @@ const handleDuplicateComponent=()=>{
                             setCopyText={setCopyText}
                             handleHistoryComponent={handleHistoryComponent}
                             handleDuplicateComponent={handleDuplicateComponent}
-                            top={"10vh"}
-                            left={"10vh"}
+                            top={10}
+                            left={10}
                             handleDeleteComponent={handleDeleteComponent}
 
                         />:""}
-                                            <div
-                                                key={index}
 
-                                                ref={el => (ref.current[index] = el)}
-                                                onClick={(e) => { if (imageBorder != null && imageBorder == index && data.isLocked == false) { setImageBorder(null) } else { setImageBorder(index) } }} id='resize-component' onContextMenu={(e) => { setSelectImageLayer(index); setMenuPosition(data); }} style={{ zIndex: data.z_index, width: data.width + "px", height: data.height + "px", overflow: "auto", opacity: data.transparency / 100, position: "absolute", top: data.y + "px", left: data.x + "px", border: imageBorder == index && data.isLocked == false ? "1px solid blue" : "none", zIndex: imageBorder == index && data.isLocked == false ? 1005 : 1000 }}>
                                                 <div ref={el => (refLeft.current[index] = el)} style={{
-                                                    width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-l"></div>
                                                 <div ref={el => (refTop.current[index] = el)} style={{
-                                                    height: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                 }} className="resizer resizer-t"></div>
                                                 <div style={{
-                                                    width: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    width: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refRight.current[index] = el)} className="resizer resizer-r"></div>
                                                 <div style={{
-                                                    height: imageBorder == index && data.isLocked == false ? "1.5px" : "0px", zIndex: data.z_index + 1
+                                                    height: imageBorder == index && data.isLocked == false ? "2px" : "0px", zIndex: data.z_index + 1
                                                 }} ref={el => (refBottom.current[index] = el)} className="resizer resizer-b"></div>
                                                 <div style={{ display: index == imageBorder ? showInsideBorder[0].left == false ? "none" : "block" : "none", width: "1px", height: "100%", background: "red", left: "50%", position: "absolute", zIndex: 1000 }}></div>
                                                 <div style={{ height: "1px", display: index == imageBorder ? showInsideBorder[0].right == false ? "none" : "block" : "none", width: "100%", background: "red", top: "50%", position: "absolute", zIndex: 1000 }}></div>
@@ -898,8 +903,10 @@ const handleDuplicateComponent=()=>{
 
                                                     }} src={data.src} />
                                             </div>
+
                                         </Draggable>
-                                    )
+
+                                    </>                                    )
                                 }
                             }
                         })
