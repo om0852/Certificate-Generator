@@ -89,7 +89,7 @@ place-items: center;
 }
 .sidebar-menu{
   width: 40vh;
-  height: 100%;
+  height: 90%;
 overflow:hidden;
   background-color: white;
   position: absolute;
