@@ -21,13 +21,13 @@ const UserSchema = new Schema({
     }
 });
 
-UserSchema.pre('save', async function (next) {
-    if (this.isModified('password') || this.isNew) {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-    }
-    next();
-});
+// UserSchema.pre('save', async function (next) {
+//     if (this.isModified('password') || this.isNew) {
+//         const salt = await bcrypt.genSalt(10);
+//         this.password = await bcrypt.hash(this.password, salt);
+//     }
+//     next();
+// });
 
-const User = models.User || model("User", UserSchema);
-export default User;
+const NormalUser = model("normalusers", UserSchema);
+export default NormalUser;
