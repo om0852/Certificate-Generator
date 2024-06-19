@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-pdf/renderer": "^3.4.2",
+    "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "child_process": "^1.0.2",
     "dom-to-pdf": "^0.3.2",
@@ -21,8 +22,12 @@
     "install": "^0.13.0",
     "jspdf": "^2.5.1",
     "mongodb": "^6.5.0",
+<<<<<<< HEAD
     "mongoose": "^8.3.5",
     "multer": "^1.4.5-lts.1",
+=======
+    "mongoose": "^8.4.0",
+>>>>>>> a3ea27afaf96fedbede8ee616cb832c13301faf1
     "next": "14.1.0",
     "next-auth": "^4.24.7",
     "npm": "^10.5.1",
