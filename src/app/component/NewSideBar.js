@@ -1,8 +1,10 @@
 "use client"
 import { useState,useEffect } from "react";
-import addImageIcon from "../../images/addimage.png"
+import ReactToPrint from 'react-to-print';
 
+import addImageIcon from "../../images/addimage.png"
 import "./component.css"
+import circle from "../../../shape/line2-removebg-preview.png"
 const NewSideBar=({
     addFields,
     handleTextFieldChange,
@@ -95,6 +97,36 @@ const fontFamilies = [
 ];
 const textOrientation = ["capitalize", "uppercase", "lowercase", "none"];
 let fontSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+
+const [imageNames, setImageNames] = useState([]);
+
+useEffect(() => {
+  async function fetchImageNames() {
+    try {
+      const res = await fetch(`http://localhost:3000/api/shapeApi`, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body:"",
+    });
+    const response = await res.json();
+    console.log(response);
+      setImageNames(response.error);
+      
+      // alert(response)
+    } catch (error) {
+      console.error('Error fetching image names:', error);
+    }
+  }
+
+  fetchImageNames();
+}, []);
+useEffect(()=>{
+console.log(imageNames)
+},[imageNames])
+
 useEffect(() => {
   if (asyncTracker != 0) {
     handleHistoryComponent();
@@ -233,6 +265,12 @@ const handleAddImage = (event, i) => {
   setSelectedImageData(null);
 
 };
+const handleAddShape=(w,b,r)=>{
+const updatedata=[...textFields];
+updatedata.push({  x: 100, y: 100, width: w, height: b, z_index: 100, transparency: 100, type: "shape", isLocked: false,radius:r });
+setTextFields(updatedata)
+handleHistoryComponent(updatedata)
+}
     return(
         <>    
      <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
@@ -247,6 +285,11 @@ const handleAddImage = (event, i) => {
         <div   onClick={(e)=>{setMenu(true);setMenuData("Shape")}} className="sidebar-icon">   
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16Zm0 176H48V48h160v160Z"></path></svg>              
         Shape
+    
+<div>
+
+</div>
+
 </div>
         <div  onClick={(e)=>{setMenu(true);setMenuData("Image")}} className="sidebar-icon">   
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 16v102.75l-26.07-26.06a16 16 0 0 0-22.63 0l-20 20-44-44a16 16 0 0 0-22.62 0L40 149.37V56ZM40 172l52-52 80 80H40Zm176 28h-21.37l-36-36 20-20L216 181.38V200Zm-72-100a12 12 0 1 1 12 12 12 12 0 0 1-12-12Z"></path></svg>
@@ -257,10 +300,11 @@ const handleAddImage = (event, i) => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M192 116a12 12 0 1 1-12-12 12 12 0 0 1 12 12Zm-40-52h-40a8 8 0 0 0 0 16h40a8 8 0 0 0 0-16Zm96 48v32a24 24 0 0 1-24 24h-2.36l-16.21 45.38A16 16 0 0 1 190.36 224h-12.72a16 16 0 0 1-15.07-10.62l-1.92-5.38h-57.3l-1.92 5.38A16 16 0 0 1 86.36 224H73.64a16 16 0 0 1-15.07-10.62L46 178.22a87.69 87.69 0 0 1-21.44-48.38A16 16 0 0 0 16 144a8 8 0 0 1-16 0 32 32 0 0 1 24.28-31A88.12 88.12 0 0 1 112 32h104a8 8 0 0 1 0 16h-21.39a87.93 87.93 0 0 1 30.17 37c.43 1 .85 2 1.25 3A24 24 0 0 1 248 112Zm-16 0a8 8 0 0 0-8-8h-3.66a8 8 0 0 1-7.64-5.6A71.9 71.9 0 0 0 144 48h-32a72 72 0 0 0-53.09 120.64 8 8 0 0 1 1.64 2.71L73.64 208h12.72l3.82-10.69a8 8 0 0 1 7.53-5.31h68.58a8 8 0 0 1 7.53 5.31l3.82 10.69h12.72l18.11-50.69A8 8 0 0 1 216 152h8a8 8 0 0 0 8-8Z"></path></svg>
         Graphics
         </div>
-        <div  onClick={(e)=>{setMenu(true);setMenuData("Download")}} className="sidebar-icon">   
-        <img width="32" height="32" src="https://img.icons8.com/material-outlined/32/download--v1.png" alt="download--v1"/>  
-              Download
-        </div>
+        <ReactToPrint
+          trigger={() => <button className='rounded'
+            style={{ width: "90%", height: "40px", background: "green" }}  >Download</button>}
+          content={() => certificateRef.current}
+        /> 
         <div  onClick={(e)=>{setMenu(true);setMenuData("Upload")}} className="sidebar-icon">   
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M240 136v64a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h48a8 8 0 0 1 0 16H32v64h192v-64h-48a8 8 0 0 1 0-16h48a16 16 0 0 1 16 16ZM85.66 77.66 120 43.31V128a8 8 0 0 0 16 0V43.31l34.34 34.35a8 8 0 0 0 11.32-11.32l-48-48a8 8 0 0 0-11.32 0l-48 48a8 8 0 0 0 11.32 11.32ZM200 168a12 12 0 1 0-12 12 12 12 0 0 0 12-12Z"></path></svg>
         Upload
@@ -385,7 +429,13 @@ const handleAddImage = (event, i) => {
           </div>
         </div>
 </>:""}
-
+{menuData=="Shape"?<>
+<div style={{ display: "grid", alignItems: "center" }} >
+  <button onClick={()=>handleAddShape(100,100,"50%")}>Circle</button>
+  <button onClick={()=>handleAddShape(100,100,"0%")}>square</button>
+  <button onClick={()=>handleAddShape(200,100,"0%")}>Rectangle</button>
+        </div>
+</>:""}
 </div>
      </div>
         </>
