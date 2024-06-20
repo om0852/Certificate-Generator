@@ -17,6 +17,50 @@ export default function AuthComponent() {
         setPassword(e.target.value);
     };
 
+    const handleSignUp = async (e) => {
+        e.preventDefault();
+
+        // Check if email and password are provided
+        if (!email || !password) {
+            setError('Please provide both email and password.');
+            return;
+        }
+
+        try {
+            // Query the database to find the user with the provided email and password
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                setError(errorData.message);
+                return;
+            }
+
+            const data = await response.json();
+
+            // If user is found, sign in
+            if (data.success) {
+                await signIn('credentials', {
+                    email,
+                    password,
+                    redirect: false
+                });
+            } else {
+                // If user is not found, display error message
+                setError('Incorrect email or password.');
+            }
+        } catch (error) {
+            console.error('Error authenticating user:', error);
+            setError('An error occurred while authenticating. Please try again later.');
+        }
+    }
+
     const handleSignIn = async (e) => {
         e.preventDefault();
 
@@ -75,12 +119,13 @@ export default function AuthComponent() {
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
                 <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign In</button>
-                <button type="submit" className="w-full my-3 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign Up</button>
 
             </form>
             <button onClick={() => signIn('google')} className="mt-4 w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Sign In with Google</button>
+            <button type="submit" onClick={handleSignUp} className="w-full my-3 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign Up</button>
 
-            {/* <button><Link href="@app/signup">Sign Up</Link></button> */}
+
+
         </div>
     );
 }
