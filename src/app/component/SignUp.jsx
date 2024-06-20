@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import Link from 'next/link';
 
-export default function AuthComponent() {
+export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -63,7 +62,7 @@ export default function AuthComponent() {
 
     return (
         <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-4">Sign In</h2>
+            <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
             <form onSubmit={handleSignIn}>
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-gray-700">Email:</label>
@@ -74,13 +73,9 @@ export default function AuthComponent() {
                     <input type="password" id="password" value={password} onChange={handlePasswordChange} required className="w-full px-3 py-2 mt-1 text-gray-700 border rounded-md focus:outline-none focus:ring focus:ring-blue-400" />
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
-                <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign In</button>
-                <button type="submit" className="w-full my-3 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign Up</button>
-
+                <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign Up</button>
             </form>
-            <button onClick={() => signIn('google')} className="mt-4 w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Sign In with Google</button>
 
-            {/* <button><Link href="@app/signup">Sign Up</Link></button> */}
         </div>
     );
 }
