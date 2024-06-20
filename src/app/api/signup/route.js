@@ -19,22 +19,21 @@ export const POST = async (req, res) => {
         // Find the user by email
         const user = await NormalUser.findOne({ email: email });
 
-        if (!user) {
-            return new Response(JSON.stringify({ success: false, message: 'Incorrect email or password' }), { status: 401 });
+        if (user) {
+            return new Response(JSON.stringify({ success: false, message: 'User already exists' }), { status: 401 });
         }
+        await NormalUser.create(
+            {
+                email: email,
+                password: password,
+                image: email,
+            }
+        )
 
         // Compare the provided password with the stored hashed password
-        // const isMatch = await bcrypt.compare(password, user.password);
-        if (password == user.password) {
-            const isMatch = true;
-        }
-
-        if (!isMatch) {
-            return new Response(JSON.stringify({ success: false, message: 'Incorrect email or password' }), { status: 401 });
-        }
 
         // Authentication successful
-        return new Response(JSON.stringify({ success: true, message: 'Sign in successful' }), { status: 300 });
+        return new Response(JSON.stringify({ success: true, message: 'Sign up successful' }), { status: 300 });
 
     } catch (error) {
         console.error('Error authenticating user:', error);
