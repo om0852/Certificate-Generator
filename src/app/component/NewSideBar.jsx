@@ -30,6 +30,7 @@ const NewSideBar=({
 
 })=>{
 const [showMenu,setMenu]=useState(false);
+const [graphicsData,setGraphicsData]=useState(null);
 const [menuData,setMenuData]=useState("");
 const [templateGroup,setTemplateGroup]=useState(true);
 const [asyncTracker, setAsyncTracker] = useState(0);
@@ -51,6 +52,9 @@ useEffect(() => {
   }
   if(menuData=="Template"){
     handleCertificateTemplate()
+  }
+  if(menuData=="My Graphics"){
+    handleGraphicsData()
   }
   }, [menuData,templateGroup]);
 useEffect(()=>{
@@ -167,6 +171,20 @@ const handleShapeData=async()=>{
 const response = await res.json();
 setShapeData(response.error)
 }
+const handleGraphicsData=async()=>{
+  console.log("run")
+  const res = await fetch(`http://localhost:3000/api/graphics/fetch`, {
+    method: "POST",
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    },
+    body:JSON.stringify({id:"om"})
+
+});
+const response = await res.json();
+setGraphicsData(response.data)
+}
 const handleCertificateTemplate=async()=>{
   console.log("run")
   const res = await fetch(`http://localhost:3000/api/certificatetemplate/fetch`, {
@@ -175,7 +193,7 @@ const handleCertificateTemplate=async()=>{
         Accept: "application/json",
         "Content-Type": "application/json",
     },
-    body:JSON.stringify({id:"om",templateGroup:templateGroup})
+    body:JSON.stringify({id:"om"})
 });
 const response = await res.json();
 setCertificateTempplate(response.data)
@@ -322,10 +340,10 @@ const handlePic = async (e) => {
      <div className="sidebar-menu" style={{left:showMenu==true?"14vh":"-30vh",top:"54px"}}>
 <div style={{width:"100%",height:"5vh",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"1vh 2vh"}}>{menuData}<img style={{cursor:"pointer"}} onClick={(e)=>{setMenu(false);setMenuData("")}} width="30" height="30" src="https://img.icons8.com/material-outlined/24/multiply--v1.png" alt="multiply--v1"/></div>
 <div style={{width:"100%",overflowY:"scroll",height:"80vh"}}>
-  <div style={{display:"flex",alignItems:"center",height:"7vh"}}><div onClick={()=>setTemplateGroup(true)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==true?"green":"white",color:templateGroup==true?"white":"black"}}>My Template</div><div onClick={()=>setTemplateGroup(false)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==false?"green":"white",color:templateGroup==false?"white":"black"}}> Templates</div></div>
   {
     menuData=="Template"?
     <>
+    <div style={{display:"flex",alignItems:"center",height:"7vh"}}><div onClick={()=>setTemplateGroup(true)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==true?"green":"white",color:templateGroup==true?"white":"black"}}>My Template</div><div onClick={()=>setTemplateGroup(false)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==false?"green":"white",color:templateGroup==false?"white":"black"}}> Templates</div></div>
     {templateGroup && certificateTemplate ? (
             certificateTemplate.map((data, index) => (
               <CertificateTemplateCard
@@ -418,6 +436,15 @@ const handlePic = async (e) => {
   <img width="30" height="30" src="https://img.icons8.com/fluency/48/upload--v16.png" alt="upload--v16"/>
 	     Upload
   </label>
+  <div>
+    {
+      graphicsData && graphicsData.map((data)=>{
+        return(
+<img width={200} height={100} src={data}/>
+        )
+      })
+    }
+  </div>
 </div>
   </>:""
 }

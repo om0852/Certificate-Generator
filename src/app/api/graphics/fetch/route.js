@@ -8,7 +8,7 @@ export async function POST(req, res) {
 try{
     await connectToDB();
     const body=await req.json();
-
+console.log(body)
     const data=await GrpahicsModel.findOne({userId:body.id});
     console.log(data)
     return NextResponse.json({ status: 200, error:"sucessfully fetch",data:data.img});
