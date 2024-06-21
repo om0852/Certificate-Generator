@@ -4,23 +4,22 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req, res) {
     const body = await req.json();
-const {  userID,
+const {  id,
     certificateComponentData,
-    backgroundImage}=body;
+    }=body;
+    console.log(body)
 await connectToDB();
 try{
 
     const success = await certificateTemplate.create({
-        userId:userID,
-        certificateComponentData:certificateComponentData,
-        backgroundImage:backgroundImage
-        
+        userId:id,
+        certificateComponentData:certificateComponentData,        
     })
     
-    return NextResponse.json({ status: 300, error: "certificate Uploaded Successfully" });
+    return NextResponse.json({ status: 200, error: "certificate Uploaded Successfully" });
 
 }catch(error){
-    console.log("certificateTemplate errror occur");
+    console.log("certificateTemplate errror occur",error.message);
     return NextResponse.json({ status: 300, error: "Invalid Attempt" +error.message});
 
 }

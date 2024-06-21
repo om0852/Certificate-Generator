@@ -8,11 +8,6 @@ userId:{
 certificateComponentData:{
     type:Array
 },
-backgroundImage:{
-    type:String,
-required:[true,'Background Image is required']
-}
-
 },
 { timestamps: true });
 
