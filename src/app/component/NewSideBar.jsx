@@ -193,7 +193,7 @@ const handleCertificateTemplate=async()=>{
         Accept: "application/json",
         "Content-Type": "application/json",
     },
-    body:JSON.stringify({id:"om"})
+    body:JSON.stringify({id:"om",templateGroup:templateGroup})
 });
 const response = await res.json();
 setCertificateTempplate(response.data)

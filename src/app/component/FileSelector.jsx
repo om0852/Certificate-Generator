@@ -1315,205 +1315,202 @@ const ImageBanner = ({
                       </Draggable>
                     </>
                   );
-                }
-                else{
-                    return (
-                        <>
-                          <Draggable
-                            className="draggable"
-                            defaultPosition={{ x: 100, y: 100 }}
-                            position={{ x: data.x, y: data.y }}
-                            key={index}
-                            onDrag={(e, ui) => {
-                              stopImage(e, ui, index);
-                            }}
-                            onStop={(e, ui) => {
-                              const updatedata = [...showInsideBorder];
-                              updatedata.left = false;
-                              updatedata.right = false;
-    
-                              setShowInsideBorder(showInsideBorder);
-                              //  stop(e, ui, index);
-                              setDragIndicator({
-                                left: false,
-                                right: false,
-                                center: false,
-                                top: false,
-                                bottom: false,
-                              });
-                              // console.log(undoHistoryComponent[undoHistoryComponent.length - 1][0][index])
-                              if (
-                                ui.lastX !=
-                                  undoHistoryComponent[
-                                    undoHistoryComponent.length - 1
-                                  ][index].x ||
-                                ui.lastY !=
-                                  undoHistoryComponent[
-                                    undoHistoryComponent.length - 1
-                                  ][index].y
-                              ) {
-                                handleHistoryComponent();
+                } else {
+                  return (
+                    <>
+                      <Draggable
+                        className="draggable"
+                        defaultPosition={{ x: 100, y: 100 }}
+                        position={{ x: data.x, y: data.y }}
+                        key={index}
+                        onDrag={(e, ui) => {
+                          stopImage(e, ui, index);
+                        }}
+                        onStop={(e, ui) => {
+                          const updatedata = [...showInsideBorder];
+                          updatedata.left = false;
+                          updatedata.right = false;
+
+                          setShowInsideBorder(showInsideBorder);
+                          //  stop(e, ui, index);
+                          setDragIndicator({
+                            left: false,
+                            right: false,
+                            center: false,
+                            top: false,
+                            bottom: false,
+                          });
+                          // console.log(undoHistoryComponent[undoHistoryComponent.length - 1][0][index])
+                          if (
+                            ui.lastX !=
+                              undoHistoryComponent[
+                                undoHistoryComponent.length - 1
+                              ][index].x ||
+                            ui.lastY !=
+                              undoHistoryComponent[
+                                undoHistoryComponent.length - 1
+                              ][index].y
+                          ) {
+                            handleHistoryComponent();
+                          }
+                          stopImage(e, ui, index);
+                        }}
+                      >
+                        <div
+                          key={index}
+                          ref={(el) => (ref.current[index] = el)}
+                          onClick={(e) => {
+                            if (
+                              imageBorder != null &&
+                              imageBorder == index &&
+                              data.isLocked == false
+                            ) {
+                              setImageBorder(null);
+                            } else {
+                              setImageBorder(index);
+                            }
+                          }}
+                          id="resize-component"
+                          onContextMenu={(e) => {
+                            setSelectImageLayer(index);
+                            setMenuPosition(data);
+                          }}
+                          style={{
+                            zIndex: data.z_index,
+                            width: data.width + "px",
+                            height: data.height + "px",
+                            overflow: "visible",
+                            opacity: data.transparency / 100,
+                            position: "absolute",
+                            top: data.y + "px",
+                            left: data.x + "px",
+                            border:
+                              imageBorder == index && data.isLocked == false
+                                ? "1px solid blue"
+                                : "none",
+                            zIndex:
+                              imageBorder == index && data.isLocked == false
+                                ? 1005
+                                : 1000,
+                          }}
+                        >
+                          {menuPosition &&
+                          menuStateTracker != true &&
+                          menuPosition.id == data.id ? (
+                            <ContextMenu
+                              menuPosition={menuPosition}
+                              sendBack={sendBack}
+                              sendToBack={sendToBack}
+                              setLayerVisible={setLayerVisible}
+                              handleSendBack={handleSendBack}
+                              handleBringForward={handleBringForward}
+                              layerVisible={layerVisible}
+                              handleBringToForward={handleBringToForward}
+                              bringToForward={bringToForward}
+                              handleSendToBack={handleSendToBack}
+                              handleLockComponent={handleLockComponent}
+                              textFields={textFields}
+                              selectImageLayer={selectImageLayer}
+                              setTextFields={setTextFields}
+                              copyStyle={copyStyle}
+                              setCopyStyle={setCopyStyle}
+                              handleCopyText={handleCopyText}
+                              copyText={copyText}
+                              setCopyText={setCopyText}
+                              handleHistoryComponent={handleHistoryComponent}
+                              handleDuplicateComponent={
+                                handleDuplicateComponent
                               }
-                              stopImage(e, ui, index);
+                              top={10}
+                              left={10}
+                              handleDeleteComponent={handleDeleteComponent}
+                            />
+                          ) : (
+                            ""
+                          )}
+
+                          <div
+                            ref={(el) => (refLeft.current[index] = el)}
+                            style={{
+                              width:
+                                imageBorder == index && data.isLocked == false
+                                  ? "2px"
+                                  : "0px",
+                              zIndex: data.z_index + 1,
                             }}
-                          >
-                            <div
-                              key={index}
-                              ref={(el) => (ref.current[index] = el)}
-                              onClick={(e) => {
-                                if (
-                                  imageBorder != null &&
-                                  imageBorder == index &&
-                                  data.isLocked == false
-                                ) {
-                                  setImageBorder(null);
-                                } else {
-                                  setImageBorder(index);
-                                }
-                              }}
-                              id="resize-component"
-                              onContextMenu={(e) => {
-                                setSelectImageLayer(index);
-                                setMenuPosition(data);
-                              }}
-                              style={{
-                                zIndex: data.z_index,
-                                width: data.width + "px",
-                                height: data.height + "px",
-                                overflow: "visible",
-                                opacity: data.transparency / 100,
-                                position: "absolute",
-                                top: data.y + "px",
-                                left: data.x + "px",
-                                border:
-                                  imageBorder == index && data.isLocked == false
-                                    ? "1px solid blue"
-                                    : "none",
-                                zIndex:
-                                  imageBorder == index && data.isLocked == false
-                                    ? 1005
-                                    : 1000,
-                              }}
-                            >
-                              {menuPosition &&
-                              menuStateTracker != true &&
-                              menuPosition.id == data.id ? (
-                                <ContextMenu
-                                  menuPosition={menuPosition}
-                                  sendBack={sendBack}
-                                  sendToBack={sendToBack}
-                                  setLayerVisible={setLayerVisible}
-                                  handleSendBack={handleSendBack}
-                                  handleBringForward={handleBringForward}
-                                  layerVisible={layerVisible}
-                                  handleBringToForward={handleBringToForward}
-                                  bringToForward={bringToForward}
-                                  handleSendToBack={handleSendToBack}
-                                  handleLockComponent={handleLockComponent}
-                                  textFields={textFields}
-                                  selectImageLayer={selectImageLayer}
-                                  setTextFields={setTextFields}
-                                  copyStyle={copyStyle}
-                                  setCopyStyle={setCopyStyle}
-                                  handleCopyText={handleCopyText}
-                                  copyText={copyText}
-                                  setCopyText={setCopyText}
-                                  handleHistoryComponent={handleHistoryComponent}
-                                  handleDuplicateComponent={
-                                    handleDuplicateComponent
-                                  }
-                                  top={10}
-                                  left={10}
-                                  handleDeleteComponent={handleDeleteComponent}
-                                />
-                              ) : (
-                                ""
-                              )}
-    
-                              <div
-                                ref={(el) => (refLeft.current[index] = el)}
-                                style={{
-                                  width:
-                                    imageBorder == index && data.isLocked == false
-                                      ? "2px"
-                                      : "0px",
-                                  zIndex: data.z_index + 1,
-                                }}
-                                className="resizer resizer-l"
-                              ></div>
-                              <div
-                                ref={(el) => (refTop.current[index] = el)}
-                                style={{
-                                  height:
-                                    imageBorder == index && data.isLocked == false
-                                      ? "2px"
-                                      : "0px",
-                                  zIndex: data.z_index + 1,
-                                }}
-                                className="resizer resizer-t"
-                              ></div>
-                              <div
-                                style={{
-                                  width:
-                                    imageBorder == index && data.isLocked == false
-                                      ? "2px"
-                                      : "0px",
-                                  zIndex: data.z_index + 1,
-                                }}
-                                ref={(el) => (refRight.current[index] = el)}
-                                className="resizer resizer-r"
-                              ></div>
-                              <div
-                                style={{
-                                  height:
-                                    imageBorder == index && data.isLocked == false
-                                      ? "2px"
-                                      : "0px",
-                                  zIndex: data.z_index + 1,
-                                }}
-                                ref={(el) => (refBottom.current[index] = el)}
-                                className="resizer resizer-b"
-                              ></div>
-                              <div
-                                style={{
-                                  display:
-                                    index == imageBorder
-                                      ? showInsideBorder[0].left == false
-                                        ? "none"
-                                        : "block"
-                                      : "none",
-                                  width: "1px",
-                                  height: "100%",
-                                  background: "red",
-                                  left: "50%",
-                                  position: "absolute",
-                                  zIndex: 1000,
-                                }}
-                              ></div>
-                              <div
-                                style={{
-                                  height: "1px",
-                                  display:
-                                    index == imageBorder
-                                      ? showInsideBorder[0].right == false
-                                        ? "none"
-                                        : "block"
-                                      : "none",
-                                  width: "100%",
-                                  background: "red",
-                                  top: "50%",
-                                  position: "absolute",
-                                  borderRadius:data.radius,
-                                  border:"2px solid black",
-                                  zIndex: 1000,
-                                }}
-                              ></div>
-    
-                             
-                            </div>
-                          </Draggable>
-                        </>
-                      );
+                            className="resizer resizer-l"
+                          ></div>
+                          <div
+                            ref={(el) => (refTop.current[index] = el)}
+                            style={{
+                              height:
+                                imageBorder == index && data.isLocked == false
+                                  ? "2px"
+                                  : "0px",
+                              zIndex: data.z_index + 1,
+                            }}
+                            className="resizer resizer-t"
+                          ></div>
+                          <div
+                            style={{
+                              width:
+                                imageBorder == index && data.isLocked == false
+                                  ? "2px"
+                                  : "0px",
+                              zIndex: data.z_index + 1,
+                            }}
+                            ref={(el) => (refRight.current[index] = el)}
+                            className="resizer resizer-r"
+                          ></div>
+                          <div
+                            style={{
+                              height:
+                                imageBorder == index && data.isLocked == false
+                                  ? "2px"
+                                  : "0px",
+                              zIndex: data.z_index + 1,
+                            }}
+                            ref={(el) => (refBottom.current[index] = el)}
+                            className="resizer resizer-b"
+                          ></div>
+                          <div
+                            style={{
+                              display:
+                                index == imageBorder
+                                  ? showInsideBorder[0].left == false
+                                    ? "none"
+                                    : "block"
+                                  : "none",
+                              width: "1px",
+                              height: "100%",
+                              background: "red",
+                              left: "50%",
+                              position: "absolute",
+                              zIndex: 1000,
+                            }}
+                          ></div>
+                          <div
+                            style={{
+                              height: "1px",
+                              display:
+                                index == imageBorder
+                                  ? showInsideBorder[0].right == false
+                                    ? "none"
+                                    : "block"
+                                  : "none",
+                              width: "100%",
+                              background: "red",
+                              top: "50%",
+                              position: "absolute",
+                              borderRadius: data.radius,
+                              border: "2px solid black",
+                              zIndex: 1000,
+                            }}
+                          ></div>
+                        </div>
+                      </Draggable>
+                    </>
+                  );
                 }
               }
             })}
