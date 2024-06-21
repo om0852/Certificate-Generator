@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import selectImage from "../../images/selectimage.png"
 import ReactToPrint from 'react-to-print';
 import { toPng } from 'html-to-image';
-import NewSideBar from "../component/NewSideBar";
+import NewSideBar from "../component/NewSideBar.jsx";
 import StylingHeader from "../component/StylingHeader";
 import ZoomControlBar from "../component/menu/ZoomControlBar";
 

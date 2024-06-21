@@ -1,10 +1,14 @@
 "use client"
-import { useState,useEffect } from "react";
+import { useState,useEffect, useRef } from "react";
 import ReactToPrint from 'react-to-print';
-
+import jsPDF from 'jspdf';
+import { useReactToPrint } from 'react-to-print';
 import addImageIcon from "../../images/addimage.png"
+import "@/css/form.css"
 import "./component.css"
-import circle from "../../../shape/line2-removebg-preview.png"
+import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
+
 const NewSideBar=({
     addFields,
     handleTextFieldChange,
@@ -20,16 +24,14 @@ const NewSideBar=({
     handleHistoryComponent
 
 })=>{
+  const printRef=useRef()
 const [showMenu,setMenu]=useState(false);
 const [menuData,setMenuData]=useState("");
 
-const [selectedFontFamily, setSelectedFontFamily] = useState('Times New Romans'); // State to hold the selected font family
-//this tracker is used to called  used effect when state of textField change based on some condition
 const [asyncTracker, setAsyncTracker] = useState(0);
 
 const [selectedImageData, setSelectedImageData] = useState(null);
-const [tabGroup1, setTabGroup1] = useState(true);
-const [tabGroup2, setTabGroup2] = useState(true);
+const [shapeData,setShapeData]=useState(null);
 
 const handleImageData = (e, i) => {
   setSelectedImageData({ x: e.clientX, y: e.clientY, index: i })
@@ -37,92 +39,13 @@ const handleImageData = (e, i) => {
 }
 
 
-const fontFamilies = [
-  'Arial',
-  'Arial Black',
-  'Arial Narrow',
-  'Arial Rounded MT Bold',
-  'Book Antiqua',
-  'Bookman Old Style',
-  'Bradley Hand',
-  'Brush Script MT',
-  'Calibri',
-  'Cambria',
-  'Candara',
-  'Century',
-  'Century Gothic',
-  'Comic Sans MS',
-  'Consolas',
-  'Constantia',
-  'Copperplate',
-  'Courier',
-  'Courier New',
-  'Didot',
-  'Dubai',
-  'Ebrima',
-  'Franklin Gothic Medium',
-  'Gabriola',
-  'Garamond',
-  'Georgia',
-  'Gill Sans',
-  'Helvetica',
-  'Impact',
-  'Lucida Console',
-  'Lucida Grande',
-  'Lucida Sans',
-  'Lucida Sans Unicode',
-  'MS Gothic',
-  'MS PGothic',
-  'MS Reference Sans Serif',
-  'MS Sans Serif',
-  'MS Serif',
-  'MV Boli',
-  'Myriad',
-  'Myriad Pro',
-  'Nirmala UI',
-  'Palatino',
-  'Palatino Linotype',
-  'Segoe Print',
-  'Segoe Script',
-  'Segoe UI',
-  'Segoe UI Historic',
-  'Segoe UI Symbol',
-  'Tahoma',
-  'Times',
-  'Times New Roman',
-  'Trebuchet MS',
-  'Verdana',
-  'Yu Gothic',
-  // Add more font families as needed
-];
-const textOrientation = ["capitalize", "uppercase", "lowercase", "none"];
-let fontSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
-
 const [imageNames, setImageNames] = useState([]);
 
 useEffect(() => {
-  async function fetchImageNames() {
-    try {
-      const res = await fetch(`http://localhost:3000/api/shapeApi`, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body:"",
-    });
-    const response = await res.json();
-    console.log(response);
-      setImageNames(response.error);
-      
-      // alert(response)
-    } catch (error) {
-      console.error('Error fetching image names:', error);
-    }
+  if(menuData=="Shape"){
+    handleShapeData();
   }
-
-  fetchImageNames();
-}, []);
+  }, [menuData]);
 useEffect(()=>{
 console.log(imageNames)
 },[imageNames])
@@ -134,105 +57,58 @@ useEffect(() => {
   }
 }, [asyncTracker])
 
-// Function to handle font family change
-const onChangeFontSize = (e) => {
-  const updatedTextFields = textFields.map((textField, index) => {
-    if (selectedTextFieldIndex != -1) {
 
-      if (index === selectedTextFieldIndex) {
-        return { ...textField, size: e.target.value };
-      }
-      return textField;
-    }
+// const generateAndSavePDF = async (printIframe) => {
+//   // Capture the content of the iframe
+//   const doc = new jsPDF('l', 'mm', 'a4');
+//   doc.html(printIframe.contentDocument.body, {
+//     callback: function (pdf) {
+//       pdf.save('certificate.pdf');
+//     },
+//     x: 40,
+//     y: 0,
+//     page:1
+//   });
+// };
+const handleDownloadImage1 = () => {
+  html2canvas(certificateRef.current, {
+    scale: 1.25, // Adjust scale if needed
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/jpeg', 0.98); // Use 'image/png' if you prefer PNG format
+    link.download = 'myfile.jpg'; // Change the filename and extension as needed
+    link.click();
   });
-  setTextFields(updatedTextFields);
-  setAsyncTracker(prev => prev + 1);
-
-}
-const onChangeFontFamily = (e) => {
-  const updatedTextFields = textFields.map((textField, index) => {
-
-    if (index === selectedTextFieldIndex && selectedTextFieldIndex != -1) {
-      return { ...textField, fontFamily: e.target.value };
-    }
-    return textField;
-  });
-  setTextFields(updatedTextFields);
-  setAsyncTracker(prev => prev + 1);
 };
-const onChangeOrientation = (e) => {
-  const updatedTextFields = textFields.map((textField, index) => {
-
-    if (index === selectedTextFieldIndex && selectedTextFieldIndex != -1) {
-      return { ...textField, textOrientation: e.target.value };
-    }
-    return textField;
+const handleDownloadImage2 = () => {
+  html2canvas(certificateRef.current, {
+    scale: 1.25, // Adjust scale if needed
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png', 0.98); // Use 'image/png' if you prefer PNG format
+    link.download = 'myfile.png'; // Change the filename and extension as needed
+    link.click();
   });
-  setTextFields(updatedTextFields);
-  setAsyncTracker(prev => prev + 1);
-
-}
-const changeBold = () => {
-  const updatedTextFields = [...textFields];
-  if (textFields[selectedTextFieldIndex].bold == "bold") {
-    updatedTextFields[selectedTextFieldIndex].bold = "normal";
-    setTextFields(updatedTextFields);
-
-  }
-  else {
-    updatedTextFields[selectedTextFieldIndex].bold = "bold";
-    setTextFields(updatedTextFields);
-  }
-  setAsyncTracker(prev => prev + 1);
-
-}
-const changeItalic = () => {
-  const updatedTextFields = [...textFields];
-  if (textFields[selectedTextFieldIndex].italic == "italic") {
-    updatedTextFields[selectedTextFieldIndex].italic = "normal";
-    setTextFields(updatedTextFields);
-
-  }
-  else {
-    updatedTextFields[selectedTextFieldIndex].italic = "italic";
-    setTextFields(updatedTextFields);
-  }
-  setAsyncTracker(prev => prev + 1);
-}
-const changeUnderline = () => {
-  const updatedTextFields = [...textFields];
-  if (textFields[selectedTextFieldIndex].underline == "underline") {
-    updatedTextFields[selectedTextFieldIndex].underline = "none";
-    setTextFields(updatedTextFields);
-
-  }
-  else {
-    updatedTextFields[selectedTextFieldIndex].underline = "underline";
-    setTextFields(updatedTextFields);
-  }
-  setAsyncTracker(prev => prev + 1);
-
-}
-
-
-const handleConvertToPdf = async () => {
-  const element = certificateRef.current;
-
-  var options = {
-    filename: 'test.pdf',
+};
+const handlePrint1=()=>{
+  var opt = {
+    margin:       [0, 0, 0, 2], // Array for top, right, bottom, and left margins
+    filename:     'myfile.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    jsPDF:        { unit: 'mm', format: [674,464], orientation: 'landscape' }
   };
-  domToPdf(element, options, function (pdf) {
-    console.log('done');
-  }, 900, 400);
-};
-
-const handleTransparency = (e) => {
-  const updatedImageFields = [...textFields];
-  updatedImageFields[imageBorder].transparency = e.target.value
-  setTextFields(updatedImageFields)
-
-
+   
+  // New Promise-based usage:
+  html2pdf().from(certificateRef.current).set(opt).save();
 }
+const handlePrint2 = useReactToPrint({
+  content: () => certificateRef.current,
+documentTitle:"done",
+onAfterPrint:()=>{console.log("printing done")},
+
+removeAfterPrint:true
+});
+
 const handleAddImage = (event, i) => {
   const updatedImageField = [...textFields];
   const file = event.target.files[0];
@@ -265,12 +141,28 @@ const handleAddImage = (event, i) => {
   setSelectedImageData(null);
 
 };
-const handleAddShape=(w,b,r)=>{
+const handleAddShape=(imageSrc)=>{
 const updatedata=[...textFields];
-updatedata.push({  x: 100, y: 100, width: w, height: b, z_index: 100, transparency: 100, type: "shape", isLocked: false,radius:r });
+updatedata.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image", isLocked: false });
 setTextFields(updatedata)
 handleHistoryComponent(updatedata)
 }
+
+const handleShapeData=async()=>{
+  console.log("run")
+  const res = await fetch(`http://localhost:3000/api/shape`, {
+    method: "GET",
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    },
+});
+const response = await res.json();
+setShapeData(response.error)
+}
+const handlePrint = () => {
+  printRef.current.handlePrint();
+};
     return(
         <>    
      <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
@@ -300,12 +192,17 @@ handleHistoryComponent(updatedata)
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M192 116a12 12 0 1 1-12-12 12 12 0 0 1 12 12Zm-40-52h-40a8 8 0 0 0 0 16h40a8 8 0 0 0 0-16Zm96 48v32a24 24 0 0 1-24 24h-2.36l-16.21 45.38A16 16 0 0 1 190.36 224h-12.72a16 16 0 0 1-15.07-10.62l-1.92-5.38h-57.3l-1.92 5.38A16 16 0 0 1 86.36 224H73.64a16 16 0 0 1-15.07-10.62L46 178.22a87.69 87.69 0 0 1-21.44-48.38A16 16 0 0 0 16 144a8 8 0 0 1-16 0 32 32 0 0 1 24.28-31A88.12 88.12 0 0 1 112 32h104a8 8 0 0 1 0 16h-21.39a87.93 87.93 0 0 1 30.17 37c.43 1 .85 2 1.25 3A24 24 0 0 1 248 112Zm-16 0a8 8 0 0 0-8-8h-3.66a8 8 0 0 1-7.64-5.6A71.9 71.9 0 0 0 144 48h-32a72 72 0 0 0-53.09 120.64 8 8 0 0 1 1.64 2.71L73.64 208h12.72l3.82-10.69a8 8 0 0 1 7.53-5.31h68.58a8 8 0 0 1 7.53 5.31l3.82 10.69h12.72l18.11-50.69A8 8 0 0 1 216 152h8a8 8 0 0 0 8-8Z"></path></svg>
         Graphics
         </div>
-        <ReactToPrint
-          trigger={() => <button className='rounded'
-            style={{ width: "90%", height: "40px", background: "green" }}  >Download</button>}
-          content={() => certificateRef.current}
-        /> 
-        <div  onClick={(e)=>{setMenu(true);setMenuData("Upload")}} className="sidebar-icon">   
+      
+        {/* <div  onClick={(e)=>{setMenu(false);handlePrint2()}} className="sidebar-icon">   
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M192 116a12 12 0 1 1-12-12 12 12 0 0 1 12 12Zm-40-52h-40a8 8 0 0 0 0 16h40a8 8 0 0 0 0-16Zm96 48v32a24 24 0 0 1-24 24h-2.36l-16.21 45.38A16 16 0 0 1 190.36 224h-12.72a16 16 0 0 1-15.07-10.62l-1.92-5.38h-57.3l-1.92 5.38A16 16 0 0 1 86.36 224H73.64a16 16 0 0 1-15.07-10.62L46 178.22a87.69 87.69 0 0 1-21.44-48.38A16 16 0 0 0 16 144a8 8 0 0 1-16 0 32 32 0 0 1 24.28-31A88.12 88.12 0 0 1 112 32h104a8 8 0 0 1 0 16h-21.39a87.93 87.93 0 0 1 30.17 37c.43 1 .85 2 1.25 3A24 24 0 0 1 248 112Zm-16 0a8 8 0 0 0-8-8h-3.66a8 8 0 0 1-7.64-5.6A71.9 71.9 0 0 0 144 48h-32a72 72 0 0 0-53.09 120.64 8 8 0 0 1 1.64 2.71L73.64 208h12.72l3.82-10.69a8 8 0 0 1 7.53-5.31h68.58a8 8 0 0 1 7.53 5.31l3.82 10.69h12.72l18.11-50.69A8 8 0 0 1 216 152h8a8 8 0 0 0 8-8Z"></path></svg>
+        Print
+        </div> */}
+        <div   onClick={(e)=>{setMenu(true);setMenuData("Download");}} className="sidebar-icon">   
+        <img width="30" height="30" src="https://img.icons8.com/material-outlined/24/download--v1.png" alt="download--v1"/>        Download
+        </div>
+        
+      <div className="sidebar-icon">
+      {/* Optional: Another button that triggers the print function */}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M240 136v64a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h48a8 8 0 0 1 0 16H32v64h192v-64h-48a8 8 0 0 1 0-16h48a16 16 0 0 1 16 16ZM85.66 77.66 120 43.31V128a8 8 0 0 0 16 0V43.31l34.34 34.35a8 8 0 0 0 11.32-11.32l-48-48a8 8 0 0 0-11.32 0l-48 48a8 8 0 0 0 11.32 11.32ZM200 168a12 12 0 1 0-12 12 12 12 0 0 0 12-12Z"></path></svg>
         Upload
         </div>
@@ -430,12 +327,39 @@ handleHistoryComponent(updatedata)
         </div>
 </>:""}
 {menuData=="Shape"?<>
-<div style={{ display: "grid", alignItems: "center" }} >
-  <button onClick={()=>handleAddShape(100,100,"50%")}>Circle</button>
-  <button onClick={()=>handleAddShape(100,100,"0%")}>square</button>
-  <button onClick={()=>handleAddShape(200,100,"0%")}>Rectangle</button>
-        </div>
+<div  style={{ display: "grid", alignItems: "center" }} >
+ {shapeData && shapeData.map((data)=>{
+  return(
+    <img onClick={()=>handleAddShape(data.img)} src={data.img} width={250} height={150}/>
+  )
+ })}
+   </div>
 </>:""}
+{
+  menuData=="Download"?
+  <div  style={{ display: "grid", alignItems: "center" }} >
+     <button  onClick={handlePrint2}
+        type="button" 
+        className=" download-btn px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex"
+    >
+      <img width="30" height="30" src="https://img.icons8.com/ios/50/print--v1.png" alt="print--v1"/>
+        <span class="ml-2">Print</span>
+    </button>
+    <button  onClick={handlePrint1}  type="button" className=" download-btn text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:ring-[#FF9119]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 mr-2 mb-2 px-4 py-3">
+    <img width="30" height="30" src="https://img.icons8.com/ios/50/pdf--v1.png" alt="pdf--v1"/>Download As PDF
+    </button>
+	<button  onClick={handleDownloadImage1}  type="button" className=" download-btn text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2 mb-2">
+  <img width="30" height="30" src="https://img.icons8.com/ios/50/jpg.png" alt="jpg"/> Download JPG</button>
+<button onClick={handleDownloadImage2} type="button" className=" download-btn  text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+<img width="30" height="30" src="https://img.icons8.com/ios/50/png.png" alt="png"/>Download As PNG
+</button>
+    {/* <button className="download-btn" style={{color:"white"}}>Print</button> */}
+    {/* <button onClick={handlePrint1} className="download-btn" style={{background:"green"}}>Download As PDF</button>
+    <button onClick={handleDownloadImage1} style={{background:"blue"}} className="download-btn">Download As JPG</button>
+    <button onClick={handleDownloadImage2} style={{background:"yellow",color:"red"}} className="download-btn">Download As PNG</button> */}
+  </div>
+  :""
+}
 </div>
      </div>
         </>
