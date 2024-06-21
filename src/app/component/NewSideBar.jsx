@@ -12,6 +12,7 @@ import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 
 import { ToastContainer,toast } from "react-toastify";
+import CertificateTemplateCard from "./card/CertificateTemplateCard";
 
 const NewSideBar=({
     addFields,
@@ -28,12 +29,11 @@ const NewSideBar=({
     handleHistoryComponent
 
 })=>{
-  const printRef=useRef()
 const [showMenu,setMenu]=useState(false);
 const [menuData,setMenuData]=useState("");
-
+const [templateGroup,setTemplateGroup]=useState(true);
 const [asyncTracker, setAsyncTracker] = useState(0);
-
+const [certificateTemplate,setCertificateTempplate]=useState(null)
 const [selectedImageData, setSelectedImageData] = useState(null);
 const [shapeData,setShapeData]=useState(null);
 
@@ -46,10 +46,13 @@ const handleImageData = (e, i) => {
 const [imageNames, setImageNames] = useState([]);
 
 useEffect(() => {
-  if(menuData=="Shape"){
+  if(menuData=="Shape" && shapeData==null){
     handleShapeData();
   }
-  }, [menuData]);
+  if(menuData=="Template"){
+    handleCertificateTemplate()
+  }
+  }, [menuData,templateGroup]);
 useEffect(()=>{
 console.log(imageNames)
 },[imageNames])
@@ -164,14 +167,30 @@ const handleShapeData=async()=>{
 const response = await res.json();
 setShapeData(response.error)
 }
+const handleCertificateTemplate=async()=>{
+  console.log("run")
+  const res = await fetch(`http://localhost:3000/api/certificatetemplate/fetch`, {
+    method: "POST",
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    },
+    body:JSON.stringify({id:"om",templateGroup:templateGroup})
+});
+const response = await res.json();
+setCertificateTempplate(response.data)
+}
 const uploadCertificateTemplate=async()=>{
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
   const res1 = await fetch(`http://localhost:3000/api/addCertificateTemplate`, {
     method: "POST",
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
     },
-    body: JSON.stringify({id:"om",certificateComponentData:textFields}),
+    body: JSON.stringify({id:"om",certificateComponentData:textFields,backgroundImage:id}),
   });
 const response = await res1.json();
 if(response.status==200){
@@ -255,9 +274,6 @@ const handlePic = async (e) => {
 }
 
 
-// const handlePrint = () => {
-//   printRef.current.handlePrint();
-// };
     return(
         <>    
         <ToastContainer/>
@@ -305,7 +321,31 @@ const handlePic = async (e) => {
      </div>
      <div className="sidebar-menu" style={{left:showMenu==true?"14vh":"-30vh",top:"54px"}}>
 <div style={{width:"100%",height:"5vh",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"1vh 2vh"}}>{menuData}<img style={{cursor:"pointer"}} onClick={(e)=>{setMenu(false);setMenuData("")}} width="30" height="30" src="https://img.icons8.com/material-outlined/24/multiply--v1.png" alt="multiply--v1"/></div>
-<div style={{width:"100%",height:"100%",marginTop:"2vh",}}>
+<div style={{width:"100%",overflowY:"scroll",height:"80vh"}}>
+  <div style={{display:"flex",alignItems:"center",height:"7vh"}}><div onClick={()=>setTemplateGroup(true)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==true?"green":"white",color:templateGroup==true?"white":"black"}}>My Template</div><div onClick={()=>setTemplateGroup(false)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==false?"green":"white",color:templateGroup==false?"white":"black"}}> Templates</div></div>
+  {
+    menuData=="Template"?
+    <>
+    {templateGroup && certificateTemplate ? (
+            certificateTemplate.map((data, index) => (
+              <CertificateTemplateCard
+                key={index}
+                setTextFields={setTextFields}
+                textFields={data.certificateComponentData}
+                backgroundImg={data.backgroundImg}
+              />
+            ))
+          ) :certificateTemplate && certificateTemplate.map((data, index) => (
+            <CertificateTemplateCard
+              key={index}
+              setTextFields={setTextFields}
+              textFields={data.certificateComponentData}
+              backgroundImg={data.backgroundImg}
+            />
+          ))}
+    </>
+    :""
+  }
 {menuData=="Text" ?
 <>
 <button className='rounded' style={{ margin: "1vh auto", position: "relative", left: "5%", width: "90%", height: "40px", background: "khaki" }} onClick={() => addFields()}>Add Field</button>

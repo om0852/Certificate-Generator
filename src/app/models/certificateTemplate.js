@@ -8,6 +8,10 @@ userId:{
 certificateComponentData:{
     type:Array
 },
+backgroundImg:{
+    type:String,
+    default:"welc,ome"
+}
 },
 { timestamps: true });
 
