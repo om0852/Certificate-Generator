@@ -49,7 +49,7 @@ const handleAddProduct=async()=>{
     });
         const response=await res.json();
         if(response.status==200){
-            toast.success(' Product Update Successfully', {
+            toast.success(' Upload Successfully', {
                 position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,

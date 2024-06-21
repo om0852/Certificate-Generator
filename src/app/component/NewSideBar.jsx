@@ -6,8 +6,12 @@ import { useReactToPrint } from 'react-to-print';
 import addImageIcon from "../../images/addimage.png"
 import "@/css/form.css"
 import "./component.css"
+import 'react-toastify/dist/ReactToastify.css';
+
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
+
+import { ToastContainer,toast } from "react-toastify";
 
 const NewSideBar=({
     addFields,
@@ -160,11 +164,68 @@ const handleShapeData=async()=>{
 const response = await res.json();
 setShapeData(response.error)
 }
-const handlePrint = () => {
-  printRef.current.handlePrint();
-};
+const handlePic = async (e) => {
+  const filedata = e.target.files[0];
+  console.log(e.target.files[0])
+  const data = new FormData();
+  data.append("file", filedata);
+  data.append("upload_preset", "gsceswka");
+  data.append("cloud_name", "dge7wv4zo");
+
+  await fetch("https://api.cloudinary.com/v1_1/dge7wv4zo/image/upload", {
+      method: "post",
+      body: data
+  })
+      .then((res) => {
+          res.json().then(async(data) => {
+            console.log(data.url)
+            const res1 = await fetch(`http://localhost:3000/api/graphics/add`, {
+              method: "POST",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({id:"om",img:data.url}),
+            });
+          const response = await res1.json();
+          if(response.status==200){
+            toast.success(' Upload Successfully', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+        }
+        else{
+            toast.error('Check Internet Connection', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+        }
+   
+        })
+      }).catch((error) => {
+          console.log(error);
+      })
+}
+
+
+// const handlePrint = () => {
+//   printRef.current.handlePrint();
+// };
     return(
         <>    
+        <ToastContainer/>
      <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
         <div className="sidebar-icon" onClick={(e)=>{setMenu(true);setMenuData("Template")}}>   
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 16v40H40V56ZM40 112h56v88H40Zm176 88H112v-88h104v88Z"></path></svg>
@@ -188,9 +249,9 @@ const handlePrint = () => {
         Image
         </div>
         
-        <div  onClick={(e)=>{setMenu(true);setMenuData("Graphics")}} className="sidebar-icon">   
+        <div  onClick={(e)=>{setMenu(true);setMenuData("My Graphics")}} className="sidebar-icon">   
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M192 116a12 12 0 1 1-12-12 12 12 0 0 1 12 12Zm-40-52h-40a8 8 0 0 0 0 16h40a8 8 0 0 0 0-16Zm96 48v32a24 24 0 0 1-24 24h-2.36l-16.21 45.38A16 16 0 0 1 190.36 224h-12.72a16 16 0 0 1-15.07-10.62l-1.92-5.38h-57.3l-1.92 5.38A16 16 0 0 1 86.36 224H73.64a16 16 0 0 1-15.07-10.62L46 178.22a87.69 87.69 0 0 1-21.44-48.38A16 16 0 0 0 16 144a8 8 0 0 1-16 0 32 32 0 0 1 24.28-31A88.12 88.12 0 0 1 112 32h104a8 8 0 0 1 0 16h-21.39a87.93 87.93 0 0 1 30.17 37c.43 1 .85 2 1.25 3A24 24 0 0 1 248 112Zm-16 0a8 8 0 0 0-8-8h-3.66a8 8 0 0 1-7.64-5.6A71.9 71.9 0 0 0 144 48h-32a72 72 0 0 0-53.09 120.64 8 8 0 0 1 1.64 2.71L73.64 208h12.72l3.82-10.69a8 8 0 0 1 7.53-5.31h68.58a8 8 0 0 1 7.53 5.31l3.82 10.69h12.72l18.11-50.69A8 8 0 0 1 216 152h8a8 8 0 0 0 8-8Z"></path></svg>
-        Graphics
+        My Graphics
         </div>
       
         {/* <div  onClick={(e)=>{setMenu(false);handlePrint2()}} className="sidebar-icon">   
@@ -204,7 +265,7 @@ const handlePrint = () => {
       <div className="sidebar-icon">
       {/* Optional: Another button that triggers the print function */}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M240 136v64a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h48a8 8 0 0 1 0 16H32v64h192v-64h-48a8 8 0 0 1 0-16h48a16 16 0 0 1 16 16ZM85.66 77.66 120 43.31V128a8 8 0 0 0 16 0V43.31l34.34 34.35a8 8 0 0 0 11.32-11.32l-48-48a8 8 0 0 0-11.32 0l-48 48a8 8 0 0 0 11.32 11.32ZM200 168a12 12 0 1 0-12 12 12 12 0 0 0 12-12Z"></path></svg>
-        Upload
+               Upload
         </div>
      </div>
      <div className="sidebar-menu" style={{left:showMenu==true?"14vh":"-30vh",top:"54px"}}>
@@ -273,9 +334,20 @@ const handlePrint = () => {
 </>
 
 :""}
+{
+  menuData=="My Graphics"?<>
+  <div style={{ display: "grid", alignItems: "center" }} >
+  <input onChange={handlePic} hidden id="uploadimg" type="file" accept="image/*" />
 
+  <label htmlFor="uploadimg"  className=" download-btn inline-flex items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md">
+  <img width="30" height="30" src="https://img.icons8.com/fluency/48/upload--v16.png" alt="upload--v16"/>
+	     Upload
+  </label>
+</div>
+  </>:""
+}
 {menuData=="Image"?<>
-<div style={{ display: "grid", alignItems: "center" }} >
+<div style={{ display: "grid", alignItems: "center" ,scrollbarWidth:"0"}} >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly", width: "100%" }}>
             <input type="file"
               accept="image/*"
