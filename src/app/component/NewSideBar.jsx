@@ -7,11 +7,11 @@ import addImageIcon from "../../images/addimage.png"
 import "@/css/form.css"
 import "./component.css"
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer,toast } from "react-toastify";
 
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 
-import { ToastContainer,toast } from "react-toastify";
 import CertificateTemplateCard from "./card/CertificateTemplateCard";
 
 const NewSideBar=({
@@ -198,6 +198,7 @@ const handleCertificateTemplate=async()=>{
 const response = await res.json();
 setCertificateTempplate(response.data)
 }
+
 const uploadCertificateTemplate=async()=>{
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -208,7 +209,7 @@ const uploadCertificateTemplate=async()=>{
         Accept: "application/json",
         "Content-Type": "application/json",
     },
-    body: JSON.stringify({id:"om",certificateComponentData:textFields,backgroundImage:id}),
+    body: JSON.stringify({id:"om",certificateComponentData:textFields,certificateName:id,state:"edit"}),
   });
 const response = await res1.json();
 if(response.status==200){
@@ -343,7 +344,12 @@ const handlePic = async (e) => {
   {
     menuData=="Template"?
     <>
-    <div style={{display:"flex",alignItems:"center",height:"7vh"}}><div onClick={()=>setTemplateGroup(true)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==true?"green":"white",color:templateGroup==true?"white":"black"}}>My Template</div><div onClick={()=>setTemplateGroup(false)} style={{width:"50%",height:"100%",border:"1px solid black",display:"grid",placeItems:"center",background:templateGroup==false?"green":"white",color:templateGroup==false?"white":"black"}}> Templates</div></div>
+    <div class="inline-flex rounded-md shadow-sm" role="group">
+  <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"onClick={()=>setTemplateGroup(true)}>My Template
+  </button>
+  <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"onClick={()=>setTemplateGroup(false)} > Templates
+  </button>
+</div>
     {templateGroup && certificateTemplate ? (
             certificateTemplate.map((data, index) => (
               <CertificateTemplateCard
@@ -514,7 +520,7 @@ const handlePic = async (e) => {
   <div  style={{ display: "grid", alignItems: "center" }} >
      <button  onClick={handlePrint2}
         type="button" 
-        className=" download-btn px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex"
+        className=" download-btn px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform  flex"
     >
       <img width="30" height="30" src="https://img.icons8.com/ios/50/print--v1.png" alt="print--v1"/>
         <span class="ml-2">Print</span>
@@ -527,11 +533,7 @@ const handlePic = async (e) => {
 <button onClick={handleDownloadImage2} type="button" className=" download-btn  text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
 <img width="30" height="30" src="https://img.icons8.com/ios/50/png.png" alt="png"/>Download As PNG
 </button>
-    {/* <button className="download-btn" style={{color:"white"}}>Print</button> */}
-    {/* <button onClick={handlePrint1} className="download-btn" style={{background:"green"}}>Download As PDF</button>
-    <button onClick={handleDownloadImage1} style={{background:"blue"}} className="download-btn">Download As JPG</button>
-    <button onClick={handleDownloadImage2} style={{background:"yellow",color:"red"}} className="download-btn">Download As PNG</button> */}
-  </div>
+   </div>
   :""
 }
 </div>

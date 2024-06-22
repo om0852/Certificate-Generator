@@ -1,11 +1,9 @@
 "use client"
 import FileSelector from "../component/FileSelector";
 import React, { useEffect, useRef, useState } from 'react';
-import Sidebar from "../component/Sidebar";
-import html2canvas from "html2canvas"
-import jsPDF from "jspdf";
-import selectImage from "../../images/selectimage.png"
-import ReactToPrint from 'react-to-print';
+import selectImage from "../../images/selectimage.png";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer,toast } from "react-toastify";
 import { toPng } from 'html-to-image';
 import NewSideBar from "../component/NewSideBar.jsx";
 import StylingHeader from "../component/StylingHeader";
@@ -171,11 +169,38 @@ const handleZoomControl=(value)=>{
             setSelectedImage(null);
         }
     };
-    useEffect(() => {
+    const fetchCertiifcateData=async()=>{
+
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        setSelectedImage(id != selectImage ? id : selectImage)
-    }, [])
+        const res1 = await fetch(`http://localhost:3000/api/certificatetemplate/singlefetch`, {
+          method: "POST",
+          headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({id:"om",certificateName:id}),
+        });
+      const response = await res1.json();
+      setTextFields(response.data.certificateComponentData);
+      setSelectedImage(response.data.backgroundImg);
+      
+      if(response.status==404){
+        toast.success(response.error, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+      }
+      }
+    useEffect(() => {
+        fetchCertiifcateData();
+     }, [])
     const addFields = () => {
         addTextField();
     }

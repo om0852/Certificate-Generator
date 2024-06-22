@@ -6,11 +6,15 @@ userId:{
     required:[true,'User ID is required'],
 },
 certificateComponentData:{
-    type:Array
+    type:Array,
+    default:[]
 },
 backgroundImg:{
     type:String,
     default:"welc,ome"
+},
+certificateName:{
+    type:String
 }
 },
 { timestamps: true });
