@@ -8,9 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer,toast } from "react-toastify";
 
 import Link from "next/link";
-import AddProjectName from "../component/card/AddProjectName";
+import { useRouter } from "next/navigation";
 
 export default function ChooseTemplate() {
+    const router=useRouter();
     const [prevImage, setPrevImage] = useState("");
     const [projectName,setProjectName]=useState("")
     const CreateCertificatetemplate=async()=>{
@@ -21,7 +22,7 @@ export default function ChooseTemplate() {
                   Accept: "application/json",
                   "Content-Type": "application/json",
               },
-              body: JSON.stringify({id:"om",certificateComponentData:[],backgroundImage:prevImage,certificateName:projectName}),
+              body: JSON.stringify({id:"om",backgroundImage:prevImage,certificateName:projectName,state:"create"}),
             });
           const response = await res1.json();
           if(response.status==404){
@@ -36,12 +37,16 @@ export default function ChooseTemplate() {
                 theme: "light",
                 });
           }
+          else{
+            router.push(`/customizetemplate?id=${projectName}`)
+          }
           }
           
           
     
     return (
         <>
+        <ToastContainer/>
             <SideTemplate setPrevImage={setPrevImage} />
             <div style={{ display: "grid", placeItems: "center", width: "70%", height: "100vh" }} className="main-container">{prevImage ? <> <img style={{ width: "inherit", }} src={prevImage} /><div className="flex items-start mb-5">
             <div className="">
@@ -50,7 +55,7 @@ export default function ChooseTemplate() {
   </div>
 
   </div>
-{projectName && <Link onClick={CreateCertificatetemplate} href={`/customizetemplate?id=${projectName}`} type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Use Template</Link>
+{projectName && <button onClick={CreateCertificatetemplate}  type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Use Template</button>
 }            </> : <h2 style={{ textAlign: "center", color: "black", fontWeight:"bold",fontSize: "4em" }}>Select Template</h2>}</div >
         </>
 

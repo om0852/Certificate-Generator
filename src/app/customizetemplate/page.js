@@ -8,9 +8,11 @@ import { toPng } from 'html-to-image';
 import NewSideBar from "../component/NewSideBar.jsx";
 import StylingHeader from "../component/StylingHeader";
 import ZoomControlBar from "../component/menu/ZoomControlBar";
+import { useRouter } from "next/navigation";
 
 
 export default function Page() {
+    const router=useRouter();
     const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(0); // State to hold the index of the selected text field
     const [undoHistoryTracker, setUndoHistoryTracker] = useState(-1)
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
@@ -182,11 +184,13 @@ const handleZoomControl=(value)=>{
           body: JSON.stringify({id:"om",certificateName:id}),
         });
       const response = await res1.json();
-      setTextFields(response.data.certificateComponentData);
-      setSelectedImage(response.data.backgroundImg);
+      if(response.status==200){
+          setTextFields(response.data.certificateComponentData);
+          setSelectedImage(response.data.backgroundImg);
+        }
       
       if(response.status==404){
-        toast.success(response.error, {
+        toast.error(response.error, {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
@@ -196,6 +200,7 @@ const handleZoomControl=(value)=>{
             progress: undefined,
             theme: "light",
             });
+            router.push("/choosetemplate")
       }
       }
     useEffect(() => {

@@ -8,12 +8,12 @@ try{
 await connectToDB()
     const data=await certificateTemplate.findOne({userId:body.id,certificateName:body.certificateName})
     if(data==null){
-        return NextResponse.json({ status: 404, error: "Invalid Data" ,data:[]});
+        return NextResponse.json({ status: 404, error: "Invalid Data" ,data:null});
 
     }
     return NextResponse.json({ status: 200, error: "fetch successfully" ,data:data});
 }catch(error){
-    return NextResponse.json({ status: 404, error: "Invalid Data" ,data:[]});
+    return NextResponse.json({ status: 404, error: "Invalid Data" ,data:null});
 
 }
 
