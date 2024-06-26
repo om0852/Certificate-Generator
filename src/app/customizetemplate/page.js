@@ -75,12 +75,12 @@ const handleZoomControl=(value)=>{
     //     console.log("history index tracker", redoHistoryIndexTracker)
     // }
     //     , [redoHistoryComponent])
-    useEffect(() => {
-        console.log(undoHistoryComponent)
-        console.log("history index", undoHistoryIndex)
-        console.log("history index tracker", undoHistoryTracker)
-    }
-        , [undoHistoryComponent, undoHistoryTracker])
+    // useEffect(() => {
+    //     console.log(undoHistoryComponent)
+    //     console.log("history index", undoHistoryIndex)
+    //     console.log("history index tracker", undoHistoryTracker)
+    // }
+    //     , [undoHistoryComponent, undoHistoryTracker])
     //main code
 
 
@@ -186,6 +186,8 @@ const handleZoomControl=(value)=>{
       const response = await res1.json();
       if(response.status==200){
           setTextFields(response.data.certificateComponentData);
+          setUndoHistoryComponent([response.data.certificateComponentData]);
+          setUndoHistoryIndex([{ x: 0, y: 0 }])
           setSelectedImage(response.data.backgroundImg);
         }
       

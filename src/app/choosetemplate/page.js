@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
 import SideTemplate from "../component/SideTemplate";
-import Slider from "../component/Slider";
 import "@/app/globals.css"
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,6 +8,7 @@ import { ToastContainer,toast } from "react-toastify";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "../component/Navbar";
 
 export default function ChooseTemplate() {
     const router=useRouter();
@@ -47,6 +47,7 @@ export default function ChooseTemplate() {
     return (
         <>
         <ToastContainer/>
+        <Navbar/>
             <SideTemplate setPrevImage={setPrevImage} />
             <div style={{ display: "grid", placeItems: "center", width: "70%", height: "100vh" }} className="main-container">{prevImage ? <> <img style={{ width: "inherit", }} src={prevImage} /><div className="flex items-start mb-5">
             <div className="">

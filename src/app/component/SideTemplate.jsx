@@ -13,8 +13,7 @@ export default function SideTemplate({ setPrevImage }) {
         <>
             <div className="sidebar-template">
                 <Link href={"/customizetemplate"} className="create-card">
-                    <img src={createTemplateIcon.src} />
-                </Link>
+                <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/add--v1.png" alt="add--v1"/>                </Link>
 
                 <TemplateDesign setPrevImage={setPrevImage} templateimg={certificate1.src} />
                 <TemplateDesign setPrevImage={setPrevImage} templateimg={certificate2.src} />

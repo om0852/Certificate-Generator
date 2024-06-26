@@ -116,3 +116,18 @@ height: 10vh;
   background-image: url("../images/background.avif");
   background-size: cover;
 }
+.w{
+  width: 100%;
+}
+.h{
+  height: 100vh;
+}
+.w-5{
+  width: 50%;
+}
+.h-5{
+  height: 50%;
+}
+.flex{
+  display: flex;
+}

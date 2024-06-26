@@ -124,9 +124,9 @@ const handlePasteStyle =()=>{
   // Function to handle font family change
   const onChangeFontSize = (e) => {
     const updatedTextFields = textFields.map((textField, index) => {
-      if (selectedTextFieldIndex != -1) {
+      if (imageBorder != -1) {
 
-        if (index === selectedTextFieldIndex) {
+        if (index === imageBorder) {
           return { ...textField, size: e.target.value };
         }
         return textField;
@@ -138,9 +138,9 @@ const handlePasteStyle =()=>{
   }
   const onChangeTextColor = (e) => {
     const updatedTextFields = textFields.map((textField, index) => {
-      if (selectedTextFieldIndex != -1) {
+      if (imageBorder != -1) {
 
-        if (index === selectedTextFieldIndex) {
+        if (index === imageBorder) {
           return { ...textField, textColor: e.target.value };
         }
         return textField;
@@ -153,7 +153,7 @@ const handlePasteStyle =()=>{
   const onChangeFontFamily = (e) => {
     const updatedTextFields = textFields.map((textField, index) => {
 
-      if (index === selectedTextFieldIndex && selectedTextFieldIndex != -1) {
+      if (index === imageBorder && imageBorder != -1) {
         return { ...textField, fontFamily: e.target.value };
       }
       return textField;
@@ -164,7 +164,7 @@ const handlePasteStyle =()=>{
   const onChangeOrientation = (e) => {
     const updatedTextFields = textFields.map((textField, index) => {
 
-      if (index === selectedTextFieldIndex && selectedTextFieldIndex != -1) {
+      if (index === imageBorder && imageBorder != -1) {
         return { ...textField, textOrientation: e.target.value };
       }
       return textField;
@@ -175,13 +175,13 @@ const handlePasteStyle =()=>{
   }
   const changeBold = () => {
     const updatedTextFields = [...textFields];
-    if (textFields[selectedTextFieldIndex].bold == "bold") {
-      updatedTextFields[selectedTextFieldIndex].bold = "normal";
+    if (textFields[imageBorder].bold == "bold") {
+      updatedTextFields[imageBorder].bold = "normal";
       setTextFields(updatedTextFields);
 
     }
     else {
-      updatedTextFields[selectedTextFieldIndex].bold = "bold";
+      updatedTextFields[imageBorder].bold = "bold";
       setTextFields(updatedTextFields);
     }
     setAsyncTracker(prev => prev + 1);
@@ -189,26 +189,26 @@ const handlePasteStyle =()=>{
   }
   const changeItalic = () => {
     const updatedTextFields = [...textFields];
-    if (textFields[selectedTextFieldIndex].italic == "italic") {
-      updatedTextFields[selectedTextFieldIndex].italic = "normal";
+    if (textFields[imageBorder].italic == "italic") {
+      updatedTextFields[imageBorder].italic = "normal";
       setTextFields(updatedTextFields);
 
     }
     else {
-      updatedTextFields[selectedTextFieldIndex].italic = "italic";
+      updatedTextFields[imageBorder].italic = "italic";
       setTextFields(updatedTextFields);
     }
     setAsyncTracker(prev => prev + 1);
   }
   const changeUnderline = () => {
     const updatedTextFields = [...textFields];
-    if (textFields[selectedTextFieldIndex].underline == "underline") {
-      updatedTextFields[selectedTextFieldIndex].underline = "none";
+    if (textFields[imageBorder].underline == "underline") {
+      updatedTextFields[imageBorder].underline = "none";
       setTextFields(updatedTextFields);
 
     }
     else {
-      updatedTextFields[selectedTextFieldIndex].underline = "underline";
+      updatedTextFields[imageBorder].underline = "underline";
       setTextFields(updatedTextFields);
     }
     setAsyncTracker(prev => prev + 1);
@@ -246,11 +246,11 @@ const handlePasteStyle =()=>{
              {textFields[imageBorder].type=="textfield" && <select
                 style={{ color: 'black', width: "14vh", height: "5vh", marginLeft: "3vh", border: "1px solid grey", outline: "none" }}
                 onChange={onChangeFontFamily}
-                value={textFields[selectedTextFieldIndex].fontFamily}
+                value={textFields[imageBorder].fontFamily}
               >
                 {fontFamilies &&
                   fontFamilies.map((data, index) => {
-                    if (textFields[selectedTextFieldIndex].fontFamily == data) {
+                    if (textFields[imageBorder].fontFamily == data) {
                       return (
                         <option key={index} value={data} style={{ fontFamily: data, color: 'black' }}>
                           {data}
@@ -272,24 +272,24 @@ const handlePasteStyle =()=>{
               {textFields[imageBorder].type=="textfield" && <input type="number" min={1} max={100}
                 onChange={onChangeFontSize}
                 style={{ color: 'black', margin: "1vh 0", width: "6vh", height: "5vh", marginLeft: "3vh", border: "1px solid grey", outline: "none" }}
-                value={textFields[selectedTextFieldIndex].size}
+                value={textFields[imageBorder].size}
               />}
               {/* color picker */}
               <input onChange={onChangeTextColor} style={{ display: "none" }} type="color" id="colorpicker" />
               {textFields[imageBorder].type=="textfield" &&  <label htmlFor="colorpicker" style={{ width: "7vh", height: "5vh", display: "grid", placeItems: "center" }}>
                 A           <div style={{ width: "3.5vh", borderRadius: "1vh", height: "1vh", background: "red" }} ></div>
               </label>}
-              {textFields[imageBorder].type=="textfield" &&  <span onClick={changeBold} style={{ background: textFields[selectedTextFieldIndex].bold == "bold" ? "#c1c9c4" : "none", margin: "0 .5vh" }} className='bold'><img width="24" height="24" src="https://img.icons8.com/material-outlined/24/bold.png" alt="bold" /></span>}
-            {textFields[imageBorder].type=="textfield" &&  <span onClick={changeItalic} style={{ background: textFields[selectedTextFieldIndex].italic == "italic" ? "#c1c9c4" : "none", margin: "0 .4vh" }}><img width="24" height="24" src="https://img.icons8.com/ios-glyphs/24/italic.png" alt="italic" /></span>}
-            {textFields[imageBorder].type=="textfield" && <span onClick={changeUnderline} style={{ background: textFields[selectedTextFieldIndex].underline == "underline" ? "#c1c9c4" : "none", margin: "0 .5vh" }}><img width="24" height="24" src="https://img.icons8.com/ios/24/underline.png" alt="underline" /></span>}
+              {textFields[imageBorder].type=="textfield" &&  <span onClick={changeBold} style={{ background: textFields[imageBorder].bold == "bold" ? "#c1c9c4" : "none", margin: "0 .5vh" }} className='bold'><img width="24" height="24" src="https://img.icons8.com/material-outlined/24/bold.png" alt="bold" /></span>}
+            {textFields[imageBorder].type=="textfield" &&  <span onClick={changeItalic} style={{ background: textFields[imageBorder].italic == "italic" ? "#c1c9c4" : "none", margin: "0 .4vh" }}><img width="24" height="24" src="https://img.icons8.com/ios-glyphs/24/italic.png" alt="italic" /></span>}
+            {textFields[imageBorder].type=="textfield" && <span onClick={changeUnderline} style={{ background: textFields[imageBorder].underline == "underline" ? "#c1c9c4" : "none", margin: "0 .5vh" }}><img width="24" height="24" src="https://img.icons8.com/ios/24/underline.png" alt="underline" /></span>}
               {textFields[imageBorder].type=="textfield" &&
               <select
                 onChange={onChangeOrientation}
-                value={textFields[selectedTextFieldIndex].textOrientation}
+                value={textFields[imageBorder].textOrientation}
                 style={{ color: 'black', width: "7vh", height: "5vh", marginLeft: "2vh", border: "1px solid grey", outline: "none" }}>
                 {textOrientation &&
                   textOrientation.map((data, index) => {
-                    if (textFields[selectedTextFieldIndex].textOrientation == data) {
+                    if (textFields[imageBorder].textOrientation == data) {
                       return (
                         <option key={index} value={data} style={{ color: 'black', textTransform: data }}>
                           {data}
@@ -308,32 +308,33 @@ const handlePasteStyle =()=>{
               </select>}
               <div style={{ display: "grid", placeItems: "center", width: "5vh", height: "100%" }}>|</div>
               {/* align ment  */}
+             {textFields[imageBorder].type=="textfield" && <span style={{display:"flex"}}>
               <input onClick={() => {
                 const updatedTextFields = [...textFields];
-                updatedTextFields[selectedTextFieldIndex].alignment = "justify";
+                updatedTextFields[imageBorder].alignment = "justify";
                 setTextFields(updatedTextFields);
-              }} id='align-justify' type='radio' name="content-align" style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "justify" ? "grey" : "white" }} />
+              }} id='align-justify' type='radio' name="content-align" style={{ display: "none", background: textFields[imageBorder].alignment == "justify" ? "grey" : "white" }} />
                           {textFields[imageBorder].type=="textfield" &&
-  <label style={{ background: textFields[selectedTextFieldIndex].alignment == "justify" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor="align-justify"><img width="24" height="24" src="https://img.icons8.com/ios/24/align-justify.png" alt="align-justify" /></label>}
+  <label style={{ background: textFields[imageBorder].alignment == "justify" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor="align-justify"><img width="24" height="24" src="https://img.icons8.com/ios/24/align-justify.png" alt="align-justify" /></label>}
               <input onClick={() => {
                 const updatedTextFields = [...textFields];
-                updatedTextFields[selectedTextFieldIndex].alignment = "center"; setTextFields(updatedTextFields);
-              }} type='radio' name='content-align' id='align-center' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "center" ? "grey" : "none", border: "1px solid black" }} />
+                updatedTextFields[imageBorder].alignment = "center"; setTextFields(updatedTextFields);
+              }} type='radio' name='content-align' id='align-center' style={{ display: "none", background: textFields[imageBorder].alignment == "center" ? "grey" : "none", border: "1px solid black" }} />
                            {textFields[imageBorder].type=="textfield" &&
- <label style={{ background: textFields[selectedTextFieldIndex].alignment == "center" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-center'><img width="24" height="24" src="https://img.icons8.com/ios-glyphs/24/align-center.png" alt="align-center" /></label>}
+ <label style={{ background: textFields[imageBorder].alignment == "center" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-center'><img width="24" height="24" src="https://img.icons8.com/ios-glyphs/24/align-center.png" alt="align-center" /></label>}
               <input onClick={() => {
                 const updatedTextFields = [...textFields];
-                updatedTextFields[selectedTextFieldIndex].alignment = "left"; setTextFields(updatedTextFields);
-              }} type='radio' name='content-align' id='align-left' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "grey" : "none", border: "1px solid black" }} />
+                updatedTextFields[imageBorder].alignment = "left"; setTextFields(updatedTextFields);
+              }} type='radio' name='content-align' id='align-left' style={{ display: "none", background: textFields[imageBorder].alignment == "align-left" ? "grey" : "none", border: "1px solid black" }} />
                            {textFields[imageBorder].type=="textfield" &&
- <label style={{ background: textFields[selectedTextFieldIndex].alignment == "align-left" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-left'><img width="24" height="24" src="https://img.icons8.com/ios/24/align-left.png" alt="align-left" /></label>}
+ <label style={{ background: textFields[imageBorder].alignment == "align-left" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-left'><img width="24" height="24" src="https://img.icons8.com/ios/24/align-left.png" alt="align-left" /></label>}
               <input onClick={() => {
                 const updatedTextFields = [...textFields];
-                updatedTextFields[selectedTextFieldIndex].alignment = "right"; setTextFields(updatedTextFields); console.log(textFields[selectedTextFieldIndex].alignment)
-              }} type='radio' name='content-align' id='align-right' style={{ display: "none", background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "grey" : "none", border: "1px solid black" }} />
+                updatedTextFields[imageBorder].alignment = "right"; setTextFields(updatedTextFields); console.log(textFields[imageBorder].alignment)
+              }} type='radio' name='content-align' id='align-right' style={{ display: "none", background: textFields[imageBorder].alignment == "align-right" ? "grey" : "none", border: "1px solid black" }} />
                          {textFields[imageBorder].type=="textfield" &&
-   <label style={{ background: textFields[selectedTextFieldIndex].alignment == "align-right" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-right'><img width="24" height="24" src="https://img.icons8.com/ios/24/align-right.png" alt="align-right" />
-              </label>}
+   <label style={{ background: textFields[imageBorder].alignment == "align-right" ? "#c1c9c4" : "none", margin: "0 1vh" }} htmlFor='align-right'><img width="24" height="24" src="https://img.icons8.com/ios/24/align-right.png" alt="align-right" />
+              </label>}</span>}
               {textFields[imageBorder].type=="textfield" &&
    <div style={{ display: "grid", placeItems: "center", width: "5vh", height: "100%" }}>|</div>}
                          {textFields[imageBorder].type=="textfield" &&

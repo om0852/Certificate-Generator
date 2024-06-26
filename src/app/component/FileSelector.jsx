@@ -9,7 +9,6 @@ import sendToBack from "../../images/send to back.png";
 import sendBack from "../../images/send back.png";
 import bringToForward from "../../images/bring to forward.png";
 import ContextMenu from "./menu/ContextMenu";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 const ImageBanner = ({
   addFields,
   setTextFields,
@@ -303,191 +302,42 @@ const ImageBanner = ({
     }
     // }
   }, [textFields]);
-  // addFields(addTextField);
-  // useEffect(() => {
-  //     setTextFields(textFields)
-  // }, [])
+
 
   const handleBringToForward = () => {
-    const updatedImages = [...textFields];
     const updatedtextfield = [...textFields];
-    let values1 = [0];
-    let values2 = [0];
-    let ind = Math.abs(selectImageLayer) - 1;
-    if (selectImageLayer < 0) {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages.map((obj) => obj.z_index);
-      }
-      // console.log(updatedtextfield)
-      values2 = updatedtextfield
-        .filter((obj, index) => index !== ind) // Exclude object at index i
+    let values1 = updatedtextfield
+        .filter((obj, index) => index !== imageBorder) // Exclude object at index i
         .map((obj) => obj.z_index);
-    } else {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages
-          .filter((obj, index) => index !== selectImageLayer) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-      if (textFields.length > 0) {
-        values2 = updatedtextfield.map((obj) => obj.z_index);
-      }
-    }
-    let maxValue = Math.max(...values1);
-    let maxValue2 = Math.max(...values2);
-    if (maxValue < maxValue2) {
-      maxValue = maxValue2;
-    }
-    if (selectImageLayer < 0) {
-      //
-      if (maxValue < 1) {
-        updatedtextfield[ind].z_index = 1;
-        setTextFields(updatedtextfield);
-      }
-      updatedtextfield[ind].z_index = maxValue + 1;
+    let maxValue1 = Math.max(...values1);
+    console.log(updatedtextfield[imageBorder].z_index,maxValue1)
+    if(updatedtextfield[imageBorder].z_index<=maxValue1){
+      updatedtextfield[imageBorder].z_index=(maxValue1+1);
       setTextFields(updatedtextfield);
-    } else {
-      if (maxValue < 1) {
-        updatedImages[selectImageLayer].z_index = 1;
-        setTextFields(updatedImages);
-      }
-      updatedImages[selectImageLayer].z_index = maxValue + 1;
-      setTextFields(updatedImages);
     }
+   
   };
   const handleSendToBack = () => {
-    const updatedImages = [...textFields];
     const updatedtextfield = [...textFields];
-    let values1 = [0];
-    let values2 = [0];
-    let ind = Math.abs(selectImageLayer) - 1;
-    if (selectImageLayer < 0) {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages.map((obj) => obj.z_index);
-      }
-      // console.log(updatedtextfield)
-      if (updatedtextfield.length > 1) {
-        values2 = updatedtextfield
-          .filter((obj, index) => index !== ind) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-    } else {
-      if (updatedImages.length > 1) {
-        values1 = updatedImages
-          .filter((obj, index) => index !== selectImageLayer) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-      if (textFields.length > 0) {
-        values2 = updatedtextfield.map((obj) => obj.z_index);
-      }
-    }
-    let maxValue = Math.min(...values1);
-
-    let maxValue2 = Math.min(...values2);
-
-    if (maxValue < maxValue2 && maxValue2 != 0) {
-      maxValue = maxValue2;
-    }
-    if (selectImageLayer < 0) {
-      updatedtextfield[ind].z_index = maxValue;
+    let  values1 = updatedtextfield
+        .filter((obj, index) => index !== imageBorder) // Exclude object at index i
+        .map((obj) => obj.z_index);
+    let maxValue1 = Math.min(...values1);
+    if(updatedtextfield[imageBorder].z_index>=maxValue1){
+      updatedtextfield[imageBorder].z_index=(maxValue1-1);
       setTextFields(updatedtextfield);
-    } else {
-      updatedImages[selectImageLayer].z_index = maxValue - 1;
-      setTextFields(updatedImages);
     }
+   
   };
   const handleSendBack = () => {
-    const updatedImages = [...textFields];
     const updatedtextfield = [...textFields];
-    // console.log(textFields)
-    let values1 = [0];
-    let values2 = [0];
-    let ind = Math.abs(selectImageLayer) - 1;
-    if (selectImageLayer < 0) {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages.map((obj) => obj.z_index);
-      }
-      if (updatedtextfield.length > 1) {
-        values2 = updatedtextfield
-          .filter((obj, index) => index !== ind) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-      console.log(values2);
-    } else {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages
-          .filter((obj, index) => index !== selectImageLayer) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-      if (textFields.length > 0) {
-        values2 = updatedtextfield.map((obj) => obj.z_index);
-      }
-    }
-    let maxValue = Math.max(...values1);
-    let maxValue2 = Math.max(...values2);
-
-    if (maxValue > maxValue2) {
-      maxValue = maxValue2;
-    }
-    if (selectImageLayer < 0) {
-      if (maxValue < updatedtextfield[ind].z_index + 1) {
-        updatedtextfield[ind].z_index--;
-        setTextFields(updatedtextfield);
-      }
-    } else {
-      if (maxValue < updatedImages[selectImageLayer].z_index + 1) {
-        updatedImages[selectImageLayer].z_index--;
-        setTextFields(updatedImages);
-      }
-    }
+    updatedtextfield[imageBorder].z_index--;
+    setTextFields(updatedtextfield);
   };
-  useEffect(() => {
-    // console.log(textFields)
-    // console.log(selectImageLayer)
-  }, [textFields]);
   const handleBringForward = () => {
-    const updatedImages = [...textFields];
     const updatedtextfield = [...textFields];
-    let values1 = [0];
-    let values2 = [0];
-    let ind = Math.abs(selectImageLayer) - 1;
-    if (selectImageLayer < 0) {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages.map((obj) => obj.z_index);
-      }
-      console.log(updatedtextfield);
-      values2 = updatedtextfield
-        .filter((obj, index) => index !== ind) // Exclude object at index i
-        .map((obj) => obj.z_index);
-    } else {
-      if (updatedImages.length > 0) {
-        values1 = updatedImages
-          .filter((obj, index) => index !== selectImageLayer) // Exclude object at index i
-          .map((obj) => obj.z_index);
-      }
-      if (textFields.length > 0) {
-        values2 = updatedtextfield.map((obj) => obj.z_index);
-      }
-    }
-    let maxValue = Math.max(...values1);
-    let maxValue2 = Math.max(...values2);
-    if (maxValue < maxValue2) {
-      maxValue = maxValue2;
-    }
-
-    if (selectImageLayer < 0) {
-      let ind = Math.abs(selectImageLayer) - 1;
-
-      if (maxValue > updatedtextfield[ind].z_index - 1) {
-        updatedtextfield[ind].z_index++;
-        setTextFields(updatedtextfield);
-      }
-    } else {
-      // Use Math.max() to get the maximum value
-      if (maxValue > updatedImages[selectImageLayer].z_index - 1) {
-        updatedImages[selectImageLayer].z_index++;
-        setTextFields(updatedImages);
-      }
-    }
+    updatedtextfield[imageBorder].z_index++;
+    setTextFields(updatedtextfield);
   };
   const rangeBorderChecker = (index) => {
     const updatedTextFields = [...textFields];
@@ -805,7 +655,7 @@ const ImageBanner = ({
                                 position: "absolute",
                               }}
                             ></div>
-                            {menuPosition &&
+                            {imageBorder==index && menuPosition &&
                             menuStateTracker != true &&
                             menuPosition.id == data.id ? (
                               <ContextMenu
@@ -924,7 +774,7 @@ const ImageBanner = ({
                                     <path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path>
                                   </svg>
 
-                                  {menuStateTracker == true &&
+                                  {imageBorder==index && menuStateTracker == true &&
                                   menuPosition != null &&
                                   menuPosition.id == data.id ? (
                                     <ContextMenu
@@ -972,6 +822,7 @@ const ImageBanner = ({
                                 if (data.isLocked == false) {
                                   setSelectImageLayer(index);
                                   setMenuPosition(data);
+                                  setImageBorder(index)
                                 }
                               }}
                               id="resize-component"
@@ -1073,6 +924,7 @@ const ImageBanner = ({
                           <textarea
                             onContextMenu={(e) => {
                               if (data.isLocked == false) {
+                                setImageBorder(index)
                                 setSelectImageLayer(index);
                                 setMenuPosition(data);
                               }
@@ -1168,6 +1020,7 @@ const ImageBanner = ({
                           onContextMenu={(e) => {
                             setSelectImageLayer(index);
                             setMenuPosition(data);
+                            setImageBorder(index)
                           }}
                           style={{
                             zIndex: data.z_index,
@@ -1182,13 +1035,15 @@ const ImageBanner = ({
                               imageBorder == index && data.isLocked == false
                                 ? "1px solid blue"
                                 : "none",
-                            zIndex:
-                              imageBorder == index && data.isLocked == false
-                                ? 1005
-                                : 1000,
+                            // zIndex:
+                            //   imageBorder == index && data.isLocked == false
+                            //     ? 1005
+                            //     : 1000,
+                            zIndex:data.z_index
+
                           }}
                         >
-                          {menuPosition &&
+                          {imageBorder==index && menuPosition &&
                           menuStateTracker != true &&
                           menuPosition.id == data.id ? (
                             <ContextMenu
@@ -1308,6 +1163,7 @@ const ImageBanner = ({
                             style={{
                               width: "100%",
                               height: "100%",
+                              zIndex:data.z_index
                             }}
                             src={data.src}
                           />
@@ -1330,9 +1186,7 @@ const ImageBanner = ({
                           const updatedata = [...showInsideBorder];
                           updatedata.left = false;
                           updatedata.right = false;
-
                           setShowInsideBorder(showInsideBorder);
-                          //  stop(e, ui, index);
                           setDragIndicator({
                             left: false,
                             right: false,
@@ -1374,6 +1228,7 @@ const ImageBanner = ({
                           onContextMenu={(e) => {
                             setSelectImageLayer(index);
                             setMenuPosition(data);
+                            setImageBorder(index);
                           }}
                           style={{
                             zIndex: data.z_index,
@@ -1394,7 +1249,7 @@ const ImageBanner = ({
                                 : 1000,
                           }}
                         >
-                          {menuPosition &&
+                          {imageBorder==index && menuPosition &&
                           menuStateTracker != true &&
                           menuPosition.id == data.id ? (
                             <ContextMenu
