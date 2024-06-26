@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import Draggable from 'react-draggable';
 
-export default function CertificateTemplateCard({ textFields, backgroundImg, setTextFields }) {
+export default function CertificateTemplateCard({ textFields, backgroundImg, setTextFields,setImageBorder,setImage }) {
   const certificateRef = useRef(null);
   const selectedImage = backgroundImg; // Assuming backgroundImg is passed correctly as a prop
 
@@ -12,6 +12,7 @@ export default function CertificateTemplateCard({ textFields, backgroundImg, set
 
   return (
     <div
+    onClick={(setImageBorder(null))}
       className="flex flex-col items-center relative"
       style={{
         width: '100%',
@@ -28,7 +29,7 @@ export default function CertificateTemplateCard({ textFields, backgroundImg, set
         }}
       >
         <div style={{ zIndex: -1 }}>
-          <img onClick={handleSetData} src={selectedImage} style={{ width: '900px', height: '620px' }} alt="Certificate Background" />
+          <img  onClick={()=>{handleSetData();setImageBorder(null);setImage(backgroundImg)}} src={selectedImage} style={{ width: '900px', height: '620px' }} alt="Certificate Background" />
           {textFields.map((data, index) => {
             if (data.type === 'textfield') {
               return (
@@ -80,6 +81,31 @@ export default function CertificateTemplateCard({ textFields, backgroundImg, set
                     />
                   </div>
                 </Draggable>
+              );
+            }
+            else{
+              return(
+                <Draggable
+                className="draggable"
+                key={index}
+                defaultPosition={{ x: 0, y: 0 }}
+                position={{ x: data.x, y: data.y }}
+              >
+                <div
+                  key={index}
+                  style={{
+                    width: data.width + 'px',
+                    height: data.height + 'px',
+                    left: data.x,
+                    top: data.y,
+                    textAlign: data.alignment,
+                    position: 'absolute',
+                    border: 'none',
+                  }}
+                >
+                <img src={data.src}/>
+            </div>
+            </Draggable>
               );
             }
             return null;
