@@ -7,7 +7,7 @@ export default function Page(
 ) {
   return (
     <>
-      <div style={{width:"100%",height:"100vh",overflow:"hidden"}}>
+      <div style={{width:"100%",height:"100vh",overflow:"hidden"}} >
 
         <Navbar />
         {/* <ChooseTemplate /> */}

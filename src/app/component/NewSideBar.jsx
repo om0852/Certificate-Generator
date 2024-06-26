@@ -358,7 +358,6 @@ const handlePic = async (e) => {
 
 setImageBorder={setImageBorder}
 setImage={setSelectedImage}       
-
 setTextFields={setTextFields}
                 textFields={data.certificateComponentData}
                 backgroundImg={data.backgroundImg}
