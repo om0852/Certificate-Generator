@@ -204,7 +204,7 @@ background-size: cover;
   top:40vh;
   overflow: hidden;
   overflow-y: scroll;
-  scrollbar-width: 0;
+  scrollbar-width: none;
   border-radius: 1.4vh;
   width: 40vh;
 box-shadow:rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px;
@@ -216,3 +216,9 @@ box-shadow:rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2p
   /* border: 1px solid black; */
   z-index: 400;
 }
+.dashboard-card span{
+  padding: 0 2vh;
+}
+.dashboard-card-span:hover{
+  background-color: rgb(0 0 0 / 0.1);
+  }

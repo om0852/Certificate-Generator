@@ -33,5 +33,7 @@ const dashboardItems = [
       img: "https://img.icons8.com/ios/50/settings--v1.png"
     }
   ];
+export const ownership=["Every","Shared","Me"];
 export const dateModified=["All Time","Today","Yesterday","Last 30 Days","Last 60 Days","Last Year"];
+export const soryByOptions=["Newest Edited","Oldest Edited","Alphabetical(A-Z)","Alphabetical(Z-A)"]
   export default dashboardItems;
