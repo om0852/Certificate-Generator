@@ -1,39 +1,75 @@
 "use client";
 import "@/app/globals.css";
-import { useEffect, useState } from "react";
-import dashboardItems, { dateModified, ownership, soryByOptions } from "./menuoptions";
+import React, { useEffect, useRef, useState } from "react";
+import dashboardItems, {
+  dateModified,
+  ownership,
+  projectTemplateOption,
+  soryByOptions,
+} from "./menuoptions";
 import { useRouter } from "next/navigation";
 import CertificateTemplateCard2 from "../component/card/CertificateTemplateCard2";
 export default function Page() {
   const router = useRouter();
   const [selectedMenu, setSelectedMenu] = useState("Project");
-  const [selectedMenu2, setSelectedMenu2] = useState("");
+  const [selectedMenu2, setSelectedMenu2] = useState(null);
+  const [selectedMenu3, setSelectedMenu3] = useState(null);
   const [selectOwner, setSelectOwner] = useState("Every");
   const [selectDateModified, setSelectDateModified] = useState("Today");
   const [selectSortOption, setSelectSortOption] = useState("Newest Edited");
-  const [projectData,setProjectData]=useState([]);
+  const [projectData, setProjectData] = useState([]);
+  const menu3Ref = useRef([]);
+  const handleCertificateTemplateOption=(data,index)=>{
+    if(data=="Open in a new tab"){
+      const url = `${process.env.NEXT_PUBLIC_WEBSITE_URL}customizetemplate?id=${projectData[index].certificateName}`;
 
-
-  const handleCertificateTemplate=async()=>{
-    console.log("run")
-    const res = await fetch(`http://localhost:3000/api/certificatetemplate/fetch`, {
-      method: "POST",
-      headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-      },
-      body:JSON.stringify({id:"om",templateGroup:true})
-    });
-    const response= await res.json();
-    setProjectData(response.data)
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+    else if(data="Duplicate"){
+      
+    }
   }
   useEffect(() => {
-    handleCertificateTemplate()
-  }, [])
-  useEffect(()=>{
-    console.log(projectData)
-
-  },[projectData])
+    const handler = (e) => {
+      console.log(selectedMenu3);
+      if (selectedMenu3 != null) {
+        if (!menu3Ref.current[selectedMenu3].contains(e.target)) {
+          setSelectedMenu3(null);
+        }
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [selectedMenu3]);
+  const handleCertificateTemplate = async () => {
+    console.log("run");
+    const res = await fetch(
+      `http://localhost:3000/api/certificatetemplate/fetch`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: "om", templateGroup: true }),
+      }
+    );
+    const response = await res.json();
+    setProjectData(response.data);
+    if (menu3Ref.current.length !== response.data.length) {
+      menu3Ref.current = Array(response.data.length)
+        .fill()
+        .map((_, i) => menu3Ref.current[i] || React.createRef());
+    }
+  };
+  useEffect(() => {
+    handleCertificateTemplate();
+  }, []);
+  useEffect(() => {
+    // console.log(projectData)
+  }, [projectData]);
   return (
     <>
       <div className="w h flex">
@@ -110,7 +146,7 @@ export default function Page() {
             })}
           </div>
         </div>
-        <div className="w" style={{ background: "white",overflow:"hidden" }}>
+        <div className="w" style={{ background: "white", overflow: "hidden" }}>
           <div style={{ width: "95%", height: "100%", margin: "auto" }}>
             <div
               className="w h-3"
@@ -159,7 +195,7 @@ export default function Page() {
                       display: selectedMenu2 == "owner" ? "block" : "none",
                     }}
                   >
-                  <div
+                    <div
                       style={{
                         width: "90%",
                         height: "7vh",
@@ -175,11 +211,14 @@ export default function Page() {
                     {ownership.map((data, index) => {
                       return (
                         <div
-                        className="dashboard-card dashboard-card-span"
-                        style={{  backgroundColor:data==selectOwner? "rgb(0 0 0 / 0.1)"
-                        :""}}
-                        
-                          onClick={() =>{ setSelectOwner(data);
+                          key={index}
+                          className="dashboard-card dashboard-card-span"
+                          style={{
+                            backgroundColor:
+                              data == selectOwner ? "rgb(0 0 0 / 0.1)" : "",
+                          }}
+                          onClick={() => {
+                            setSelectOwner(data);
                             setSelectedMenu2("");
                           }}
                         >
@@ -187,7 +226,6 @@ export default function Page() {
                         </div>
                       );
                     })}
-                 
                   </div>
                 </div>
                 <div
@@ -227,13 +265,19 @@ export default function Page() {
                     {dateModified.map((data, index) => {
                       return (
                         <div
-                        className="dashboard-card dashboard-card-span"
-                        style={{  backgroundColor:data==selectDateModified? "rgb(0 0 0 / 0.1)"
-                        :""}}
-                        
-                          onClick={() =>{ setSelectDateModified(data);
-                          setSelectedMenu2("");
-                        }}>
+                          key={index}
+                          className="dashboard-card dashboard-card-span"
+                          style={{
+                            backgroundColor:
+                              data == selectDateModified
+                                ? "rgb(0 0 0 / 0.1)"
+                                : "",
+                          }}
+                          onClick={() => {
+                            setSelectDateModified(data);
+                            setSelectedMenu2("");
+                          }}
+                        >
                           <span>{data}</span>
                         </div>
                       );
@@ -244,51 +288,54 @@ export default function Page() {
                   className="dashboard-edit-container-button"
                   onMouseUp={() => setSelectedMenu2("relevant")}
                 >
-{selectSortOption}        
-<img
+                  {selectSortOption}
+                  <img
                     width="15"
                     height="15"
                     src="https://img.icons8.com/ios-glyphs/30/chevron-down.png"
                     alt="chevron-down"
                   />
-
                 </div>
                 <div
                   className="dashboard-menucard"
                   style={{
                     left: "48%",
-                    height:"50vh",
+                    height: "50vh",
                     display: selectedMenu2 == "relevant" ? "block" : "none",
                   }}
                 >
-                    <div
-                      style={{
-                        width: "90%",
-                        height: "7vh",
-                        margin: "auto",
-                        padding: "0 1vh",
-                        display: "flex",
-                        alignItems: "center",
-                        borderBottom: "1px solid black",
-                      }}
-                    >
-Sort By
-            </div>
-                    {soryByOptions.map((data, index) => {
-                      // console.log(data,soryByOptions)
-                      return (
-                        <div
-                        style={{  backgroundColor:data==selectSortOption? "rgb(0 0 0 / 0.1)"
-                          :""}}
-                          className="dashboard-card dashboard-card-span" 
-                          onClick={() =>{ setSelectSortOption(data);                            setSelectedMenu2("");
-                          }
-}                        >
-                          <span >{data}</span>
-                        </div>
-                      );
-                    })}
-                  
+                  <div
+                    style={{
+                      width: "90%",
+                      height: "7vh",
+                      margin: "auto",
+                      padding: "0 1vh",
+                      display: "flex",
+                      alignItems: "center",
+                      borderBottom: "1px solid black",
+                    }}
+                  >
+                    Sort By
+                  </div>
+                  {soryByOptions.map((data, index) => {
+                    // console.log(data,soryByOptions)
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor:
+                            data == selectSortOption ? "rgb(0 0 0 / 0.1)" : "",
+                        }}
+                        className="dashboard-card dashboard-card-span"
+                        onClick={() => {
+                          setSelectSortOption(data);
+                          setSelectedMenu2("");
+                        }}
+                      >
+                        <span>{data}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </span>
               <span>
@@ -311,21 +358,93 @@ Sort By
               </span>
             </div>
             <div className="w h-5">
-              <div style={{fontSize:"2em",fontWeight:"500"}}>Recent Designs</div>
-              <div style={{width:"100%",scrollbarWidth:"none",height:"45%",overflowY:"hidden",display:"flex",alignItems:"center",overflowX:"scroll"}}>
+              <div style={{ fontSize: "2em", fontWeight: "500" }}>
+                Recent Designs
+              </div>
+              <div style={{ width: "100%", overflow: "hidden", height: "45vh" }}>
+                <div
+                  style={{
+                    height:"45vh",
+                    width: "100%",
+                    scrollbarWidth: "none",
+                    overflowY: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {projectData &&
+                    projectData.map((data, index) => {
+                      return (
+                        <div
+                          style={{ textAlign: "center", height: "33vh" }}
+                          key={index}
+                        >
+                          <CertificateTemplateCard2
+                            textFields={data.certificateComponentData}
+                            backgroundImg={data.backgroundImg}
+                          />
+                          {data.certificateName}
+                          <div
+                            ref={(el) => (menu3Ref.current[index] = el)}
+                            style={{
+                              display: "grid",
+                              placeItems: "center",
+                              width: "40px",
+                              height: "40px",
+                              position: "relative",
+                              top: "-32vh",
+                              left: "36.5vh",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <img
+                              onClick={() => {
+                                setSelectedMenu3(index);
+                              }}
+                              width="30"
+                              height="30"
+                              src="https://img.icons8.com/ios-glyphs/30/menu-2.png"
+                              alt="menu-2"
+                            />
+                            {index == selectedMenu3 && (
+                              <div
+                                style={{
+                                  width: "40vh",
+                                  height: "auto",
+                                  top:"8%",
+                                  borderRadius:"1vh",
+                                  boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px",
+                                  position: "fixed",
+                                  background: "white",
+                                  zIndex: 300,
+                                }}
+                              >
+                                {projectTemplateOption.map((data, index2) => {
+                                  return (
+                                    <div onClick={()=>handleCertificateTemplateOption(data.text,index)} 
+                                    className="dashboard-card dashboard-card-span"
+                                    key={index}
+                                    >
 
-                {projectData && projectData.map((data,index)=>{
-                  return(
-<div style={{textAlign:"center"}}>
-                    <CertificateTemplateCard2 
-                    key={index}
-                    textFields={data.certificateComponentData}
-                    backgroundImg={data.backgroundImg}
-                    />
-                    {data.certificateName}
-                    </div>
-                  )
-                })}
+                                      <span 
+                                      style={{display:"flex",alignItems:"center",justifyContent:"space-around"}}>
+                                      <img
+                                        width="20"
+                                        height="20"
+                                        src={data.img}
+                                        alt="add--v1"
+                                      />
+                                        {data.text}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}{" "}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>
