@@ -2,13 +2,13 @@
 import { useState,useEffect, useRef } from "react";
 import ReactToPrint from 'react-to-print';
 import jsPDF from 'jspdf';
-import { useReactToPrint } from 'react-to-print';
 import addImageIcon from "../../images/addimage.png"
 import "@/css/form.css"
 import "./component.css"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer,toast } from "react-toastify";
 
+import { useReactToPrint } from 'react-to-print';
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 

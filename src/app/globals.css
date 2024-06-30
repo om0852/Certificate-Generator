@@ -223,3 +223,8 @@ box-shadow:rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2p
   background-color: rgb(0 0 0 / 0.1);
   }
 /* .dashboard-card: */
+
+.bx-shadow{
+  box-shadow:rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px;
+
+}

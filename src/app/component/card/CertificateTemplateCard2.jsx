@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import Draggable from 'react-draggable';
 
-export default function CertificateTemplateCard2({ textFields, backgroundImg}) {
+export default function CertificateTemplateCard2({ textFields, backgroundImg,certificateRef,index}) {
   const selectedImage = backgroundImg; // Assuming backgroundImg is passed correctly as a prop
 
 
@@ -11,7 +11,7 @@ export default function CertificateTemplateCard2({ textFields, backgroundImg}) {
       className="flex flex-col items-center relative"
       style={{
         width:"40vh",
-        background:"rgb(196 196 196)",
+        background:"rgb(196 254 254)",
         margin:"0 1vh",
       height:"29vh"
       ,borderRadius:"1.4vh"
@@ -19,6 +19,7 @@ export default function CertificateTemplateCard2({ textFields, backgroundImg}) {
       }}
     >
       <div
+
         style={{
           width: '900px',
           position: 'relative',
@@ -27,7 +28,10 @@ export default function CertificateTemplateCard2({ textFields, backgroundImg}) {
           marginTop: '-5vh',
         }}
       >
-        <div style={{ zIndex: -1 }}>
+        <div style={{ zIndex: -1 }}
+                                          ref={(el) => (certificateRef.current[index] = el)}
+
+        > 
           <img  src={selectedImage} style={{ width: '900px', height: '620px' }} alt="Certificate Background" />
           {textFields.map((data, index) => {
             if (data.type === 'textfield') {
