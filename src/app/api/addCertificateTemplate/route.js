@@ -23,6 +23,8 @@ if(data==null){
         backgroundImg:backgroundImage    ,
         certificateName:certificateName
     })
+    return NextResponse.json({ status: 201, error: "Project Create Successfully" });
+
     
 }
 

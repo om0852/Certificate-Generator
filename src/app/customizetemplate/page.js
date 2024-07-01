@@ -75,12 +75,12 @@ export default function Page() {
     //     console.log("history index tracker", redoHistoryIndexTracker)
     // }
     //     , [redoHistoryComponent])
-    useEffect(() => {
-        console.log(undoHistoryComponent)
-        console.log("history index", undoHistoryIndex)
-        console.log("history index tracker", undoHistoryTracker)
-    }
-        , [undoHistoryComponent, undoHistoryTracker])
+    // useEffect(() => {
+    //     console.log(undoHistoryComponent)
+    //     console.log("history index", undoHistoryIndex)
+    //     console.log("history index tracker", undoHistoryTracker)
+    // }
+    //     , [undoHistoryComponent, undoHistoryTracker])
     //main code
 
 
@@ -258,7 +258,7 @@ export default function Page() {
             }}>
                 {/* <!-- Sidebar (Optional) --> */}
 
-                <NewSideBar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
+                <NewSideBar setSelectedImage={setSelectedImage} imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
                 {/* <Sidebar imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} /> */}
                 <div style={{ width: "100%", overflow: "hidden", height: "100%" }}>
                     <StylingHeader imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />

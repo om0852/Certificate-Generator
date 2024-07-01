@@ -2,13 +2,13 @@
 import { useState,useEffect, useRef } from "react";
 import ReactToPrint from 'react-to-print';
 import jsPDF from 'jspdf';
-import { useReactToPrint } from 'react-to-print';
 import addImageIcon from "../../images/addimage.png"
 import "@/css/form.css"
 import "./component.css"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer,toast } from "react-toastify";
 
+import { useReactToPrint } from 'react-to-print';
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 
@@ -16,6 +16,7 @@ import CertificateTemplateCard from "./card/CertificateTemplateCard";
 
 const NewSideBar=({
     addFields,
+    setSelectedImage,
     handleTextFieldChange,
     textFields,
     downloadCertificate,
@@ -131,7 +132,7 @@ const handleAddImage = (event, i) => {
       const imageSrc = reader.result;
       if (i == -1) {
         // Push new image object to updatedImageField
-        updatedImageField.push({ src: imageSrc, x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image", isLocked: false });
+        updatedImageField.push({ src: imageSrc, alignment:"justify",x: 100, y: 100, width: 100, height: 100, z_index: 100, transparency: 100, type: "image", isLocked: false });
       }
       else {
         updatedImageField[i].src = imageSrc;
@@ -297,7 +298,7 @@ const handlePic = async (e) => {
         <>    
         <ToastContainer/>
      <div style={{width:'15vh',height:"100vh",background:"white",zIndex:1501,boxShadow:"rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px" }}>
-        <div className="sidebar-icon" onClick={(e)=>{setMenu(true);setMenuData("Template")}}>   
+        <div className="sidebar-icon" onClick={(e)=>{setMenu(true);setMenuData("Template");setImageBorder(null);}}>   
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="2em" height="2em"><path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 16v40H40V56ZM40 112h56v88H40Zm176 88H112v-88h104v88Z"></path></svg>
               Template
 </div>
@@ -354,7 +355,10 @@ const handlePic = async (e) => {
             certificateTemplate.map((data, index) => (
               <CertificateTemplateCard
                 key={index}
-                setTextFields={setTextFields}
+
+setImageBorder={setImageBorder}
+setImage={setSelectedImage}       
+setTextFields={setTextFields}
                 textFields={data.certificateComponentData}
                 backgroundImg={data.backgroundImg}
               />
@@ -362,6 +366,10 @@ const handlePic = async (e) => {
           ) :certificateTemplate && certificateTemplate.map((data, index) => (
             <CertificateTemplateCard
               key={index}
+              
+setImageBorder={setImageBorder}
+setImage={setSelectedImage}       
+
               setTextFields={setTextFields}
               textFields={data.certificateComponentData}
               backgroundImg={data.backgroundImg}
