@@ -8,10 +8,10 @@ export default function CertificateTemplateCard2({ textFields, backgroundImg,cer
 
   return (
     <div
-      className="flex flex-col items-center relative"
+      className="flex flex-col items-center relative bx-shadow"
       style={{
         width:"40vh",
-        background:"rgb(196 254 254)",
+        background:"white",
         margin:"0 1vh",
       height:"29vh"
       ,borderRadius:"1.4vh"

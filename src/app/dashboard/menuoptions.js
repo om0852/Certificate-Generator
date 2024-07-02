@@ -2,35 +2,35 @@ const dashboardItems = [
     
     {
       text: "Home",
-      img: "https://img.icons8.com/ios/50/home--v1.png"
+      img: "https://img.icons8.com/ios/50/FFFFFF/home--v1.png"
     },
     {
       text: "Project",
-      img: "https://img.icons8.com/ios/50/group-of-projects.png"
+      img: "https://img.icons8.com/ios/50/FFFFFF/group-of-projects.png"
     },
     {
       text: "Generated Certificate",
-      img: "https://img.icons8.com/ios/50/certificate--v1.png"
+      img: "https://img.icons8.com/ios/50/FFFFFF/certificate--v1.png"
     },
     {
       text: "My Graphics",
-      img: "https://img.icons8.com/ios/50/gallery.png"
+      img: "https://img.icons8.com/ios/50/FFFFFF/gallery.png"
     },
     {
       text: "Products",
-      img: "https://img.icons8.com/material-outlined/24/product.png"
+      img: "https://img.icons8.com/material-outlined/24/FFFFFF/product.png"
     },
     {
       text: "Sales Report",
-      img: "https://img.icons8.com/windows/32/total-sales--v1.png"
+      img: "https://img.icons8.com/windows/32/FFFFFF/total-sales--v1.png"
     },
     {
       text: "Transactions",
-      img: "https://img.icons8.com/ios-glyphs/30/transaction.png"
+      img: "https://img.icons8.com/ios-glyphs/30/FFFFFF/transaction.png"
     },
     {
       text: "Settings",
-      img: "https://img.icons8.com/ios/50/settings--v1.png"
+      img: "https://img.icons8.com/ios/50/FFFFFF/settings--v1.png"
     }
   ];
 export const ownership=["Every","Shared","Me"];
