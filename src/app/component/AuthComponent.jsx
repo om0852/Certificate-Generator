@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
@@ -8,6 +9,7 @@ export default function AuthComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    // Make sure this is inside the functional component
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -20,14 +22,12 @@ export default function AuthComponent() {
     const handleSignUp = async (e) => {
         e.preventDefault();
 
-        // Check if email and password are provided
         if (!email || !password) {
             setError('Please provide both email and password.');
             return;
         }
 
         try {
-            // Query the database to find the user with the provided email and password
             const response = await fetch('/api/signup', {
                 method: 'POST',
                 headers: {
@@ -35,7 +35,7 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
-
+            // console.log(response)
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.message);
@@ -44,15 +44,21 @@ export default function AuthComponent() {
 
             const data = await response.json();
 
-            // If user is found, sign in
             if (data.success) {
-                await signIn('credentials', {
+                const signInResponse = await signIn('credentials', {
                     email,
                     password,
                     redirect: false
                 });
+
+                if (error == "Sign in successful") {
+                    const router = useRouter();
+                    // console.log("reponse ok")
+                    router.push('/');
+                } else {
+                    setError('Failed to sign in after sign up.');
+                }
             } else {
-                // If user is not found, display error message
                 setError('Incorrect email or password.');
             }
         } catch (error) {
@@ -64,14 +70,12 @@ export default function AuthComponent() {
     const handleSignIn = async (e) => {
         e.preventDefault();
 
-        // Check if email and password are provided
         if (!email || !password) {
             setError('Please provide both email and password.');
             return;
         }
 
         try {
-            // Query the database to find the user with the provided email and password
             const response = await fetch('/api/authenticate', {
                 method: 'POST',
                 headers: {
@@ -79,7 +83,7 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
-
+            console.log(response.ok)
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.message);
@@ -88,15 +92,21 @@ export default function AuthComponent() {
 
             const data = await response.json();
 
-            // If user is found, sign in
             if (data.success) {
-                await signIn('credentials', {
+                const signInResponse = await signIn('credentials', {
                     email,
                     password,
                     redirect: false
                 });
+                if (error == "Sign in successful") {
+                    const router = useRouter();
+                    // console.log("response ok")
+
+                    router.push('/');
+                } else {
+                    setError('Incorrect email or password.');
+                }
             } else {
-                // If user is not found, display error message
                 setError('Incorrect email or password.');
             }
         } catch (error) {
@@ -119,13 +129,9 @@ export default function AuthComponent() {
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
                 <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign In</button>
-
             </form>
             <button onClick={() => signIn('google')} className="mt-4 w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Sign In with Google</button>
             <button type="submit" onClick={handleSignUp} className="w-full my-3 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Sign Up</button>
-
-
-
         </div>
     );
 }

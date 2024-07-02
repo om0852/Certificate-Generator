@@ -3,7 +3,7 @@ import FileSelector from "../component/FileSelector";
 import React, { useEffect, useRef, useState } from 'react';
 import selectImage from "../../images/selectimage.png";
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { toPng } from 'html-to-image';
 import NewSideBar from "../component/NewSideBar.jsx";
 import StylingHeader from "../component/StylingHeader";
@@ -12,17 +12,17 @@ import { useRouter } from "next/navigation";
 
 
 export default function Page() {
-    const router=useRouter();
+    const router = useRouter();
     const [selectedTextFieldIndex, setSelectedTextFieldIndex] = useState(0); // State to hold the index of the selected text field
     const [undoHistoryTracker, setUndoHistoryTracker] = useState(-1)
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageBorder, setImageBorder] = useState(0);
     const [selectImageLayer, setSelectImageLayer] = useState(0);
-    const [zoomValue,setZoomValue]=useState(0.7);
+    const [zoomValue, setZoomValue] = useState(0.7);
     const [textFields, setTextFields] = useState([
-        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman",letterSpacing:0,lineHeight:10, size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
+        { id: 1, x: 0, y: 0, text: 'Text 1', fontFamily: "Times New Roman", letterSpacing: 0, lineHeight: 10, size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false },
     ]);
-    const [undoHistoryComponent, setUndoHistoryComponent] = useState([[{ id: 1, x: 0, y: 0, text: 'Text 1',letterSpacing:0,lineHeight:10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }]])
+    const [undoHistoryComponent, setUndoHistoryComponent] = useState([[{ id: 1, x: 0, y: 0, text: 'Text 1', letterSpacing: 0, lineHeight: 10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }]])
     const [undoHistoryIndex, setUndoHistoryIndex] = useState([{ x: 0, y: 0 }]);
     const [imageFields, setImageFields] = useState([])
     const certificateRef = useRef(null);
@@ -35,10 +35,10 @@ export default function Page() {
     const [redoHistoryIndexTracker, setRedoHistoryIndexTracker] = useState(-1);
 
 
-//zoom logic
-const handleZoomControl=(value)=>{
-    setZoomValue(value);
-}
+    //zoom logic
+    const handleZoomControl = (value) => {
+        setZoomValue(value);
+    }
 
     //redo feature login
     const handleRedoHistoryComponent = (e) => {
@@ -107,14 +107,14 @@ const handleZoomControl=(value)=>{
             const updatedata2 = [...undoHistoryComponent];
 
             updatedata2.push(textFields);
-            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',letterSpacing:0,lineHeight:10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', letterSpacing: 0, lineHeight: 10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             setUndoHistoryComponent(updatedata2);
         }
         else {
             const updatedata2 = [...undoHistoryComponent];
 
             updatedata2.push(data1);
-            updatedata2[0] = [{ id: 1, x: 0, y: 0, letterSpacing:0,lineHeight:10, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata2[0] = [{ id: 1, x: 0, y: 0, letterSpacing: 0, lineHeight: 10, text: 'Text 1', fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             setUndoHistoryComponent(updatedata2);
 
         }
@@ -136,7 +136,7 @@ const handleZoomControl=(value)=>{
             console.log(undoHistoryTracker)
 
             const updatedata = [...undoHistoryComponent] // Remove last item
-            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1',textColor:"black", letterSpacing:0,lineHeight:10,fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
+            updatedata[0] = [{ id: 1, x: 0, y: 0, text: 'Text 1', textColor: "black", letterSpacing: 0, lineHeight: 10, fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", color: "black", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: true, isLocked: false }];
             let newArray = updatedata[undoHistoryTracker]
             setTextFields(newArray);
             setSelectedTextFieldIndex(undoHistoryIndex[undoHistoryTracker].x);
@@ -171,43 +171,41 @@ const handleZoomControl=(value)=>{
             setSelectedImage(null);
         }
     };
-    const fetchCertiifcateData=async()=>{
+    const fetchCertiifcateData = async () => {
 
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         const res1 = await fetch(`http://localhost:3000/api/certificatetemplate/singlefetch`, {
-          method: "POST",
-          headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({id:"om",certificateName:id}),
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "om", certificateName: id }),
         });
-      const response = await res1.json();
-      if(response.status==200){
-          setTextFields(response.data.certificateComponentData);
-          setUndoHistoryComponent([response.data.certificateComponentData]);
-          setUndoHistoryIndex([{ x: 0, y: 0 }])
-          setSelectedImage(response.data.backgroundImg);
+        const response = await res1.json();
+        if (response.status == 200) {
+            setTextFields(response.data.certificateComponentData);
+            setSelectedImage(response.data.backgroundImg);
         }
-      
-      if(response.status==404){
-        toast.error(response.error, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+
+        if (response.status == 404) {
+            toast.error(response.error, {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
             });
             router.push("/choosetemplate")
-      }
-      }
+        }
+    }
     useEffect(() => {
         fetchCertiifcateData();
-     }, [])
+    }, [])
     const addFields = () => {
         addTextField();
     }
@@ -237,7 +235,7 @@ const handleZoomControl=(value)=>{
             })
     }
     const addTextField = () => {
-        const data = { id: (textFields.length + 1), x: 0, y: 0,letterSpacing:0,lineHeight:10, text: "Text" + (textFields.length + 1), textColor: "black", fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
+        const data = { id: (textFields.length + 1), x: 0, y: 0, letterSpacing: 0, lineHeight: 10, text: "Text" + (textFields.length + 1), textColor: "black", fontFamily: "Times New Roman", size: 10, bold: "normal", italic: "normal", alignment: "justify", underline: "normal", textOrientation: "none", z_index: 100, type: "textfield", transparency: 100, width: "200", height: "100", isSelected: false, isLocked: false }
         setTextFields(prevTextFields => [
             ...prevTextFields,
             data
@@ -265,7 +263,7 @@ const handleZoomControl=(value)=>{
                 <div style={{ width: "100%", overflow: "hidden", height: "100%" }}>
                     <StylingHeader imageBorder={imageBorder} setImageBorder={setImageBorder} certificateRef={certificateRef} setImageFields={setImageFields} imageFields={imageFields} handleImageChange={handleImageChange} selectedTextFieldIndex={selectedTextFieldIndex} handleRadioChange={handleRadioChange} setTextFields={setTextFields} textFields={textFields} downloadCertificate={downloadCertificate} handleTextFieldChange={handleTextFieldChange} addFields={addFields} handleHistoryComponent={handleHistoryComponent} />
                     <FileSelector imageBorder={imageBorder} zoomValue={zoomValue} setSelectedTextFieldIndex={setSelectedTextFieldIndex} setImageBorder={setImageBorder} setImageFields={setImageFields} imageFields={imageFields} selectedImage={selectedImage} selectedTextFieldIndex={selectedTextFieldIndex} addFields={addFields} certificateRef={certificateRef} setTextFields={setTextFields} textFields={textFields} handleRadioChange={handleRadioChange} setSelectImageLayer={setSelectImageLayer} handleHistoryComponent={handleHistoryComponent} selectImageLayer={selectImageLayer} undoHistoryComponent={undoHistoryComponent} />
-                    <ZoomControlBar handleZoomControl={handleZoomControl} zoomValue={zoomValue}/>
+                    <ZoomControlBar handleZoomControl={handleZoomControl} zoomValue={zoomValue} />
                 </div>
             </div >
 

@@ -25,9 +25,11 @@ export const POST = async (req, res) => {
 
         // Compare the provided password with the stored hashed password
         // const isMatch = await bcrypt.compare(password, user.password);
+        let isMatch;
         if (password == user.password) {
-            const isMatch = true;
+            isMatch = true;
         }
+
 
         if (!isMatch) {
             return new Response(JSON.stringify({ success: false, message: 'Incorrect email or password' }), { status: 401 });
