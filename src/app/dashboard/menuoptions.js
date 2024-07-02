@@ -62,5 +62,6 @@ export const projectTemplateOption=[
   text:"Delete"
 },
 
-]
+];
+export const tabgroup1=["All","Folder","Design"]
   export default dashboardItems;
