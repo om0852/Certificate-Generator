@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
@@ -34,7 +34,13 @@ export default function AuthComponent() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
-            });
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const router = useRouter();
+                        router.replace('/')
+                    }
+                });
             // console.log(response)
             if (!response.ok) {
                 const errorData = await response.json();
@@ -45,19 +51,13 @@ export default function AuthComponent() {
             const data = await response.json();
 
             if (data.success) {
-                const signInResponse = await signIn('credentials', {
-                    email,
-                    password,
-                    redirect: false
-                });
 
-                if (error == "Sign in successful") {
-                    const router = useRouter();
-                    // console.log("reponse ok")
-                    router.push('/');
-                } else {
-                    setError('Failed to sign in after sign up.');
-                }
+
+
+                const router = useRouter();
+                // console.log("reponse ok")
+                router.replace('/');
+
             } else {
                 setError('Incorrect email or password.');
             }
@@ -82,8 +82,11 @@ export default function AuthComponent() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
-            });
-            console.log(response.ok)
+            })
+
+            if (response) {
+                console.log('response')
+            }
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.message);
@@ -93,19 +96,13 @@ export default function AuthComponent() {
             const data = await response.json();
 
             if (data.success) {
-                const signInResponse = await signIn('credentials', {
-                    email,
-                    password,
-                    redirect: false
-                });
-                if (error == "Sign in successful") {
-                    const router = useRouter();
-                    // console.log("response ok")
+                console.log('data success');
 
-                    router.push('/');
-                } else {
-                    setError('Incorrect email or password.');
-                }
+                const router = useRouter();
+                // console.log("response ok")
+
+                router.replace('/');
+
             } else {
                 setError('Incorrect email or password.');
             }
