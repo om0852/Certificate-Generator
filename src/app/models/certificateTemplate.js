@@ -17,10 +17,14 @@ backgroundImg:{
 },
 certificateName:{
     type:String
-}
+},
+    ownership:{
+        type:Array
+    }
+
 },
 { timestamps: true });
 
 
-const certificateTemplate=models.certificateTemplate || model("certificateTemplate",certificateTemplateSchema);
+const certificateTemplate=models.certificatetemplate || model("certificatetemplate",certificateTemplateSchema);
 export default certificateTemplate;

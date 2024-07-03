@@ -10,6 +10,7 @@ export default function AuthComponent() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     // Make sure this is inside the functional component
+    const router = useRouter();
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -52,12 +53,22 @@ export default function AuthComponent() {
 
             if (data.success) {
 
+<<<<<<< HEAD
 
 
                 const router = useRouter();
                 // console.log("reponse ok")
                 router.replace('/');
 
+=======
+                if (data.message == "Sign in successful") {
+                    const router = useRouter();
+                    // console.log("reponse ok")
+                    router.push('/');
+                } else {
+                    setError('Failed to sign in after sign up.');
+                }
+>>>>>>> 756f05a917e7cc2880b1f6babe06a1f03888042e
             } else {
                 setError('Incorrect email or password.');
             }
@@ -82,6 +93,7 @@ export default function AuthComponent() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
+<<<<<<< HEAD
             })
 
             if (response) {
@@ -92,16 +104,30 @@ export default function AuthComponent() {
                 setError(errorData.message);
                 return;
             }
+=======
+            });
+            
+>>>>>>> 756f05a917e7cc2880b1f6babe06a1f03888042e
 
             const data = await response.json();
-
             if (data.success) {
+<<<<<<< HEAD
                 console.log('data success');
 
                 const router = useRouter();
                 // console.log("response ok")
 
                 router.replace('/');
+=======
+                // const signInResponse = await signIn('credentials', {
+                    //     email,
+                    //     password,
+                    //     redirect: false
+                    // });
+                    if (data.message == "Sign in successful") {
+                    console.log(data)
+                    // console.log("response ok")
+>>>>>>> 756f05a917e7cc2880b1f6babe06a1f03888042e
 
             } else {
                 setError('Incorrect email or password.');

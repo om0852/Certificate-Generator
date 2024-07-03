@@ -1,7 +1,7 @@
 import certificateTemplate from '@/app/models/certificateTemplate';
 import { connectToDB } from '@/app/utils/database';
 import { NextResponse } from 'next/server';
-
+// this same api is also used for duplicate certificate
 export async function POST(req, res) {
     const body = await req.json();
 const {  id,certificateComponentData,backgroundImage,certificateName,state
@@ -21,7 +21,11 @@ if(data==null){
         userId:id,
         certificateComponentData:certificateComponentData,    
         backgroundImg:backgroundImage    ,
-        certificateName:certificateName
+        certificateName:certificateName,
+        ownership:{
+            email:id,
+            type:"admin"
+        }
     })
     return NextResponse.json({ status: 201, error: "Project Create Successfully" });
 
@@ -37,6 +41,7 @@ else{
             {_id:data._id},{
                 certificateComponentData:certificateComponentData,    
                 backgroundImg:backgroundImage    
+                
             })
     
 }
