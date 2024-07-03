@@ -250,3 +250,12 @@ box-shadow:rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2p
   background-image: url("../images/background2.jpg");
   background-size: cover;
 }
+.see-more-btn{
+  width: 30vh;
+  height: 8vh;
+  position:relative;
+  left: 50%;
+  border-radius: 1.4vh;
+  background-color: blueviolet;
+  transform: translateX(-50%);
+}
