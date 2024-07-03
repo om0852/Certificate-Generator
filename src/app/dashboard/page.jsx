@@ -18,12 +18,15 @@ import CertificateTemplateCard2 from "../component/card/CertificateTemplateCard2
 import { data } from "autoprefixer";
 export default function Page() {
   const router = useRouter();
+  const [currentPage,setCurrentPage]=useState(1);
+  const [sharedEmail, setSharedEmail] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState("Project");
   const [selectedMenu2, setSelectedMenu2] = useState(null);
   const [selectedMenu3, setSelectedMenu3] = useState(null);
   const [selectOwner, setSelectOwner] = useState("Every");
   const [downloadState, setDownloadState] = useState(false);
   const [folderState, setFolderState] = useState(false);
+  const [sharedState, setSharedState] = useState(false);
   const [selectDateModified, setSelectDateModified] = useState("Today");
   const [selectSortOption, setSelectSortOption] = useState("Newest Edited");
   const [projectData, setProjectData] = useState([]);
@@ -34,6 +37,74 @@ export default function Page() {
   const [designSectionState, setDesignSectionState] = useState(true);
   const menu3Ref = useRef([]);
   const certificateRef = useRef([]);
+
+  const handleShareProject = async(projectId,email)=>{
+    const res1 = await fetch(
+      `http://localhost:3000/api/certificatetemplate/shared`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({pid:projectId,id:email})
+      }
+    );
+    const response = await res1.json();
+    if (response.status == 404) {
+      toast.error(response.error, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      const updatedata=[...projectData];
+      updatedata[selectedMenu3].ownership.push({type:"shared",email:email})
+      setProjectData(updatedata)
+      toast.success(response.error, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });    }
+  }
+  const handleSharedEmail = async (e) => {
+    const res1 = await fetch(
+      `http://localhost:3000/api/user/email/?name=${e.target.value}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const response = await res1.json();
+    if (response.status == 404) {
+      toast.error(response.error, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      setSharedEmail(response.data);
+    }
+  };
+
   const handlePrint1 = () => {
     var opt = {
       margin: [0, 0, 0, 2], // Array for top, right, bottom, and left margins
@@ -152,12 +223,15 @@ export default function Page() {
         const updatedata = [...projectData];
         updatedata.splice(index, 1);
         setProjectData(updatedata);
+        setSelectedMenu3(null);
       }
     } else if (data == "Download") {
       setDownloadState(true);
     } else if (data == "Move to folder") {
       fetchFolderData();
       setFolderState(true);
+    } else if (data == "Share") {
+      setSharedState(true);
     } else {
     }
   };
@@ -269,11 +343,29 @@ export default function Page() {
     }
   };
   useEffect(() => {
-    handleCertificateTemplate();
+    // handleCertificateTemplate();
   }, []);
   useEffect(() => {
     // console.log(projectData)
   }, [projectData]);
+
+  const fetchProjectData = async () => {
+    const res = await fetch(
+      `http://localhost:3000/api/certificatetemplate/fetch?ownership=${selectOwner}&date=${selectDateModified}&sort=${selectSortOption}&page=${currentPage}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const response = await res.json();
+    setProjectData(response.data);
+  } 
+  useEffect(()=>{
+    fetchProjectData()
+  },[selectSortOption,selectOwner,selectDateModified]);
   return (
     <>
       <div className="w h flex">
@@ -391,7 +483,7 @@ export default function Page() {
                   <img
                     width="15"
                     height="15"
-                    src="https://img.icons8.com/ios-glyphs/30/FFFFFF/chevron-down.png"
+                    src="https://img.icons8.com/ios-glyphs/30/chevron-down.png"
                     alt="chevron-down"
                   />
                   <div
@@ -590,68 +682,404 @@ export default function Page() {
                 })}
               </div>
               {/* recent degign  */}
-              {(tabGroup1=="All" || tabGroup1=="Recent Designs")  &&
-              <div>
-                <div
-                  onClick={() => {
-                    setRecentDesignState((prev) => !prev);
-                  }}
-                  style={{
-                    transition: "all .3s ease-in",
-                    height: "9vh",
-                    display: "flex",
-                    padding: "0 2vh",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      rotate: recentDesignState == true ? "90deg" : "0deg",
-                    }}
-                    width="24"
-                    height="24"
-                    src="https://img.icons8.com/material-outlined/24/forward.png"
-                    alt="forward"
-                  />
-                  <span style={{ fontSize: "2em" }}>Recent Deigns</span>
-                </div>
-
-                {recentDesignState && (
+              {(tabGroup1 == "All" || tabGroup1 == "Recent Designs") && (
+                <div>
                   <div
+                    onClick={() => {
+                      setRecentDesignState((prev) => !prev);
+                    }}
                     style={{
-                      width: "100%",
-                      overflow: "hidden",
-                      height: "45vh",
+                      transition: "all .3s ease-in",
+                      height: "9vh",
+                      display: "flex",
+                      padding: "0 2vh",
+                      alignItems: "center",
                     }}
                   >
+                    <img
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        rotate: recentDesignState == true ? "90deg" : "0deg",
+                      }}
+                      width="24"
+                      height="24"
+                      src="https://img.icons8.com/material-outlined/24/forward.png"
+                      alt="forward"
+                    />
+                    <span style={{ fontSize: "2em" }}>Recent Deigns</span>
+                  </div>
+
+                  {recentDesignState && (
                     <div
                       style={{
-                        height: "45vh",
                         width: "100%",
-                        scrollbarWidth: "none",
-                        overflowY: "hidden",
-                        display: "flex",
-                        alignItems: "center",
+                        overflow: "hidden",
+                        height: "45vh",
                       }}
                     >
-                      {projectData &&
-                        projectData.map((data, index) => {
+                      <div
+                        style={{
+                          height: "45vh",
+                          width: "100%",
+                          scrollbarWidth: "none",
+                          overflowY: "hidden",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {projectData &&
+                          projectData.map((data, index) => {
+                            return (
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  height: "33vh",
+                                  wordWrap: "break-word",
+                                  width: "50vh",
+                                }}
+                                key={index}
+                              >
+                                <CertificateTemplateCard2
+                                  index={index}
+                                  textFields={data.certificateComponentData}
+                                  backgroundImg={data.backgroundImg}
+                                  certificateRef={certificateRef}
+                                />
+                                {data.certificateName}
+                                <div
+                                  ref={(el) => (menu3Ref.current[index] = el)}
+                                  style={{
+                                    display: "grid",
+                                    placeItems: "center",
+                                    width: "40px",
+                                    height: "40px",
+                                    position: "relative",
+                                    top: "-32vh",
+                                    left: "36.5vh",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <img
+                                    onClick={() => {
+                                      setSelectedMenu3(index);
+                                    }}
+                                    width="30"
+                                    height="30"
+                                    src="https://img.icons8.com/ios-glyphs/30/menu-2.png"
+                                    alt="menu-2"
+                                  />
+                                  {index == selectedMenu3 && (
+                                    <div
+                                      style={{
+                                        width: "40vh",
+                                        height: "auto",
+                                        top: "8%",
+                                        left: "50%",
+                                        borderRadius: "1vh",
+                                        boxShadow:
+                                          "rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px",
+                                        position: "fixed",
+                                        background: "white",
+                                        zIndex: 300,
+                                      }}
+                                    >
+                                      {projectTemplateOption.map(
+                                        (data, index2) => {
+                                          return (
+                                            <div
+                                              onClick={() =>
+                                                handleCertificateTemplateOption(
+                                                  data.text,
+                                                  index
+                                                )
+                                              }
+                                              className="dashboard-card dashboard-card-span"
+                                              key={index}
+                                            >
+                                              <span
+                                                style={{
+                                                  display: "flex",
+                                                  alignItems: "center",
+                                                  justifyContent:
+                                                    "space-around",
+                                                }}
+                                              >
+                                                <img
+                                                  width="20"
+                                                  height="20"
+                                                  src={data.img}
+                                                  alt="add--v1"
+                                                />
+                                                {data.text}
+                                              </span>
+                                              {data.text == "Move to folder" &&
+                                                folderState && (
+                                                  <div
+                                                    className="bx-shadow"
+                                                    style={{
+                                                      width: "35vh",
+                                                      position: "absolute",
+                                                      left: "30vh",
+                                                      height: "auto",
+                                                      background: "white",
+                                                      borderRadius: "1.4vh",
+                                                    }}
+                                                  >
+                                                    <div
+                                                      style={{
+                                                        width: "90%",
+                                                        height: "7vh",
+                                                        margin: "auto",
+                                                        padding: "0 1vh",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        borderBottom:
+                                                          "1px solid black",
+                                                      }}
+                                                    >
+                                                      Folders
+                                                    </div>
+                                                    <div
+                                                      className="dashboard-edit-container-button"
+                                                      style={{
+                                                        margin: "1vh auto",
+                                                        width: "90%",
+                                                        display: "flex",
+                                                        justifyContent:
+                                                          "center",
+                                                        background: "#39b339",
+                                                        color: "white",
+                                                        border:
+                                                          "1px solid #39b359",
+                                                      }}
+                                                    >
+                                                      Create
+                                                      <img
+                                                        width="30"
+                                                        height="30"
+                                                        src="https://img.icons8.com/ios/50/add--v1.png"
+                                                        alt="add--v1"
+                                                      />{" "}
+                                                    </div>
+
+                                                    {folderData &&
+                                                      folderData.map(
+                                                        (data, index) => {
+                                                          return (
+                                                            <div
+                                                              onClick={() =>
+                                                                addProjectInFolder(
+                                                                  data._id
+                                                                )
+                                                              }
+                                                              className="dashboard-card dashboard-card-span"
+                                                              key={index}
+                                                            >
+                                                              <span
+                                                                style={{
+                                                                  display:
+                                                                    "flex",
+                                                                  alignItems:
+                                                                    "center",
+                                                                  justifyContent:
+                                                                    "space-around",
+                                                                }}
+                                                              >
+                                                                {
+                                                                  data.folderName
+                                                                }
+                                                              </span>
+                                                            </div>
+                                                          );
+                                                        }
+                                                      )}
+                                                  </div>
+                                                )}
+                                              {data.text == "Download" &&
+                                                downloadState && (
+                                                  <div
+                                                    className="bx-shadow"
+                                                    style={{
+                                                      width: "35vh",
+                                                      position: "absolute",
+                                                      left: "30vh",
+                                                      height: "auto",
+                                                      background: "white",
+                                                      borderRadius: "1.4vh",
+                                                    }}
+                                                  >
+                                                    <button
+                                                      onClick={() => {
+                                                        handlePrint2();
+                                                        setDownloadState(false);
+                                                      }}
+                                                      type="button"
+                                                      style={{
+                                                        width: "90%",
+                                                        margin: "1vh auto",
+                                                      }}
+                                                      className=" download-btn px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform  flex"
+                                                    >
+                                                      <img
+                                                        width="30"
+                                                        height="30"
+                                                        src="https://img.icons8.com/ios/50/print--v1.png"
+                                                        alt="print--v1"
+                                                      />
+                                                      <span class="ml-2">
+                                                        Print
+                                                      </span>
+                                                    </button>
+                                                    <button
+                                                      style={{
+                                                        width: "90%",
+                                                        margin: "1vh auto",
+                                                      }}
+                                                      onClick={handlePrint1}
+                                                      type="button"
+                                                      className=" download-btn text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:ring-[#FF9119]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 mr-2 mb-2 px-4 py-3"
+                                                    >
+                                                      <img
+                                                        width="30"
+                                                        height="30"
+                                                        src="https://img.icons8.com/ios/50/pdf--v1.png"
+                                                        alt="pdf--v1"
+                                                      />
+                                                      Download As PDF
+                                                    </button>
+                                                  </div>
+                                                )}{" "}
+                                            </div>
+                                          );
+                                        }
+                                      )}
+                                    </div>
+                                  )}{" "}
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* folder section */}
+              {(tabGroup1 == "All" || tabGroup1 == "Folder") && (
+                <div
+                  style={{
+                    paddingBottom: folderSectionState == true ? "15vh" : "0vh",
+                  }}
+                >
+                  <div
+                    onClick={() => {
+                      setFolderSectionState((prev) => !prev);
+                    }}
+                    style={{
+                      transition: "all .3s ease-in",
+                      height: "9vh",
+                      display: "flex",
+                      padding: "0 2vh",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        rotate: folderSectionState == true ? "90deg" : "0deg",
+                      }}
+                      width="24"
+                      height="24"
+                      src="https://img.icons8.com/material-outlined/24/forward.png"
+                      alt="forward"
+                    />
+                    <span style={{ fontSize: "2em" }}>Folders</span>
+                  </div>
+                  {folderSectionState && (
+                    <div>
+                      {folderData &&
+                        folderData.map((data) => {
                           return (
                             <div
                               style={{
-                                textAlign: "center",
+                                width: "20vh",
+                                display: "grid",
+                                placeItems: "center",
+                              }}
+                            >
+                              <img
+                                width="60"
+                                height="60"
+                                src="https://img.icons8.com/color/48/folder-invoices--v1.png"
+                                alt="folder-invoices--v1"
+                              />{" "}
+                              {data.folderName}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* desgin section */}
+              {(tabGroup1 == "All" || tabGroup1 == "Design") && (
+                <div
+                  style={{
+                    paddingBottom: designSectionState == true ? "15vh" : "0vh",
+                  }}
+                >
+                  <div
+                    onClick={() => {
+                      setDesignSectionState((prev) => !prev);
+                    }}
+                    style={{
+                      transition: "all .3s ease-in",
+                      height: "9vh",
+                      display: "flex",
+                      padding: "0 2vh",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        rotate: designSectionState == true ? "90deg" : "0deg",
+                      }}
+                      width="24"
+                      height="24"
+                      src="https://img.icons8.com/material-outlined/24/forward.png"
+                      alt="forward"
+                    />
+                    <span style={{ fontSize: "2em" }}>Designs</span>
+                  </div>
+                  {designSectionState && (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "auto auto auto",
+                      }}
+                    >
+                      {projectData &&
+                        projectData.map((pdata, index) => {
+                          return (
+                            <div
+                              style={{
+                                display: "grid",
+                                placeItems: "center",
                                 height: "33vh",
                                 wordWrap: "break-word",
                                 width: "50vh",
+                                margin: "2vh 0",
                               }}
                               key={index}
                             >
                               <CertificateTemplateCard2
                                 index={index}
-                                textFields={data.certificateComponentData}
-                                backgroundImg={data.backgroundImg}
+                                textFields={pdata.certificateComponentData}
+                                backgroundImg={pdata.backgroundImg}
                                 certificateRef={certificateRef}
                               />
                               {data.certificateName}
@@ -664,7 +1092,7 @@ export default function Page() {
                                   height: "40px",
                                   position: "relative",
                                   top: "-32vh",
-                                  left: "36.5vh",
+                                  left: "18vh",
                                   cursor: "pointer",
                                 }}
                               >
@@ -720,6 +1148,93 @@ export default function Page() {
                                               />
                                               {data.text}
                                             </span>
+                                            {/* //shared menu */}
+                                            {data.text == "Share" &&
+                                              sharedState && (
+                                                <div
+                                                  className="bx-shadow"
+                                                  style={{
+                                                    paddingRight: "2vh",
+                                                    position: "absolute",
+                                                    left: "30vh",
+                                                    height: "auto",
+                                                    background: "white",
+                                                    borderRadius: "1.4vh",
+                                                    marginBottom: "1.3vh",
+                                                  }}
+                                                >
+                                                  <div
+                                                    style={{
+                                                      width: "90%",
+                                                      height: "7vh",
+                                                      margin: "auto",
+                                                      padding: "0 1vh",
+                                                      display: "flex",
+                                                      alignItems: "center",
+                                                      borderBottom:
+                                                        "1px solid black",
+                                                    }}
+                                                  >
+                                                    <input
+                                                      type="text"
+                                                      placeholder="Search..."
+                                                      onChange={
+                                                        handleSharedEmail
+                                                      }
+                                                    />
+                                                  </div>
+                                                  {sharedEmail!=null ?
+                                                    sharedEmail.map(
+                                                      (data, index) => {
+                                                        return (
+                                                          <>
+                                                         { projectData[selectedMenu3].ownership.some(owner => owner.email === data.email)? <div 
+                                                          style={{width:"100%",marginLeft:"1vh",background:"red"}}
+                                                          className="dashboard-card dashboard-card-span"
+                                                          key={index}
+                                                          >
+                                                            <span
+                                                              style={{
+                                                                display: "flex",
+                                                                alignItems:
+                                                                  "center",
+                                                                justifyContent:
+                                                                  "space-around",
+                                                              }}
+                                                            >
+                                                              {data.email}
+                                                            </span>
+                                                          </div>:<div 
+                                                          style={{width:"100%",marginLeft:"1vh",background:"red"}}
+                                                            onClick={() =>
+handleShareProject(pdata._id,data.email)
+}
+className="dashboard-card dashboard-card-span"
+key={index}
+                                                          >
+                                                            <span
+                                                              style={{
+                                                                display: "flex",
+                                                                alignItems:
+                                                                  "center",
+                                                                justifyContent:
+                                                                  "space-around",
+                                                              }}
+                                                            >
+                                                              {data.email}
+                                                            </span>
+                                                          </div>}
+</>
+                                                        );
+                                                      }
+                                                    ):<div 
+                                                      style={{width:"100%",marginLeft:"1vh"}}
+                                                       
+                                                        className="dashboard-card dashboard-card-span"
+                                                        key={index}
+                                                      >No result found</div>}
+                                                </div>
+                                              )}
                                             {data.text == "Move to folder" &&
                                               folderState && (
                                                 <div
@@ -852,7 +1367,8 @@ export default function Page() {
                                                     Download As PDF
                                                   </button>
                                                 </div>
-                                              )}{" "}
+                                              )}
+                                            ;
                                           </div>
                                         );
                                       }
@@ -864,320 +1380,9 @@ export default function Page() {
                           );
                         })}
                     </div>
-                  </div>
-                )}
-              </div>}
-              {/* folder section */}
-              {(tabGroup1=="All" || tabGroup1=="Folder")  &&
-  <div style={{paddingBottom: folderSectionState==true?"15vh":"0vh"}}>
-                <div
-                  onClick={() => {
-                    setFolderSectionState((prev) => !prev);
-                  }}
-                  style={{
-                    transition: "all .3s ease-in",
-                    height: "9vh",
-                    display: "flex",
-                    padding: "0 2vh",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      rotate: folderSectionState == true ? "90deg" : "0deg",
-                    }}
-                    width="24"
-                    height="24"
-                    src="https://img.icons8.com/material-outlined/24/forward.png"
-                    alt="forward"
-                  />
-                  <span style={{ fontSize: "2em" }}>Folders</span>
+                  )}
                 </div>
-                {folderSectionState && (
-                  <div>
-                    {folderData &&
-                      folderData.map((data) => {
-                        return (
-                          <div
-                            style={{
-                              width: "20vh",
-                              display: "grid",
-                              placeItems: "center",
-                            }}
-                          >
-                            <img
-                              width="60"
-                              height="60"
-                              src="https://img.icons8.com/color/48/folder-invoices--v1.png"
-                              alt="folder-invoices--v1"
-                            />{" "}
-                            {data.folderName}
-                          </div>
-                        );
-                      })}
-                  </div>
-                )}
-              </div>}
-              {/* desgin section */}
-              {(tabGroup1=="All" || tabGroup1=="Design")  &&
-   <div style={{paddingBottom: designSectionState==true?"15vh":"0vh"}}>
-                <div
-                  onClick={() => {
-                    setDesignSectionState((prev) => !prev);
-                  }}
-                  style={{
-                    transition: "all .3s ease-in",
-                    height: "9vh",
-                    display: "flex",
-                    padding: "0 2vh",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      rotate: designSectionState == true ? "90deg" : "0deg",
-                    }}
-                    width="24"
-                    height="24"
-                    src="https://img.icons8.com/material-outlined/24/forward.png"
-                    alt="forward"
-                  />
-                  <span style={{ fontSize: "2em" }}>Designs</span>
-                </div>
-                {designSectionState && (
-                  <div style={{display:"grid",gridTemplateColumns:"auto auto auto"}}>
-                    {projectData &&
-                      projectData.map((data, index) => {
-                        return (
-                          <div
-                            style={{
-
-display:"grid",
-placeItems:"center",
-                              height: "33vh",
-                              wordWrap: "break-word",
-                              width: "50vh",
-                              margin:"2vh 0"
-                            }}
-                            key={index}
-                          >
-                            <CertificateTemplateCard2
-                              index={index}
-                              textFields={data.certificateComponentData}
-                              backgroundImg={data.backgroundImg}
-                              certificateRef={certificateRef}
-                            />
-                            {data.certificateName}
-                            <div
-                              ref={(el) => (menu3Ref.current[index] = el)}
-                              style={{
-                                display: "grid",
-                                placeItems: "center",
-                                width: "40px",
-                                height: "40px",
-                                position: "relative",
-                                top: "-32vh",
-                                left: "18vh",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <img
-                                onClick={() => {
-                                  setSelectedMenu3(index);
-                                }}
-                                width="30"
-                                height="30"
-                                src="https://img.icons8.com/ios-glyphs/30/menu-2.png"
-                                alt="menu-2"
-                              />
-                              {index == selectedMenu3 && (
-                                <div
-                                  style={{
-                                    width: "40vh",
-                                    height: "auto",
-                                    top: "8%",
-                                    left: "50%",
-                                    borderRadius: "1vh",
-                                    boxShadow:
-                                      "rgba(64, 87, 109, 0.07) 0px 0px 0px 1px, rgba(53, 71, 90, 0.2) 0px 2px 12px",
-                                    position: "fixed",
-                                    background: "white",
-                                    zIndex: 300,
-                                  }}
-                                >
-                                  {projectTemplateOption.map((data, index2) => {
-                                    return (
-                                      <div
-                                        onClick={() =>
-                                          handleCertificateTemplateOption(
-                                            data.text,
-                                            index
-                                          )
-                                        }
-                                        className="dashboard-card dashboard-card-span"
-                                        key={index}
-                                      >
-                                        <span
-                                          style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "space-around",
-                                          }}
-                                        >
-                                          <img
-                                            width="20"
-                                            height="20"
-                                            src={data.img}
-                                            alt="add--v1"
-                                          />
-                                          {data.text}
-                                        </span>
-                                        {data.text == "Move to folder" &&
-                                          folderState && (
-                                            <div
-                                              className="bx-shadow"
-                                              style={{
-                                                width: "35vh",
-                                                position: "absolute",
-                                                left: "30vh",
-                                                height: "auto",
-                                                background: "white",
-                                                borderRadius: "1.4vh",
-                                              }}
-                                            >
-                                              <div
-                                                style={{
-                                                  width: "90%",
-                                                  height: "7vh",
-                                                  margin: "auto",
-                                                  padding: "0 1vh",
-                                                  display: "flex",
-                                                  alignItems: "center",
-                                                  borderBottom:
-                                                    "1px solid black",
-                                                }}
-                                              >
-                                                Folders
-                                              </div>
-                                              <div
-                                                className="dashboard-edit-container-button"
-                                                style={{
-                                                  margin: "1vh auto",
-                                                  width: "90%",
-                                                  display: "flex",
-                                                  justifyContent: "center",
-                                                  background: "#39b339",
-                                                  color: "white",
-                                                  border: "1px solid #39b359",
-                                                }}
-                                              >
-                                                Create
-                                                <img
-                                                  width="30"
-                                                  height="30"
-                                                  src="https://img.icons8.com/ios/50/add--v1.png"
-                                                  alt="add--v1"
-                                                />{" "}
-                                              </div>
-
-                                              {folderData &&
-                                                folderData.map(
-                                                  (data, index) => {
-                                                    return (
-                                                      <div
-                                                        onClick={() =>
-                                                          addProjectInFolder(
-                                                            data._id
-                                                          )
-                                                        }
-                                                        className="dashboard-card dashboard-card-span"
-                                                        key={index}
-                                                      >
-                                                        <span
-                                                          style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                              "center",
-                                                            justifyContent:
-                                                              "space-around",
-                                                          }}
-                                                        >
-                                                          {data.folderName}
-                                                        </span>
-                                                      </div>
-                                                    );
-                                                  }
-                                                )}
-                                            </div>
-                                          )}
-                                        {data.text == "Download" &&
-                                          downloadState && (
-                                            <div
-                                              className="bx-shadow"
-                                              style={{
-                                                width: "35vh",
-                                                position: "absolute",
-                                                left: "30vh",
-                                                height: "auto",
-                                                background: "white",
-                                                borderRadius: "1.4vh",
-                                              }}
-                                            >
-                                              <button
-                                                onClick={() => {
-                                                  handlePrint2();
-                                                  setDownloadState(false);
-                                                }}
-                                                type="button"
-                                                style={{
-                                                  width: "90%",
-                                                  margin: "1vh auto",
-                                                }}
-                                                className=" download-btn px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform  flex"
-                                              >
-                                                <img
-                                                  width="30"
-                                                  height="30"
-                                                  src="https://img.icons8.com/ios/50/print--v1.png"
-                                                  alt="print--v1"
-                                                />
-                                                <span class="ml-2">Print</span>
-                                              </button>
-                                              <button
-                                                style={{
-                                                  width: "90%",
-                                                  margin: "1vh auto",
-                                                }}
-                                                onClick={handlePrint1}
-                                                type="button"
-                                                className=" download-btn text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:ring-[#FF9119]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 mr-2 mb-2 px-4 py-3"
-                                              >
-                                                <img
-                                                  width="30"
-                                                  height="30"
-                                                  src="https://img.icons8.com/ios/50/pdf--v1.png"
-                                                  alt="pdf--v1"
-                                                />
-                                                Download As PDF
-                                              </button>
-                                            </div>
-                                          )}{" "}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}{" "}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                )}
-              </div>}
+              )}
             </div>
           </div>
         </div>

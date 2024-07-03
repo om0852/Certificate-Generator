@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
@@ -10,6 +10,7 @@ export default function AuthComponent() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     // Make sure this is inside the functional component
+    const router = useRouter();
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -51,7 +52,7 @@ export default function AuthComponent() {
                     redirect: false
                 });
 
-                if (error == "Sign in successful") {
+                if (data.message == "Sign in successful") {
                     const router = useRouter();
                     // console.log("reponse ok")
                     router.push('/');
@@ -83,23 +84,17 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
-            console.log(response.ok)
-            if (!response.ok) {
-                const errorData = await response.json();
-                setError(errorData.message);
-                return;
-            }
+            
 
             const data = await response.json();
-
             if (data.success) {
-                const signInResponse = await signIn('credentials', {
-                    email,
-                    password,
-                    redirect: false
-                });
-                if (error == "Sign in successful") {
-                    const router = useRouter();
+                // const signInResponse = await signIn('credentials', {
+                    //     email,
+                    //     password,
+                    //     redirect: false
+                    // });
+                    if (data.message == "Sign in successful") {
+                    console.log(data)
                     // console.log("response ok")
 
                     router.push('/');
