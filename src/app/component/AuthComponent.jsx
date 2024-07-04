@@ -35,13 +35,7 @@ export default function AuthComponent() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
-            }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const router = useRouter();
-                        router.replace('/')
-                    }
-                });
+            });
             // console.log(response)
             if (!response.ok) {
                 const errorData = await response.json();
@@ -52,6 +46,11 @@ export default function AuthComponent() {
             const data = await response.json();
 
             if (data.success) {
+                const signInResponse = await signIn('credentials', {
+                    email,
+                    password,
+                    redirect: false
+                });
 
                 if (data.message == "Sign in successful") {
                     const router = useRouter();
@@ -98,9 +97,12 @@ export default function AuthComponent() {
                     console.log(data)
                     // console.log("response ok")
 
+                    router.push('/');
                 } else {
                     setError('Incorrect email or password.');
                 }
+            } else {
+                setError('Incorrect email or password.');
             }
         } catch (error) {
             console.error('Error authenticating user:', error);

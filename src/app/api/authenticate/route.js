@@ -36,9 +36,7 @@ export const POST = async (req, res) => {
         }
 
         // Authentication successful
-        let response = new Response(JSON.stringify({ success: true, message: 'Sign in successful' }), { status: 300 });
-        console.log(response.status);
-        return response;
+        return new Response(JSON.stringify({ success: true, message: 'Sign in successful' }), { status: 300 });
 
     } catch (error) {
         console.error('Error authenticating user:', error);
