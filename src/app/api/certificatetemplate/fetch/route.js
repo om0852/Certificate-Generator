@@ -22,7 +22,7 @@ export async function GET(req, res) {
 
         // Ownership filter
         if (selectOwner === "Me") {
-            query['ownership.email'] = id;
+            query['ownership.email'] = "admin";
         } else if (selectOwner === "Shared") {
             query['ownership.type'] = "shared";
         }
