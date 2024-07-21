@@ -4,7 +4,7 @@ import { connectToDB } from '@/app/utils/database';
 
 export const POST = async (req, res) => {
     const { email, password } = await req.json(); // Adjusted for Next.js 13+
-    console.log(email, password)
+
 
     if (!email || !password) {
         return new Response(JSON.stringify({ message: 'Email and password are required' }), { status: 400 });
@@ -13,8 +13,6 @@ export const POST = async (req, res) => {
     try {
         // Connect to the database
         await connectToDB();
-        console.log(email, password);
-        console.log(NormalUser);
 
         // Find the user by email
         const user = await NormalUser.findOne({ email: email });
