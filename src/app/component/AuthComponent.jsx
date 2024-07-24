@@ -1,11 +1,12 @@
 'use client';
-
+import { login, getSession } from '@/lib';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function AuthComponent() {
+    let expires, session;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -36,7 +37,7 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
-            // console.log(response)
+
             if (!response.ok) {
                 const errorData = await response.json();
                 setError(errorData.message);
@@ -54,7 +55,7 @@ export default function AuthComponent() {
 
                 if (data.message == "Sign in successful") {
                     const router = useRouter();
-                    // console.log("reponse ok")
+
                     router.push('/');
                 } else {
                     setError('Failed to sign in after sign up.');
@@ -68,6 +69,7 @@ export default function AuthComponent() {
         }
     }
 
+    // Function to handle sign-in
     const handleSignIn = async (e) => {
         e.preventDefault();
 
@@ -84,19 +86,13 @@ export default function AuthComponent() {
                 },
                 body: JSON.stringify({ email, password })
             });
-            
 
             const data = await response.json();
             if (data.success) {
-                // const signInResponse = await signIn('credentials', {
-                    //     email,
-                    //     password,
-                    //     redirect: false
-                    // });
-                    if (data.message == "Sign in successful") {
-                    console.log(data)
-                    // console.log("response ok")
-
+                if (data.message == "Sign in successful") {
+                    await login(email);
+                    const session = await getSession();
+                    console.log("Session after sign-in:", JSON.stringify(session, null, 2));
                     router.push('/');
                 } else {
                     setError('Incorrect email or password.');
@@ -109,6 +105,7 @@ export default function AuthComponent() {
             setError('An error occurred while authenticating. Please try again later.');
         }
     }
+
 
     return (
         <div className="max-w-md mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
