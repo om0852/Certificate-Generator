@@ -162,7 +162,7 @@ handleHistoryComponent(updatedata)
 
 const handleShapeData=async()=>{
   console.log("run")
-  const res = await fetch(`http://localhost:3000/api/shape`, {
+  const res = await fetch(` /api/shape`, {
     method: "GET",
     headers: {
         Accept: "application/json",
@@ -174,7 +174,7 @@ setShapeData(response.error)
 }
 const handleGraphicsData=async()=>{
   console.log("run")
-  const res = await fetch(`http://localhost:3000/api/graphics/fetch`, {
+  const res = await fetch(` /api/graphics/fetch`, {
     method: "POST",
     headers: {
         Accept: "application/json",
@@ -188,7 +188,7 @@ setGraphicsData(response.data)
 }
 const handleCertificateTemplate=async()=>{
   console.log("run")
-  const res = await fetch(`http://localhost:3000/api/certificatetemplate/fetch`, {
+  const res = await fetch(` /api/certificatetemplate/fetch`, {
     method: "POST",
     headers: {
         Accept: "application/json",
@@ -204,7 +204,7 @@ const uploadCertificateTemplate=async()=>{
   
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  const res1 = await fetch(`http://localhost:3000/api/addCertificateTemplate`, {
+  const res1 = await fetch(` /api/addCertificateTemplate`, {
     method: "POST",
     headers: {
         Accept: "application/json",
@@ -253,7 +253,7 @@ const handlePic = async (e) => {
   })
       .then((res) => {
           res.json().then(async(data) => {
-            const res1 = await fetch(`http://localhost:3000/api/graphics/add`, {
+            const res1 = await fetch(` /api/graphics/add`, {
               method: "POST",
               headers: {
                   Accept: "application/json",

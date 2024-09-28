@@ -47,7 +47,7 @@ export default function Page() {
   }
   const handleShareProject = async (projectId, email) => {
     const res1 = await fetch(
-      `http://localhost:3000/api/certificatetemplate/shared`,
+      ` /api/certificatetemplate/shared`,
       {
         method: "POST",
         headers: {
@@ -90,7 +90,7 @@ export default function Page() {
   };
   const handleSharedEmail = async (e) => {
     const res1 = await fetch(
-      `http://localhost:3000/api/user/email/?name=${e.target.value}`,
+      ` /api/user/email/?name=${e.target.value}`,
       {
         method: "GET",
         headers: {
@@ -146,7 +146,7 @@ export default function Page() {
       window.open(url, "_blank", "noopener,noreferrer");
     } else if (data == "Duplicate") {
       const res1 = await fetch(
-        `http://localhost:3000/api/addCertificateTemplate`,
+        ` /api/addCertificateTemplate`,
         {
           method: "POST",
           headers: {
@@ -194,7 +194,7 @@ export default function Page() {
       }
     } else if (data == "Delete") {
       const res1 = await fetch(
-        `http://localhost:3000/api/certificatetemplate/delete`,
+        ` /api/certificatetemplate/delete`,
         {
           method: "DELETE",
           headers: {
@@ -247,7 +247,7 @@ export default function Page() {
     }
   };
   const addProjectInFolder = async (id) => {
-    const res1 = await fetch(`http://localhost:3000/api/dashboard/folder/add`, {
+    const res1 = await fetch(` /api/dashboard/folder/add`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -287,7 +287,7 @@ export default function Page() {
   };
   const fetchFolderData = async () => {
     const res1 = await fetch(
-      `http://localhost:3000/api/dashboard/folder/fetchFolder`,
+      ` /api/dashboard/folder/fetchFolder`,
       {
         method: "POST",
         headers: {
@@ -335,7 +335,7 @@ export default function Page() {
   const handleCertificateTemplate = async () => {
     console.log("run");
     const res = await fetch(
-      `http://localhost:3000/api/certificatetemplate/fetch`,
+      ` /api/certificatetemplate/fetch`,
       {
         method: "POST",
         headers: {
@@ -362,7 +362,7 @@ export default function Page() {
 
   const fetchProjectData = async () => {
     const res = await fetch(
-      `http://localhost:3000/api/certificatetemplate/fetch?ownership=${selectOwner}&date=${selectDateModified}&sort=${selectSortOption}&page=${currentPage}`,
+      ` /api/certificatetemplate/fetch?ownership=${selectOwner}&date=${selectDateModified}&sort=${selectSortOption}&page=${currentPage}`,
       {
         method: "GET",
         headers: {
@@ -376,7 +376,7 @@ export default function Page() {
   };
   const fetchProjectDataPage = async () => {
     const res = await fetch(
-      `http://localhost:3000/api/certificatetemplate/fetch?ownership=${selectOwner}&date=${selectDateModified}&sort=${selectSortOption}&page=${currentPage}`,
+      ` /api/certificatetemplate/fetch?ownership=${selectOwner}&date=${selectDateModified}&sort=${selectSortOption}&page=${currentPage}`,
       {
         method: "GET",
         headers: {

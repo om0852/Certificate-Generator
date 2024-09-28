@@ -39,7 +39,7 @@ const handleAddProduct=async()=>{
     }
     else{
 
-        const res = await fetch(`http://localhost:3000/api/adminpanel/addshape`, {
+        const res = await fetch(` /api/adminpanel/addshape`, {
             method: "POST",
             headers: {
           Accept: "application/json",

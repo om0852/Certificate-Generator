@@ -16,7 +16,7 @@ export default function ChooseTemplate() {
     const [projectName,setProjectName]=useState("")
     const CreateCertificatetemplate=async()=>{
   
-            const res1 = await fetch(`http://localhost:3000/api/addCertificateTemplate`, {
+            const res1 = await fetch(` /api/addCertificateTemplate`, {
               method: "POST",
               headers: {
                   Accept: "application/json",

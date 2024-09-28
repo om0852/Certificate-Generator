@@ -175,7 +175,7 @@ export default function Page() {
 
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        const res1 = await fetch(`http://localhost:3000/api/certificatetemplate/singlefetch`, {
+        const res1 = await fetch(` /api/certificatetemplate/singlefetch`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
